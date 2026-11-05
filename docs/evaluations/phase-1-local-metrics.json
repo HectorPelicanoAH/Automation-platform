@@ -1,0 +1,38 @@
+{
+  "hardware": "Intel Core i3-1000NG4 1.10 GHz",
+  "os": "macOS 15.7.3 x64",
+  "node": "24.22.2",
+  "startup": {
+    "method": "Node process spawn to ready loopback server; built web assets; first fresh DB then existing DB",
+    "freshDataMs": 4199.345083,
+    "existingDataMs": 2225.938623,
+    "hardware": "Intel(R) Core(TM) i3-1000NG4 CPU @ 1.10GHz",
+    "node": "v24.22.2"
+  },
+  "directVsManaged": [
+    {
+      "framework": "playwright",
+      "directMs": 3988.695978,
+      "managedMs": 3898.206510000001,
+      "differenceMs": -90.4894679999993,
+      "samplesPerMode": 1,
+      "order": "direct then managed, warm dependency caches; managed includes 50ms polling quantization"
+    },
+    {
+      "framework": "karate",
+      "directMs": 13520.241768000002,
+      "managedMs": 14039.466303999998,
+      "differenceMs": 519.2245359999961,
+      "samplesPerMode": 1,
+      "order": "direct then managed, warm dependency caches; managed includes 50ms polling quantization"
+    }
+  ],
+  "browser": {
+    "eventToVisibleMs": 497.5301459999996,
+    "samples": 1,
+    "method": "Actual run creation persists event, SSE refreshes dashboard count; no full page reload",
+    "demoLoading": true,
+    "demo404": true,
+    "demo400": true
+  }
+}

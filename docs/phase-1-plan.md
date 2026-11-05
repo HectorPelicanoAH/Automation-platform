@@ -1,6 +1,6 @@
 # Phase 1 implementation proposal
 
-Status: `VALIDATION`. Authorized on 2026-11-05 by the human message `aAPPROVE PHASE 1` (an explicit approval with a leading typo). This document remains the approved scope boundary; Phase 2 is unapproved.
+Status: `COMPLETED`. Authorized on 2026-11-05 by the human message `aAPPROVE PHASE 1` (an explicit approval with a leading typo). This document remains the approved scope boundary; Phase 2 is unapproved.
 
 ## Objective and scope
 
@@ -122,7 +122,7 @@ Evidence record: command, working directory, exact versions, OS/hardware, timest
 
 ## Dependencies, risks and completion boundary
 
-Dependencies: approved Phase 1, network for initial dependencies/browsers/Gradle, local filesystem permissions, Git for optional Git metadata, Java and an available Chromium display for headed debugging. Runtime tests against the local demo work without cloud services after setup. License choice is needed before redistributing an open-source release; default recommendation is Apache-2.0, subject to owner choice and dependency notice review.
+Dependencies: approved Phase 1, network for initial dependencies/browsers/Gradle, local filesystem permissions, Git for optional Git metadata, Java and an available Chromium display for headed debugging. Runtime tests against the local demo work without cloud services after setup. The owner selected MIT; LICENSE and third-party notices are committed. Public publication remains a separate decision.
 
 Main risks: native SQLite packaging/fixed engine, Karate 2.x report/JUnit compatibility, Playwright-BDD compiler mapping, Gradle process cleanup, imported-project variability and secure local session bootstrap. Resolve or explicitly block before claiming P1 completion. Performance targets are provisional and must be measured: local API p95 under 200 ms for short metadata reads while a run is active, startup to ready under 10 seconds excluding dependency/browser downloads and demo/JVM warmup, UI progress within 1 second of a persisted event under local load. These do not predict test duration; document hardware and sample sizes.
 

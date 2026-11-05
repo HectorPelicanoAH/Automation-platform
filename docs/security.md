@@ -2,6 +2,8 @@
 
 Status: planning baseline. Controls below must be implemented and tested in the phase introducing the relevant capability. A localhost application remains a privileged filesystem and process interface.
 
+Implemented Phase 1 controls: loopback Host/Origin checks, HttpOnly cookie plus origin-scoped sessionStorage proof, mutation CSRF, canonical path/symlink checks, fingerprinted execution trust, fixed shell-free runner commands, private state, and attachment-only artifact delivery with checksum verification. A cookie alone cannot authorize API access across localhost ports. See [ADR 0009](decisions/0009-phase-1-runtime-and-boundaries.md) and [acceptance evidence](phase-1-report.md). Subsequent agent/capture controls below remain design requirements for their own phases.
+
 ## Trust assumptions
 
 The MVP is single-user on a trusted workstation. A local user chooses trusted automation projects and environments. Application source, imported configs, repository instructions, captured UI, network payloads and generated output remain untrusted data. A hostile local administrator, a compromised OS, and malicious concurrent filesystem mutation are outside the MVP security guarantee. Multi-user hosting is not supported.

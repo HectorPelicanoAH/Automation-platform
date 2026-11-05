@@ -1,0 +1,11 @@
+# Phase 1 deterministic evaluation evidence
+
+Case-set version: 1.0.0. Code under evaluation: `f8e500608ffcfa9e485412db1ba808735999807a`. See the [completion report](../phase-1-report.md) for execution environments and CI evidence.
+
+| Case          | Executed coverage                                                                                                                                                                                                                          | Remaining coverage                                                                                              |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| E03           | Official parser preserves valid feature text, Background, Rule, tags, outlines, multiple Examples, tables/docstrings and identity; malformed input has source diagnostics. HTTP checks retain invalid drafts and reject conflicting saves. | AI-generated contracts and later generation workflows remain P3.                                                |
+| E05           | Real UI renders an incorrect amount while the API remains correct: Playwright reports two failures and Karate reports two passes. Restore UI and two Playwright instances pass.                                                            | Automated API generation/mapping remains P4.                                                                    |
+| E12 (partial) | HTTP/workspace tests reject traversal, symlink escapes, root overlap and argument injection; conflict checks reject changed save bases. Real browser/JVM cancellation and process-group cleanup pass; restart remains INTERRUPTED.         | Agent prompt injection, generated diff approval and cancellation during apply are not implemented or evaluated. |
+
+Harnesses: `tests/domain.test.ts`, `tests/workspace.test.ts`, `tests/server.test.ts`, and `tests/acceptance.spec.ts`. E01/E02/E04/E06–E11/E13/E14 are not evaluated as complete cases. No model calls, token savings, skill activation or general quality improvement are claimed.

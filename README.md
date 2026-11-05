@@ -2,7 +2,7 @@
 
 A local functional testing workbench: connect read-only application sources, manage a separate automation target, edit business Gherkin, execute real Playwright-BDD and Karate tests, and inspect outcomes and native evidence without AI.
 
-**Phase 1 is in validation. Phase 2 is not approved.** Recording, transcription, AI generation, repair and autonomous skill evolution are not implemented. See [phase status](docs/phase-status.md) for the current acceptance evidence.
+**Phase 1 is complete. Phase 2 is not approved.** Recording, transcription, AI generation, repair and autonomous skill evolution are not implemented. See [phase status](docs/phase-status.md) for the current acceptance evidence.
 
 ## Run locally
 
@@ -51,7 +51,7 @@ pnpm test:smoke
 
 The smoke test starts actual loopback apps, creates isolated external fixtures, explicitly installs and independently executes both target CLIs, drives the platform UI, verifies each selector, introduces a UI-only defect while keeping API state correct, restores normal UI behavior, and checks cancellation/idempotency/restart. It needs Java 21, network for an uncached initial target setup, and Chromium. Fixtures use synthetic data, not user repositories.
 
-The required validation matrix includes Ubuntu 24.04 x86_64 and macOS Apple Silicon, with macOS Intel additionally tested. [CI](.github/workflows/phase-1.yml) records actual runner builds; a configured matrix is not passing evidence. WSL2 remains unvalidated, and native Windows execution is outside the current POSIX worker implementation. No operating system is certified merely by this README.
+The full acceptance workflow passed on Ubuntu 24.04 x86_64, macOS 15 Apple Silicon and macOS 15 Intel: [executed CI evidence](https://github.com/HectorPelicanoAH/Automation-platform/actions/runs/42125238265). The [workflow](.github/workflows/phase-1.yml) pins the setup. WSL2 remains unvalidated, and native Windows execution is outside the current POSIX worker implementation. No operating system is certified merely by this README.
 
 ## Documentation
 
@@ -63,7 +63,7 @@ The required validation matrix includes Ubuntu 24.04 x86_64 and macOS Apple Sili
 | Phase 1 acceptance criteria                   | [Phase 1 plan](docs/phase-1-plan.md)                                   |
 | Detailed setup and execution limitations      | [Local development](docs/local-development.md)                         |
 | Security and trusted execution boundary       | [Security design](docs/security.md)                                    |
-| Measured results and pending checks           | [Phase 1 report](docs/phase-1-report.md)                               |
+| Measured results and limitations              | [Phase 1 report](docs/phase-1-report.md)                               |
 | Later phases and approval protocol            | [Roadmap](docs/roadmap.md)                                             |
 | Knowledge and skill activation                | [Knowledge](docs/knowledge/README.md), [skills](docs/skills/README.md) |
 

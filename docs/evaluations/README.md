@@ -35,3 +35,5 @@ Record observed problem, baseline, candidate diff/hash, expected benefit, case v
 ## Execution status
 
 All E01–E14 cases are `NOT_RUN` at Phase 0. They become applicable as their owning phase is approved and implemented. The completion reports must name which cases ran, which failed, and which remain unavailable. No Phase 0 documentation checker substitutes for these behavior tests.
+
+Phase 1 deterministic coverage is recorded in [phase-1-results.md](phase-1-results.md). It does not constitute an AI or skill evaluation, and does not change the historical Phase 0 NOT_RUN record.

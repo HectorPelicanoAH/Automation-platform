@@ -2,6 +2,8 @@
 
 Date: 2026-11-05. Status: accepted Phase 0 planning baseline; runtime implementation is gated by phase approval. Statements here describe intended behavior, not working software.
 
+Phase 1 implementation amendments and exact toolchain are recorded in [ADR 0009](decisions/0009-phase-1-runtime-and-boundaries.md) and the [Phase 1 report](phase-1-report.md). The complete-product design below includes future, unapproved modules. Transport schemas currently live beside their owning modules; no empty contracts package was added.
+
 ## 1. Operating model
 
 Build a single-user application on one trusted workstation. A local browser uses a same-origin web application served by a Fastify control process bound to loopback. The backend owns authorization, SQLite writes, migrations, job state, and artifact references. Browser recording, test execution, indexing, and agent work run outside the HTTP request loop in supervised workers introduced only when their phase needs them.

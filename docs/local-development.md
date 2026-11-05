@@ -55,3 +55,7 @@ Artifacts download as attachments under a sandbox/no-script policy and require b
 The harness strips parent Playwright worker variables before independent CLI setup; otherwise nested BDD configuration may be misidentified. Public starter CLI execution outside a worker needs no such filtering.
 
 If Java is absent/incorrect, browser is missing, target dependencies are absent or a report fails, read readiness/logs rather than retrying blindly. If API binding is stale, review the API assertions and manifest source hash. If trust changed while queued, review and start a fresh run. Never change expected assertions simply to produce green results.
+
+## Executed operating-system matrix
+
+Fresh CI setup and all checks passed on Ubuntu 24.04 x86_64, macOS 15 ARM64 (`macos-15`) and macOS 15 x86_64 (`macos-15-intel`). [Run 42125238265](https://github.com/HectorPelicanoAH/Automation-platform/actions/runs/42125238265) validates code commit `f8e500608ffcfa9e485412db1ba808735999807a`. This establishes the tested OS/architecture families and pinned runtime, not all historical/future OS versions. WSL2 is unvalidated and native Windows is deferred.
