@@ -1,0 +1,10 @@
+plugins { id 'java' }
+repositories { mavenCentral() }
+dependencies {
+    testImplementation 'io.karatelabs:karate-core:2.1.4'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.13.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.13.4'
+}
+java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
+test { useJUnitPlatform() }
+dependencyLocking { lockAllConfigurations() }

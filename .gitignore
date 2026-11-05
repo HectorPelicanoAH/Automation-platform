@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.platform-data/
+.pnpm-store/
+.env
+.env.*
+!.env.example
+test-results/
+playwright-report/
+.features-gen/
+.gradle/
+build/
+target/
+*.sqlite*
+.DS_Store

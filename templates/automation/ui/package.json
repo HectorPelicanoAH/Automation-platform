@@ -1,0 +1,16 @@
+{
+  "name": "functional-ui-tests",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@11.25.0",
+  "scripts": {
+    "test": "bddgen && playwright test",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.65.0",
+    "playwright-bdd": "9.2.1",
+    "typescript": "5.9.3",
+    "@types/node": "24.19.2"
+  }
+}

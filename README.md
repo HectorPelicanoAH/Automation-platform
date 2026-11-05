@@ -1,0 +1,72 @@
+# AI-Native QA Engineering Platform
+
+A local functional testing workbench: connect read-only application sources, manage a separate automation target, edit business Gherkin, execute real Playwright-BDD and Karate tests, and inspect outcomes and native evidence without AI.
+
+**Phase 1 is in validation. Phase 2 is not approved.** Recording, transcription, AI generation, repair and autonomous skill evolution are not implemented. See [phase status](docs/phase-status.md) for the current acceptance evidence.
+
+## Run locally
+
+Prerequisites: **Node 24.22.2**, **pnpm 11.25.0**, **Temurin Java 21.0.13+9**, Git, and a supported macOS/Linux workstation. Gradle 9.2.1 is supplied by the independent API starter wrapper. Initial dependency/browser downloads need network; manual editing and local tests do not need cloud services after setup.
+
+```sh
+npm install --global pnpm@11.25.0
+pnpm install --frozen-lockfile
+pnpm exec playwright install chromium
+pnpm dev
+```
+
+On Ubuntu install browser OS dependencies with `pnpm exec playwright install --with-deps chromium`. Set `JAVA_HOME` to Java 21 if another Java is your system default. Select the exact Node version using your preferred version manager and `.node-version`; setup does not replace system runtimes automatically.
+
+The platform serves `http://127.0.0.1:4310` and the real promotion demo `http://127.0.0.1:4311`. In another terminal:
+
+```sh
+pnpm open
+```
+
+This opens a private, one-time launch link. The token is stored in a private `launch.json`, not printed in logs. A cookie plus an origin-scoped session proof protects API access. Restart creates a new launch link if the session is lost. The unauthenticated page explains how to start a session.
+
+Private state defaults to `~/.local/share/ai-native-qa` outside Git. Override with `QA_DATA_DIR`; `PORT` and `DEMO_PORT` change listening ports. If you change the demo port, update the application base URL in Workspace. Stop with Ctrl+C; running workers are cancelled, and abruptly interrupted runs are reconciled on restart.
+
+## First functional run
+
+1. In **Workspace**, register existing frontend/backend directories. Metadata detection is read-only; indexing preferences are stored for Phase 3.
+2. Initialize a starter in an empty external directory, or import a compatible existing automation checkout. Neither operation creates a nested Git repository. Sources, target, platform and private data roots must not overlap.
+3. Follow the target README to explicitly install its pinned UI/API dependencies. The platform never installs or executes a project during discovery/import.
+4. In **Scenarios**, select and review the canonical feature and Examples. Invalid text remains a draft; saves check base hashes. A changed contract invalidates its existing API binding until separately reviewed.
+5. In **Runs**, select the target, environment, framework and suite/feature/scenario/tag. Review the project execution fingerprint, then start a run. Unsupported example-row selection is explicit.
+6. Inspect real test statuses, steps, logs and downloadable native artifacts. API-state coverage never claims correct UI rendering. Cancelled/interrupted/missing evidence never becomes a pass.
+
+The synthetic demo covers Spanish/Portuguese free-shipping messaging. The displayed `50€`/`60€` amount describes a threshold-related promotion, not a price reduction or tested checkout eligibility.
+
+## Validate
+
+```sh
+pnpm typecheck
+pnpm lint
+pnpm format:check
+pnpm test
+pnpm build
+pnpm test:smoke
+```
+
+The smoke test starts actual loopback apps, creates isolated external fixtures, explicitly installs and independently executes both target CLIs, drives the platform UI, verifies each selector, introduces a UI-only defect while keeping API state correct, restores normal UI behavior, and checks cancellation/idempotency/restart. It needs Java 21, network for an uncached initial target setup, and Chromium. Fixtures use synthetic data, not user repositories.
+
+The required validation matrix includes Ubuntu 24.04 x86_64 and macOS Apple Silicon, with macOS Intel additionally tested. [CI](.github/workflows/phase-1.yml) records actual runner builds; a configured matrix is not passing evidence. WSL2 remains unvalidated, and native Windows execution is outside the current POSIX worker implementation. No operating system is certified merely by this README.
+
+## Documentation
+
+| Need                                          | Document                                                               |
+| --------------------------------------------- | ---------------------------------------------------------------------- |
+| Approval, implemented scope, missing evidence | [Phase status](docs/phase-status.md)                                   |
+| Architecture, ownership and source indexing   | [Architecture](docs/architecture.md)                                   |
+| Decisions and implementation amendments       | [ADRs](docs/decisions/README.md)                                       |
+| Phase 1 acceptance criteria                   | [Phase 1 plan](docs/phase-1-plan.md)                                   |
+| Detailed setup and execution limitations      | [Local development](docs/local-development.md)                         |
+| Security and trusted execution boundary       | [Security design](docs/security.md)                                    |
+| Measured results and pending checks           | [Phase 1 report](docs/phase-1-report.md)                               |
+| Later phases and approval protocol            | [Roadmap](docs/roadmap.md)                                             |
+| Knowledge and skill activation                | [Knowledge](docs/knowledge/README.md), [skills](docs/skills/README.md) |
+
+Workers supervise processes; they are **not host security sandboxes**. Run only reviewed, trusted automation in explicitly authorized environments. Native reports may contain sensitive application evidence and are downloaded rather than executed in the privileged web origin. Runtime artifacts default to 14-day retention, configurable in Workspace and applied at startup. Credentials are not stored in source configuration or version control.
+
+[MIT licensed](LICENSE), selected by the owner. See [third-party notices](THIRD_PARTY_NOTICES.md). Only the exact human authorization for the next phase permits starting it; approval of Phase 1 does not authorize Phase 2.

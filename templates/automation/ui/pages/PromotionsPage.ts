@@ -1,0 +1,24 @@
+import { expect, type Page } from '@playwright/test';
+import type { CustomerContext } from '../builders/customer';
+
+export class PromotionsPage {
+  constructor(private readonly page: Page) {}
+
+  async visit(context: CustomerContext) {
+    await this.page.goto(`/promotions?${new URLSearchParams({ ...context })}`);
+  }
+
+  async expectPromotion(title: string, amount: string, subtitle: string) {
+    const card = this.page.getByRole('region', { name: 'Free shipping promotion' });
+    await expect(card).toHaveCount(1);
+    await expect(card).toBeVisible();
+    const heading = card.getByRole('heading', { name: title, exact: true });
+    await expect(heading).toHaveCount(1);
+    await expect(heading).toBeVisible();
+    await expect(card.getByTestId('promotion-amount')).toHaveCount(1);
+    await expect(card.getByTestId('promotion-amount')).toBeVisible();
+    await expect(card.getByTestId('promotion-amount')).toHaveText(amount);
+    await expect(card.getByText(subtitle, { exact: true })).toHaveCount(1);
+    await expect(card.getByText(subtitle, { exact: true })).toBeVisible();
+  }
+}
