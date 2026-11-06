@@ -39,6 +39,8 @@ export function createPlatform(options: { dataDir: string; platformRoot?: string
   const app = Fastify({
     bodyLimit: 1_050_000,
     logger: false,
+    // preClose stops workers/streams first; incomplete client requests must not prevent shutdown.
+    forceCloseConnections: true,
     ajv: { customOptions: { removeAdditional: false } },
   });
   const launchToken = randomBytes(32).toString('hex');

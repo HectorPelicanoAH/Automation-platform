@@ -5,6 +5,48 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createPlatform } from '../apps/server/app.ts';
 import { demoApp } from '../apps/demo/app.ts';
+import { createConnection } from 'node:net';
+import { once } from 'node:events';
+
+test('Platform shutdown closes an unfinished HTTP connection', { timeout: 6000 }, async () => {
+  const root = mkdtempSync(join(tmpdir(), 'qa-shutdown-'));
+  const { app } = createPlatform({ dataDir: join(root, 'private') });
+  let markRequest = () => {};
+  const receiving = new Promise<void>((resolve) => {
+    markRequest = resolve;
+  });
+  app.addHook('onRequest', async () => {
+    markRequest();
+  });
+  await app.listen({ host: '127.0.0.1', port: 0 });
+  const address = app.server.address() as import('node:net').AddressInfo;
+  const socket = createConnection({ host: '127.0.0.1', port: address.port });
+  let closing: Promise<unknown> | undefined;
+  let bounded: boolean | undefined;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    await once(socket, 'connect');
+    // A client can leave an incomplete upload while navigating away.
+    const host = `127.0.0.1:${address.port}`;
+    socket.write(
+      `POST /api/session HTTP/1.1\r\nHost: ${host}\r\nOrigin: http://${host}\r\nContent-Type: application/json\r\nContent-Length: 1024\r\n\r\n{"token":`,
+    );
+    await receiving;
+    closing = app.close();
+    bounded = await Promise.race([
+      closing.then(() => true),
+      new Promise<boolean>((resolve) => {
+        timer = setTimeout(() => resolve(false), 2000);
+      }),
+    ]);
+  } finally {
+    clearTimeout(timer);
+    socket.destroy();
+    app.server.closeAllConnections();
+    await (closing || app.close());
+  }
+  assert.equal(bounded, true, 'Shutdown must not wait for the browser to close its socket');
+});
 
 test('Local session, CSRF, path, argument and source-write boundaries', async () => {
   const root = mkdtempSync(join(tmpdir(), 'qa-http-'));

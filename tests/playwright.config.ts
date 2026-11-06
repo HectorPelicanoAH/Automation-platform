@@ -9,7 +9,7 @@ export default defineConfig({
   reporter: [
     ['list'],
     ['html', { open: 'never' }],
-    ['json', { outputFile: 'test-results/platform-results.json' }],
+    ['json', { outputFile: '../test-results/platform-results.json' }],
   ],
   use: {
     browserName: 'chromium',

@@ -370,7 +370,9 @@ test('Real workstation journey: sources, contracts, both runners, failures, canc
     await page.goto('about:blank').catch(() => {});
     const unfinished = { ...all.runs[0], id: crypto.randomUUID(), status: 'RUNNING' as const };
     platform.store.put('runs', unfinished);
-    await platform.app.close();
+    await test.step('Close platform without waiting for browser context teardown', async () => {
+      await platform.app.close();
+    });
     const restarted = createPlatform({ dataDir });
     expect(restarted.store.list('sources')).toHaveLength(2);
     expect(restarted.store.get('runs', unfinished.id)?.status).toBe('INTERRUPTED');
