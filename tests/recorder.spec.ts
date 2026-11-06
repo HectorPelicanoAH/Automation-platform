@@ -1,3 +1,7 @@
+import { randomUUID } from 'node:crypto';
+import { Store } from '../packages/storage/store.ts';
+import { RecordingRepository } from '../packages/recording/repository.ts';
+import type { Recording } from '../packages/recording/model.ts';
 import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -54,11 +58,43 @@ test('Public headed capture: real actions, frames, popups, privacy and origin de
     audioRetentionDays: 7,
     audioConsent: false,
   };
+  const privateDir = mkdtempSync(join(tmpdir(), 'qa-record-persisted-'));
+  let store = new Store(privateDir);
+  let repository = new RecordingRepository(store);
+  const recording: Recording = {
+    id: randomUUID(),
+    name: 'Real capture of synthetic fixture',
+    status: 'RECORDING',
+    createdAt: new Date().toISOString(),
+    durationMs: 0,
+    policy,
+    events: 0,
+    gaps: 0,
+    bytes: 0,
+    artifacts: [],
+    audio: [],
+    microphone: 'OFF',
+    transcript: [],
+    incomplete: false,
+  };
+  repository.put(recording);
+  const baseMs = monotonicMs();
   const events: Omit<EvidenceEvent, 'sequence' | 'receivedMs'>[] = [];
   const screenshots: Buffer[] = [];
-  const capture = new BrowserCapture(policy, monotonicMs(), (event, image) => {
+  const capture = new BrowserCapture(policy, baseMs, (event, image) => {
     events.push(event);
     if (image) screenshots.push(image);
+    const current = repository.get(recording.id);
+    const screenshot = image
+      ? repository.artifact(
+          current,
+          image,
+          'screenshot',
+          'image/png',
+          event.evidenceAtMs || event.timeMs,
+        ).name
+      : undefined;
+    repository.append(current, { ...event, screenshot, receivedMs: monotonicMs() - baseMs });
   });
   try {
     const page = await capture.start(false);
@@ -129,6 +165,27 @@ test('Public headed capture: real actions, frames, popups, privacy and origin de
     ])
       expect(text).not.toContain(secret);
     await expect(capture.navigate('https://unapproved.invalid/')).rejects.toThrow(/approved/);
+    await capture.stop();
+    store.close();
+    store = new Store(privateDir);
+    repository = new RecordingRepository(store);
+    const persisted = repository.events(recording.id);
+    expect(persisted.some((e) => e.dom && e.aria)).toBe(true);
+    const shot = persisted.find((e) => e.screenshot)!;
+    expect(repository.read(recording.id, shot.screenshot!).bytes.subarray(1, 4).toString()).toBe(
+      'PNG',
+    );
+    const persistedText = JSON.stringify(persisted);
+    for (const secret of [
+      'synthetic-auth-secret',
+      'synthetic-cookie-secret',
+      'network-body-secret-4128',
+      'network-url-secret',
+      'private-email-4217',
+      'hidden-business-secret-5217',
+    ])
+      expect(persistedText).not.toContain(secret);
+
     await test.info().attach('capture-evidence', {
       body: Buffer.from(JSON.stringify(events, null, 2)),
       contentType: 'application/json',
@@ -137,6 +194,7 @@ test('Public headed capture: real actions, frames, popups, privacy and origin de
   } finally {
     writeFileSync('test-results/capture-events.json', JSON.stringify(events, null, 2));
     await capture.stop();
+    store.close();
     await app.close();
     await other.close();
   }
