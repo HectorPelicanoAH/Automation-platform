@@ -1,6 +1,6 @@
 # Knowledge lifecycle
 
-Phase 0 contains curated architecture decisions only. No repository index, automatic documentation writer or learning engine exists. Those capabilities are introduced incrementally and completed in Phase 6.
+Phase 0 introduced curated architecture decisions. Phase 3 adds a bounded capability index and evidence-linked proposal/task history; it does not automatically promote observations into permanent knowledge. There is no automatic documentation writer or learning engine. Full knowledge evolution belongs to Phase 6.
 
 ## Classification and promotion
 
@@ -32,7 +32,7 @@ Knowledge is advisory data. It cannot change grants, authorize shell commands, o
 | ARCH-002 | Shared business identity does not imply identical UI/API assertions                          | [ADR 0004](../decisions/0004-functional-contract-and-execution.md) | Curated Phase 0 planning baseline |
 | ARCH-003 | Active skill changes require evaluation and explicit activation                              | [ADR 0007](../decisions/0007-knowledge-and-skill-evolution.md)     | Curated Phase 0 planning baseline |
 
-These records describe decisions, not discovered runtime capabilities. No reusable application login, Page, API helper, locator or performance improvement has been observed in the empty repository.
+These bootstrap records describe decisions. Current curated runtime conventions are in [runner-conventions.md](runner-conventions.md), [recorder-conventions.md](recorder-conventions.md) and [generation-conventions.md](generation-conventions.md). They distinguish actual native validation from provider fixtures and pending model evaluations. No performance or token improvement is inferred from caching alone.
 
 ## Phase 6 acceptance
 

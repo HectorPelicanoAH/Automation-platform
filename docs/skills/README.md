@@ -1,6 +1,6 @@
 # Agent skills: policy and candidate catalog
 
-No product skill has been installed or activated in Phase 0. This catalog is a plan, not a set of functional tools. Universal approval/security rules live in [AGENTS.md](../../AGENTS.md); repeating them across empty skills would increase mandatory context without evidence of benefit.
+No product skill has been installed or activated. Phase 3 adds [inactive candidates](phase-3-candidates.md) with separately recorded evaluation/approval states. This catalog is a plan, not a set of functional tools. Universal approval/security rules live in [AGENTS.md](../../AGENTS.md); repeating them across empty skills would increase mandatory context without evidence of benefit.
 
 ## Active layout and portability
 

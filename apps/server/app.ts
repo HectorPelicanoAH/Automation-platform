@@ -1,5 +1,9 @@
 import { RecordingManager } from '../../packages/recording/manager.ts';
 import { recordingRoutes } from '../../packages/recording/routes.ts';
+import { GenerationManager } from '../../packages/generation/manager.ts';
+import { generationRoutes } from '../../packages/generation/routes.ts';
+import type { AiSettings } from '../../packages/generation/model.ts';
+import type { AgentProvider } from '../../packages/generation/provider.ts';
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
@@ -30,12 +34,25 @@ const object = (properties: Record<string, unknown>, required = Object.keys(prop
 const compare = (a: string, b: string) =>
   Buffer.byteLength(a) === Buffer.byteLength(b) && timingSafeEqual(Buffer.from(a), Buffer.from(b));
 
-export function createPlatform(options: { dataDir: string; platformRoot?: string }) {
+export function createPlatform(options: {
+  dataDir: string;
+  platformRoot?: string;
+  generationProviderFactory?: (settings: AiSettings, cwd: string) => AgentProvider;
+}) {
   const platformRoot = realpathSync(options.platformRoot || resolve(import.meta.dirname, '../..'));
   const store = new Store(options.dataDir);
   const workspace = new Workspace(store, platformRoot);
-  const manager = new ExecutionManager(store, workspace);
+  const manager: ExecutionManager = new ExecutionManager(store, workspace, (id) =>
+    generation.validationTarget(id),
+  );
   const recorder = new RecordingManager(store);
+  const generation: GenerationManager = new GenerationManager(
+    store,
+    workspace,
+    recorder,
+    manager,
+    options.generationProviderFactory,
+  );
   const app = Fastify({
     bodyLimit: 1_050_000,
     logger: false,
@@ -138,6 +155,7 @@ export function createPlatform(options: { dataDir: string; platformRoot?: string
     },
   );
   recordingRoutes(app, recorder);
+  generationRoutes(app, generation);
   app.get('/api/state', async (request) => ({
     csrf: sessionFor(request.headers.cookie)!.csrf,
     sources: store.list('sources'),
@@ -149,7 +167,7 @@ export function createPlatform(options: { dataDir: string; platformRoot?: string
       sqlite: (store.db.prepare('SELECT sqlite_version() version').get() as { version: string })
         .version,
     },
-    capabilities: { phase: 2, recording: true, ai: false, indexing: false, rowSelection: false },
+    capabilities: { phase: 3, recording: true, ai: true, indexing: true, rowSelection: false },
   }));
   app.put<{ Body: { baseUrl: string; retentionDays: number } }>(
     '/api/settings',
@@ -435,13 +453,14 @@ export function createPlatform(options: { dataDir: string; platformRoot?: string
   }
   app.addHook('preClose', async () => {
     for (const stream of streams) stream.end();
+    await generation.shutdown();
     await recorder.shutdown();
     await manager.shutdown();
   });
   app.addHook('onClose', async () => {
     store.close();
   });
-  return { app, store, workspace, manager, recorder, launchToken };
+  return { app, store, workspace, manager, recorder, generation, launchToken };
 }
 
 function readTextArtifact(root: string, path: string) {

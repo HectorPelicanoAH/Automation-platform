@@ -2,6 +2,8 @@
 
 Planning model only. Create persistence tables, contracts and migrations when the approved phase needs them. IDs are opaque UUIDs; timestamps are UTC with display in the user's timezone. Revisions are immutable content snapshots, distinct from mutable indexes.
 
+Phase 3 implements a deliberately smaller projection in `repository_indexes`, `generation_objects` and `ai_settings`. An index is a mutable hash/policy-keyed cache, not an immutable historical repository snapshot. Generation tasks retain retrieved file hashes, bounded progress, model/usage and proposal identity. Contract proposals bind target, recording evidence digest, destination, Gherkin and review answers; approval references that exact digest. Change proposals bind contract revision, target revision, base file hashes, reuse plan and full diff. Native validation references `Run.proposalId` and its executable fingerprint; application retains a private journal. Editing/rejecting a contract changes pending proposals to `INVALIDATED` without rewriting historical applied changes or runner results. The broader relationships below remain the complete-product design; Phase 3 has no capability graph or skill evolution tables.
+
 ## Relationships
 
 ```mermaid

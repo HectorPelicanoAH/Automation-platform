@@ -69,6 +69,13 @@ export class RecordingRepository {
         .all(id, after) as { data: string }[]
     ).map((r) => JSON.parse(r.data) as EvidenceEvent);
   }
+  *iterateEvents(id: string) {
+    this.get(id);
+    for (const row of this.store.db
+      .prepare('SELECT data FROM recording_events WHERE recording_id=? ORDER BY sequence')
+      .iterate(id))
+      yield JSON.parse((row as { data: string }).data) as EvidenceEvent;
+  }
   append(record: Recording, event: Omit<EvidenceEvent, 'sequence'>) {
     if (record.events >= RECORDING_LIMITS.events)
       throw new AppError(413, 'Recording event limit reached');

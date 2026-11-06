@@ -32,6 +32,7 @@ export class ExecutionManager {
   constructor(
     readonly store: Store,
     readonly workspace: Workspace,
+    readonly resolveProposalTarget?: (proposalId: string) => Target,
   ) {
     for (const run of store.list('runs'))
       if (
@@ -64,13 +65,16 @@ export class ExecutionManager {
   busyTarget(id: string) {
     return this.store.list('runs').some((r) => r.targetId === id && !terminal.has(r.status));
   }
-  create(input: {
-    targetId: string;
-    framework: Framework;
-    selection: Selection;
-    baseUrl: string;
-    idempotencyKey: string;
-  }) {
+  create(
+    input: {
+      targetId: string;
+      framework: Framework;
+      selection: Selection;
+      baseUrl: string;
+      idempotencyKey: string;
+    },
+    validation?: { proposalId: string; target: Target },
+  ) {
     const existing = this.store.list('runs').find((r) => r.idempotencyKey === input.idempotencyKey);
     if (existing) {
       if (
@@ -82,7 +86,7 @@ export class ExecutionManager {
         throw new AppError(409, 'Idempotency key belongs to another request');
       return existing;
     }
-    const target = this.workspace.target(input.targetId);
+    const target = validation?.target || this.workspace.target(input.targetId);
     if (target.trustFingerprint !== this.workspace.fingerprint(target))
       throw new AppError(409, 'Trust the current executable project fingerprint before running');
     const snapshot = this.workspace
@@ -112,6 +116,7 @@ export class ExecutionManager {
         : 'Karate version pinned in target dependency lock';
     const run: Run = {
       ...input,
+      ...(validation ? { proposalId: validation.proposalId } : {}),
       id: randomUUID(),
       status: 'QUEUED',
       createdAt: new Date().toISOString(),
@@ -288,7 +293,10 @@ export class ExecutionManager {
     run.startedAt = new Date().toISOString();
     this.store.event(run);
     try {
-      const target = this.workspace.target(run.targetId);
+      const target = run.proposalId
+        ? this.resolveProposalTarget?.(run.proposalId)
+        : this.workspace.target(run.targetId);
+      if (!target) throw new Error('Validation proposal is unavailable');
       if (target.trustFingerprint !== this.workspace.fingerprint(target))
         throw new Error('Target executable fingerprint changed after queueing');
       if (run.executableHash !== target.trustFingerprint)
@@ -321,6 +329,14 @@ export class ExecutionManager {
       const selection = this.selectionArguments(run.framework, run.selection, run.snapshot, target);
       if (run.framework === 'playwright') {
         const cwd = join(target.path, 'ui');
+        if (run.proposalId)
+          await this.command(
+            run,
+            process.execPath,
+            [join(cwd, 'node_modules/typescript/bin/tsc'), '--noEmit'],
+            cwd,
+            {},
+          );
         await this.command(
           run,
           process.execPath,

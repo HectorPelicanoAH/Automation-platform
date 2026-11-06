@@ -21,6 +21,7 @@ export const within = (root: string, path: string) => {
 export const overlap = (a: string, b: string) => within(a, b) || within(b, a);
 const blocked = /^(node_modules|dist|build|target|test-results|playwright-report)$/;
 const secret = /^\.|\.(pem|key|p12|pfx)$|credentials|secrets/i;
+export const permittedEntry = (name: string) => !secret.test(name) && !blocked.test(name);
 
 export function canonicalDirectory(path: string) {
   if (!isAbsolute(path) || path.includes('\0'))
@@ -69,7 +70,7 @@ export function fileTree(root: string) {
     if (depth > 12) throw new AppError(413, 'Repository preview exceeds depth limit');
     for (const entry of readdirSync(directory, { withFileTypes: true })) {
       if (++visited > 5000) throw new AppError(413, 'Repository preview exceeds entry limit');
-      if (secret.test(entry.name) || blocked.test(entry.name) || entry.isSymbolicLink()) continue;
+      if (!permittedEntry(entry.name) || entry.isSymbolicLink()) continue;
       if (result.length >= 1500)
         throw new AppError(413, 'Repository preview exceeds 1500 files; narrow the project');
       const absolute = resolve(directory, entry.name);

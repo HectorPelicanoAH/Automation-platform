@@ -1227,3 +1227,63 @@ code {
 .record-layout > .panel {
   padding: 24px;
 }
+
+.generation-workbench .panel {
+  margin-bottom: 24px;
+}
+.generation-workbench details {
+  margin: 12px 0;
+}
+.generation-workbench summary {
+  cursor: pointer;
+  padding: 8px 0;
+}
+.generation-workbench .button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 14px 0;
+}
+.generation-workbench .checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+.generation-workbench .checkbox-label input {
+  width: auto;
+}
+.generation-workbench .code-editor {
+  font-family: ui-monospace, monospace;
+  width: 100%;
+}
+.generation-workbench pre {
+  overflow: auto;
+  max-height: 450px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  padding: 16px;
+  background: #f2f5f2;
+  border-radius: 8px;
+}
+.generation-workbench .agent-progress {
+  max-height: 250px;
+  overflow: auto;
+  font-size: 13px;
+}
+.generation-workbench code {
+  overflow-wrap: anywhere;
+}
+.status.approved,
+.status.validated,
+.status.applied,
+.status.succeeded {
+  background: #e3f1e8;
+  color: #236247;
+}
+.status.draft,
+.status.staged,
+.status.validating {
+  background: #fff3d6;
+  color: #725b16;
+}

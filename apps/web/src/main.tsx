@@ -5,9 +5,10 @@ import './style.css';
 import { api, setCsrf, type State } from './api.ts';
 import { Empty, Status, short } from './ui.tsx';
 import { RecordPanel } from './RecordPanel.tsx';
+import { GenerationPanel } from './GenerationPanel.tsx';
 import { WorkspacePanel } from './WorkspacePanel.tsx';
 
-type View = 'Dashboard' | 'Workspace' | 'Scenarios' | 'Repository' | 'Runs' | 'Record';
+type View = 'Dashboard' | 'Workspace' | 'Scenarios' | 'Repository' | 'Runs' | 'Record' | 'Generate';
 type Check = { name: string; ready: boolean; detail: string };
 const active = (run: Run) => ['QUEUED', 'RUNNING', 'CANCEL_REQUESTED'].includes(run.status);
 const time = (value: string) => new Date(value).toLocaleString();
@@ -220,29 +221,39 @@ function App() {
         </a>
         <div className="nav-label">WORKBENCH</div>
         <nav>
-          {(['Dashboard', 'Workspace', 'Scenarios', 'Repository', 'Runs', 'Record'] as View[]).map(
-            (name, index) => (
-              <button
-                key={name}
-                aria-label={name}
-                className={view === name ? 'nav-item selected' : 'nav-item'}
-                onClick={() => setView(name)}
-              >
-                <span>{['◫', '▦', '≡', '⌘', '▷', '●'][index]}</span>
-                {name}
-                {name === 'Runs' && state?.runs.some(active) ? <i className="dot" /> : null}
-              </button>
-            ),
-          )}
+          {(
+            [
+              'Dashboard',
+              'Workspace',
+              'Scenarios',
+              'Repository',
+              'Runs',
+              'Record',
+              'Generate',
+            ] as View[]
+          ).map((name, index) => (
+            <button
+              key={name}
+              aria-label={name}
+              className={view === name ? 'nav-item selected' : 'nav-item'}
+              onClick={() => setView(name)}
+            >
+              <span>{['◫', '▦', '≡', '⌘', '▷', '●', '✧'][index]}</span>
+              {name}
+              {name === 'Runs' && state?.runs.some(active) ? <i className="dot" /> : null}
+            </button>
+          ))}
         </nav>
         <div className="sidebar-note">
-          <span className="phase-label">PHASE 02</span>
+          <span className="phase-label">PHASE 03</span>
           <p>
             A local foundation.
             <br />
             Real tests. Clear evidence.
           </p>
-          <small>Recording is available. AI generation requires Phase 3 approval.</small>
+          <small>
+            Record demonstrations, review AI proposals, and approve each generated change.
+          </small>
         </div>
         <div className="local-badge">
           <i className="dot" /> Local workstation<small>Bound to loopback</small>
@@ -282,6 +293,7 @@ function App() {
                       Repository: 'Understand what you run.',
                       Runs: 'Execution with evidence.',
                       Record: 'Capture what actually happened.',
+                      Generate: 'From evidence to reviewed tests.',
                     }[view]}
               </h1>
               <p className="muted">
@@ -293,9 +305,11 @@ function App() {
                       ? 'Review the canonical Gherkin contract before executing its implementation.'
                       : view === 'Repository'
                         ? 'Read the target files behind your functional coverage.'
-                        : view === 'Record'
-                          ? 'Capture interactions and narration, preserve evidence and inspect gaps.'
-                          : 'Independent UI and API coverage, with native reports and honest outcomes.'}
+                        : view === 'Generate'
+                          ? 'Inspect evidence, review requirements and validate staged UI automation.'
+                          : view === 'Record'
+                            ? 'Capture interactions and narration, preserve evidence and inspect gaps.'
+                            : 'Independent UI and API coverage, with native reports and honest outcomes.'}
               </p>
             </div>
             {state && (
@@ -336,6 +350,17 @@ function App() {
               {state && (
                 <RecordPanel visible={view === 'Record'} defaultUrl={state.settings.baseUrl} />
               )}
+              <GenerationPanel
+                visible={view === 'Generate'}
+                targetId={targetId}
+                sources={state.sources}
+                targets={state.targets}
+                baseUrl={state.settings.baseUrl}
+                onRun={(id) => {
+                  setSelectedRun(id);
+                  setView('Runs');
+                }}
+              />
               {view === 'Dashboard' && (
                 <>
                   <section className="welcome">
@@ -892,7 +917,7 @@ function App() {
           )}
           <footer className="page-footer">
             <span>
-              QA LOCAL <i>/</i> PHASE 02 FOUNDATION
+              QA LOCAL <i>/</i> PHASE 03 FOUNDATION
             </span>
             <span>
               {state

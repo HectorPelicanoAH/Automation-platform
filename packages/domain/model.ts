@@ -56,6 +56,7 @@ export interface TestResult {
 }
 export interface Run {
   id: string;
+  proposalId?: string;
   targetId: string;
   framework: Framework;
   selection: Selection;
@@ -80,7 +81,8 @@ export class AppError extends Error {
   constructor(
     public statusCode: number,
     message: string,
+    options?: ErrorOptions,
   ) {
-    super(message);
+    super(message, options);
   }
 }

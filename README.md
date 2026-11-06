@@ -2,7 +2,7 @@
 
 A local functional testing workbench: connect read-only application sources, manage a separate automation target, edit business Gherkin, execute real Playwright-BDD and Karate tests, and inspect outcomes and native evidence without AI.
 
-**Phases 1–2 are complete. Phase 3 is not approved.** Recording and manual timestamped narration are implemented; automatic transcription, AI generation, repair and autonomous skill evolution are not implemented. See [phase status](docs/phase-status.md) for the current acceptance evidence.
+**Phases 1–2 are complete. Phase 3 is approved and in progress.** Recording and manual timestamped narration are implemented; reviewed AI generation is under validation. Automatic transcription, repair and autonomous skill evolution are not implemented. See [phase status](docs/phase-status.md) for the current acceptance evidence.
 
 ## Run locally
 
@@ -29,7 +29,7 @@ Private state defaults to `~/.local/share/ai-native-qa` outside Git. Override wi
 
 ## First functional run
 
-1. In **Workspace**, register existing frontend/backend directories. Metadata detection is read-only; indexing preferences are stored for Phase 3.
+1. In **Workspace**, register existing frontend/backend directories. Metadata detection is read-only; opt-in indexing is available through Generate.
 2. Initialize a starter in an empty external directory, or import a compatible existing automation checkout. Neither operation creates a nested Git repository. Sources, target, platform and private data roots must not overlap.
 3. Follow the target README to explicitly install its pinned UI/API dependencies. The platform never installs or executes a project during discovery/import.
 4. In **Scenarios**, select and review the canonical feature and Examples. Invalid text remains a draft; saves check base hashes. A changed contract invalidates its existing API binding until separately reviewed.
@@ -77,4 +77,6 @@ The full acceptance workflow passed on Ubuntu 24.04 x86_64, macOS 15 Apple Silic
 
 Workers supervise processes; they are **not host security sandboxes**. Run only reviewed, trusted automation in explicitly authorized environments. Native reports may contain sensitive application evidence and are downloaded rather than executed in the privileged web origin. Runtime artifacts default to 14-day retention, configurable in Workspace and applied at startup. Credentials are not stored in source configuration or version control.
 
-[MIT licensed](LICENSE), selected by the owner. See [third-party notices](THIRD_PARTY_NOTICES.md). Only the exact human authorization for the next phase permits starting it; Phase 3 requires `APPROVE PHASE 3`.
+[MIT licensed](LICENSE), selected by the owner. See [third-party notices](THIRD_PARTY_NOTICES.md). Only the exact human authorization for the next phase permits starting it; Phase 3 is already approved; Phase 4 requires `APPROVE PHASE 4` after Phase 3 completion.
+
+Reviewed generation setup, context limits and approval controls: [generation guide](docs/generation.md).

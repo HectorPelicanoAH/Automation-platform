@@ -18,3 +18,5 @@ Phase 1 implementation amendment: [0009 — runtime and boundaries](0009-phase-1
 Each ADR records context, decision, alternatives, consequences and a validation/revisit trigger. Exact dependency pins are implementation evidence, not architecture-only claims. Research references are in [sources](../sources.md).
 
 - [ADR 0010 — Recorder evidence and privacy](0010-recorder-evidence-and-privacy.md): Phase 2 implementation, real capture boundaries, manual transcription and synthetic audio evaluation limits.
+
+- [ADR 0011 — Reviewed AI generation](0011-reviewed-ai-generation.md): Phase 3 scoped tools, index provenance, staged validation and exact application approval.

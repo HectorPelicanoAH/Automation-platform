@@ -54,7 +54,7 @@ export function WorkspacePanel({
       });
       await refresh();
       notice(
-        'Source configuration saved. Files remain read-only; indexing is scheduled for Phase 3.',
+        'Source configuration saved. Files remain read-only; use Generate to index the selected sources.',
       );
     });
   };
@@ -170,7 +170,7 @@ export function WorkspacePanel({
               checked={source.indexEnabled}
               onChange={(e) => setSource({ ...source, indexEnabled: e.target.checked })}
             />
-            Store indexing preference — indexing becomes available in Phase 3
+            Allow context indexing in Generate
           </label>
           <button className="button" disabled={busy}>
             {editing ? 'Save source settings' : 'Register read-only source'}
