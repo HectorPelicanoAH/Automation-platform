@@ -279,3 +279,55 @@ test('Oversized native screenshots are omitted with an explicit capture gap', as
     await app.close();
   }
 });
+
+test('Slow optional context does not delay observed actions', async () => {
+  const app = Fastify();
+  let releaseFont = () => {};
+  let requested = false;
+  const fontGate = new Promise<void>((resolve) => {
+    releaseFont = resolve;
+  });
+  app.get('/held.woff', async (_req, reply) => {
+    requested = true;
+    await fontGate;
+    return reply.code(404).send('Synthetic unavailable font');
+  });
+  app.get('/', async (_req, reply) =>
+    reply
+      .type('text/html')
+      .send(
+        '<style>@font-face{font-family:held;src:url(/held.woff);font-display:swap}body,button{font-family:held,serif}</style><p>Pending font fixture</p><button>Observe</button>',
+      ),
+  );
+  const url = await app.listen({ host: '127.0.0.1', port: 0 });
+  const events: Omit<EvidenceEvent, 'sequence' | 'receivedMs'>[] = [];
+  const capture = new BrowserCapture(
+    {
+      url,
+      allowedOrigins: [url],
+      screenshots: true,
+      maskSelectors: [],
+      sensitiveQueryKeys: [],
+      retentionDays: 14,
+      audioRetentionDays: 7,
+      audioConsent: false,
+    },
+    monotonicMs(),
+    (e) => events.push(e),
+  );
+  try {
+    const page = await capture.start(false);
+    await expect.poll(() => requested).toBe(true);
+    await page.getByRole('button', { name: 'Observe', exact: true }).click();
+    await expect
+      .poll(() => events.some((e) => e.kind === 'action' && e.detail === 'click'), {
+        timeout: 1500,
+      })
+      .toBe(true);
+    expect(events.some((e) => e.kind === 'context' && e.screenshot)).toBe(false);
+  } finally {
+    releaseFont();
+    await capture.stop();
+    await app.close();
+  }
+});

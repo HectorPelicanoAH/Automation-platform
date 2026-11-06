@@ -214,7 +214,7 @@ export class RecordingManager {
     } else if (message.type === 'event' && message.event) {
       const event = message.event;
       if (
-        !['action', 'navigation', 'network', 'clock', 'gap', 'page', 'marker'].includes(
+        !['action', 'context', 'navigation', 'network', 'clock', 'gap', 'page', 'marker'].includes(
           event.kind,
         ) ||
         !Number.isFinite(event.timeMs) ||

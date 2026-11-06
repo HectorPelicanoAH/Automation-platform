@@ -25,9 +25,10 @@ export interface EvidenceEvent {
   offsetMs?: number;
   uncertaintyMs?: number;
   producer?: string;
+  sourceEventId?: string;
   pageId?: string;
   frameId?: string;
-  kind: 'action' | 'navigation' | 'network' | 'clock' | 'gap' | 'page' | 'marker';
+  kind: 'action' | 'context' | 'navigation' | 'network' | 'clock' | 'gap' | 'page' | 'marker';
   provenance: 'OBSERVED';
   detail: string;
   url?: string;

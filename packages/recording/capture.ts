@@ -30,6 +30,7 @@ export class BrowserCapture {
   private queued = 0;
   private lastScreenshot = -Infinity;
   private observedIds = new Set<string>();
+  private contextTasks = new Map<string, Promise<void>>();
   private beaconPath = '/__qa_observation_' + randomUUID().replaceAll('-', '');
   private recent: number[] = [];
   private lastLimitGap = -Infinity;
@@ -169,28 +170,76 @@ export class BrowserCapture {
   private queueObservation(page: Page, frame: Frame, raw: unknown) {
     if (!raw || typeof raw !== 'object' || this.stopped) return Promise.resolve();
     const input = raw as Record<string, unknown>;
+    const id = typeof input.eventId === 'string' ? input.eventId : undefined;
+    if (id && this.observedIds.has(id)) return this.contextTasks.get(id) || Promise.resolve();
+    if (id && (id.length > 100 || this.observedIds.size >= RECORDING_LIMITS.events)) {
+      this.limited('Observation identity budget reached');
+      return Promise.resolve();
+    }
+    const base = this.basicEvent(page, frame, input);
+    if (!base) return Promise.resolve();
+    if (id) {
+      this.observedIds.add(id);
+      base.sourceEventId = id;
+    }
     if (input.backupUnavailable)
       this.limited('Unload backup unavailable; fast navigation can lose observation evidence');
-    if (typeof input.eventId === 'string') {
-      if (input.eventId.length > 100 || this.observedIds.has(input.eventId))
-        return Promise.resolve();
-      if (this.observedIds.size >= RECORDING_LIMITS.events) {
-        this.limited('Observation identity budget reached');
-        return Promise.resolve();
-      }
-      this.observedIds.add(input.eventId);
-    }
+    // Persist observed intent before any DOM/ARIA/screenshot work. Enrichment must never block the action stream.
+    this.emit(base);
+    if (!input.target) return Promise.resolve();
     if (this.frameCount > RECORDING_LIMITS.frames || this.queued >= 30) {
-      this.limited('Frame/event backlog budget exceeded; evidence omitted');
+      this.limited('Frame/context backlog exceeded; detailed evidence omitted');
       return Promise.resolve();
     }
     this.queued++;
     this.pending = this.pending
-      .then(() => this.observe(page, frame, input))
+      .then(async () => {
+        let expired = false;
+        let timer: ReturnType<typeof setTimeout> | undefined;
+        const publish = (event: CapturedEvent, image?: Buffer) => {
+          if (!expired && !this.stopped)
+            this.emit(
+              { ...event, kind: 'context', timeMs: this.time(), evidenceAtMs: this.time() },
+              image,
+            );
+        };
+        try {
+          await Promise.race([
+            this.captureContext(
+              page,
+              frame,
+              input,
+              { ...base, detail: 'Context for ' + base.detail },
+              publish,
+              () => !expired && !this.stopped,
+            ),
+            new Promise<void>((resolve) => {
+              timer = setTimeout(() => {
+                expired = true;
+                if (!this.stopped)
+                  this.emit({
+                    ...base,
+                    kind: 'gap',
+                    timeMs: this.time(),
+                    detail: 'Detailed context deadline exceeded; observed action retained',
+                  });
+                resolve();
+              }, 4000);
+            }),
+          ]);
+        } finally {
+          clearTimeout(timer);
+          expired = true;
+        }
+      })
       .catch(() =>
-        this.event('gap', 'Interaction evidence unavailable during navigation', page, frame),
+        this.event('gap', 'Detailed evidence unavailable during navigation', page, frame),
       )
-      .finally(() => this.queued--);
+      .finally(() => {
+        this.queued--;
+        if (id) this.contextTasks.delete(id);
+      });
+    if (id) this.contextTasks.set(id, this.pending);
     return this.pending;
   }
   private attach(page: Page) {
@@ -227,7 +276,11 @@ export class BrowserCapture {
     });
     page.on('filechooser', () => this.event('gap', 'File chooser content is not recorded', page));
   }
-  private async observe(page: Page, frame: Frame, input: Record<string, unknown>) {
+  private basicEvent(
+    page: Page,
+    frame: Frame,
+    input: Record<string, unknown>,
+  ): CapturedEvent | undefined {
     if (this.stopped) return;
     const kinds = ['action', 'navigation', 'clock', 'gap', 'page'];
     if (!kinds.includes(String(input.kind))) return;
@@ -251,10 +304,16 @@ export class BrowserCapture {
       url: safeUrl(typeof input.documentUrl === 'string' ? input.documentUrl : frame.url()),
       ...this.ids(page, frame),
     };
-    if (input.kind === 'clock') {
-      this.emit(event);
-      return;
-    }
+    return event;
+  }
+  private async captureContext(
+    page: Page,
+    frame: Frame,
+    input: Record<string, unknown>,
+    event: CapturedEvent,
+    publish: (event: CapturedEvent, image?: Buffer) => void,
+    current: () => boolean,
+  ) {
     try {
       const rawTarget = input.target as Record<string, unknown> | undefined;
       if (
@@ -353,12 +412,13 @@ export class BrowserCapture {
               timeout: 3000,
             });
             if (screenshot.length > RECORDING_LIMITS.artifactBytes) {
-              this.event('gap', 'Screenshot exceeds artifact budget; image omitted', page, frame);
-              this.emit(event);
+              if (current())
+                this.event('gap', 'Screenshot exceeds artifact budget; image omitted', page, frame);
+              publish(event);
               return;
             }
             event.evidenceAtMs = this.time();
-            this.emit(event, screenshot);
+            publish(event, screenshot);
             return;
           }
         } else {
@@ -367,14 +427,15 @@ export class BrowserCapture {
       }
     } catch {
       event.dom = 'Detailed evidence unavailable after navigation/detachment';
-      this.event(
-        'gap',
-        'Action observed but its target evidence could not be completed',
-        page,
-        frame,
-      );
+      if (current())
+        this.event(
+          'gap',
+          'Action observed but its target evidence could not be completed',
+          page,
+          frame,
+        );
     }
-    this.emit(event);
+    publish(event);
   }
   async navigate(url: string) {
     const next = recordingUrl(url);

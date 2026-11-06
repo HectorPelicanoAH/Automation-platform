@@ -44,6 +44,7 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
   const cursor = useRef(0);
   const current = useRef('');
   const previousRevision = useRef(-1);
+  const editorVersion = useRef(0);
   const run = async (work: () => Promise<void>) => {
     setBusy(true);
     setError('');
@@ -79,7 +80,7 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
     if (previousRevision.current < 0) {
       previousRevision.current = latest?.revision || 0;
       setBaseRevision(latest?.revision || 0);
-      setSegments(latest?.segments || []);
+      if (editorVersion.current === 0) setSegments(latest?.segments || []);
     }
     if (!active(data.recording) && mic.current) {
       const capture = mic.current;
@@ -138,6 +139,7 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
     current.current = id;
     cursor.current = 0;
     previousRevision.current = -1;
+    editorVersion.current = 0;
     setSelected(id);
     setRecord(undefined);
     setEvents([]);
@@ -212,10 +214,16 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
       await refresh();
     });
   const changeSegment = (index: number, patch: Partial<TranscriptSegment>) => {
+    editorVersion.current++;
     setDirty(true);
     setSegments((old) => old.map((s, i) => (i === index ? { ...s, ...patch } : s)));
   };
   const recording = list.find((r) => active(r));
+  const evidence =
+    event?.kind === 'action' && event.sourceEventId
+      ? events.findLast((e) => e.kind === 'context' && e.sourceEventId === event.sourceEventId) ||
+        event
+      : event;
   return (
     <>
       {!visible && recording && (
@@ -522,6 +530,7 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
                     <button
                       className="text-button"
                       onClick={() => {
+                        editorVersion.current++;
                         setDirty(true);
                         setSegments((old) => old.filter((_, i) => i !== index));
                       }}
@@ -535,6 +544,7 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
                     className="button secondary"
                     disabled={segments.length >= 200}
                     onClick={() => {
+                      editorVersion.current++;
                       setDirty(true);
                       setSegments((old) => [
                         ...old,
@@ -555,6 +565,8 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
                     disabled={busy || !dirty}
                     onClick={() =>
                       void run(async () => {
+                        const savedVersion = editorVersion.current;
+                        const savedId = record.id;
                         const saved = await api<Recording>(
                           `/recordings/${record.id}/transcript`,
                           {
@@ -567,9 +579,10 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
                           },
                           'PUT',
                         );
+                        if (current.current !== savedId) return;
                         setRecord(saved);
                         setBaseRevision(saved.transcript.at(-1)!.revision);
-                        setDirty(false);
+                        if (editorVersion.current === savedVersion) setDirty(false);
                       })
                     }
                   >
@@ -637,9 +650,9 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
                       {event.offsetMs?.toFixed(2) ?? 'n/a'} ms · uncertainty ±
                       {event.uncertaintyMs?.toFixed(2) ?? 'unknown'} ms
                     </p>
-                    <pre>{event.dom}</pre>
-                    <pre>{event.aria}</pre>
-                    {event.locators?.map((l, i) => (
+                    <pre>{evidence?.dom}</pre>
+                    <pre>{evidence?.aria}</pre>
+                    {evidence?.locators?.map((l, i) => (
                       <p key={i}>
                         <code>
                           {l.kind} {l.value} {l.name}
@@ -648,7 +661,7 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
                         {l.matchesTarget ? 'matches observed target' : 'unvalidated/ambiguous'}
                       </p>
                     ))}
-                    {event.screenshot && (
+                    {evidence?.screenshot && (
                       <button
                         className="button secondary"
                         disabled={busy}
@@ -656,7 +669,7 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
                           void run(async () => {
                             setImage(
                               URL.createObjectURL(
-                                new Blob([await artifact(record.id, event.screenshot!)], {
+                                new Blob([await artifact(record.id, evidence!.screenshot!)], {
                                   type: 'image/png',
                                 }),
                               ),

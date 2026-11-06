@@ -35,3 +35,7 @@ Real headed browser actions and worker lifecycle are exercised directly. The aut
 - [WebRTC testing flags](https://webrtc.github.io/webrtc-org/testing/), used only for the diagnostic probe, not as proof of physical hardware.
 
 - [W3C Beacon processing and unload semantics](https://www.w3.org/TR/beacon/).
+
+The initial recorder permits one continuous audio stream per session. Restarting audio requires a new recording because concatenating independently initialized native streams is not guaranteed to produce a valid playback file. Manual narration remains editable after audio stops. A lost producer after platform-tab reload is explicitly stopped/error-marked; it is not represented as continuing audio capture.
+
+CI exposed a navigation/context race and a concurrent transcript-save race. Observed actions now persist immediately; separately acquired context events retain `sourceEventId`, source timing and acquisition time, with a four-second deadline and explicit gaps. Duplicate transports share the in-flight context promise. Context acquisition never blocks the observed-action stream. Manual editing uses an edit-generation guard so a completed save cannot clear newer unsaved edits. Dedicated delayed-font and delayed-save regression fixtures preserve the original assertions.

@@ -44,3 +44,7 @@ Likelihood is qualitative architectural judgment, not incident statistics. Findi
 ## Architectural review triggers
 
 Revisit the monolith only for independently measured scaling/deployment needs. Revisit SQLite for demonstrated write contention, not anticipated scale. Add semantic retrieval only after structured lookup misses are quantified. Add broader recording/browser support only after current evidence coverage is measured. A security restriction that cannot be enforced is a blocked capability, not an implicit approval request to run with broader access.
+
+## Phase 2 evidence and remaining questions
+
+[Recorder report](phase-2-report.md) and [ADR 0010](decisions/0010-recorder-evidence-and-privacy.md) record the public binding/intercepted-beacon feasibility, explicit gaps, privacy, clocks and audio limits. Q4 is resolved for the approved minimum: manual timestamped transcription is operational and no automatic engine is configured; engine selection remains optional future work requiring explicit configuration/validation. Physical microphone hardware and real OS consent remain manual checks, separate from the real-time synthetic audio pipeline. Source indexing, agent auth/model budgets, repairs and skill evolution remain in their unapproved phases.

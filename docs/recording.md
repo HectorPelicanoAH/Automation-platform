@@ -75,3 +75,5 @@ Automated tests use explicit synthetic input, not the host microphone. In your n
 A recording currently supports one continuous audio stream. After stopping audio, start a new recording for another stream; manual transcript editing can continue in the existing session. Reloading the platform tab loses its microphone producer; Stop microphone records the loss as a gap. Keep one platform control tab open during capture.
 
 The controlled top-level windows show a passive recording badge. It belongs to the recorder, not the application business UI; stop from the platform or close the controlled browser to retain a partial session.
+
+Observed actions are persisted immediately. Optional DOM/ARIA/screenshot acquisition is a separately timestamped context event linked by source event ID and bounded by a four-second deadline. Selecting an action shows its available linked context; a context timeout remains a gap. Editing during an in-flight transcript save preserves the newer unsaved text.

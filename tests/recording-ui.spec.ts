@@ -17,6 +17,18 @@ test('Record UI: real worker, denied microphone, manual revisions, cancellation 
   let p = createPlatform({ dataDir: join(root, 'private') });
   const demo = demoApp();
   const demoUrl = await demo.listen({ host: '127.0.0.1', port: 0 });
+  let releaseFirstSave = () => {};
+  const firstSaveResponse = new Promise<void>((resolve) => {
+    releaseFirstSave = resolve;
+  });
+  let gateFirstSave = true;
+  p.app.addHook('onSend', async (req, _reply, payload) => {
+    if (gateFirstSave && req.method === 'PUT' && req.url.endsWith('/transcript')) {
+      gateFirstSave = false;
+      await firstSaveResponse;
+    }
+    return payload;
+  });
   let base = await p.app.listen({ host: '127.0.0.1', port: 0 });
   try {
     await context.addInitScript(() => {
@@ -49,6 +61,7 @@ test('Record UI: real worker, denied microphone, manual revisions, cancellation 
     await page
       .getByLabel('Narrated requirement')
       .fill('I expect the promotional title and amount to be visible.');
+    releaseFirstSave();
     await page.getByRole('button', { name: 'Save transcript revision' }).click();
     await expect.poll(() => p.recorder.repository.get(id).transcript.length).toBe(2);
     // Explicit lost-producer metadata fixture, not a claim that a physical microphone was captured.
@@ -101,6 +114,7 @@ test('Record UI: real worker, denied microphone, manual revisions, cancellation 
     await expect.poll(() => p.recorder.repository.get(crash.id).status).toBe('INTERRUPTED');
     expect(p.recorder.repository.get(crash.id).incomplete).toBe(true);
   } finally {
+    releaseFirstSave();
     await p.app.close();
     await demo.close();
   }
@@ -119,7 +133,9 @@ test('Five real minutes: synthetic microphone markers align with genuine browser
   await context.addInitScript(() => {
     Object.defineProperty(navigator.mediaDevices, 'getUserMedia', {
       value: async () => {
-        const audio = new AudioContext();
+        // A null output sink makes this synthetic source independent of a VM's physical output clock.
+        const options = { sampleRate: 48000, sinkId: { type: 'none' as const } };
+        const audio = new AudioContext(options);
         await audio.resume();
         const rate = 16000;
         const buffer = audio.createBuffer(1, 312 * rate, rate);
@@ -192,7 +208,7 @@ test('Five real minutes: synthetic microphone markers align with genuine browser
     const record = p.recorder.repository.get(id);
     expect(record.audio.length).toBeGreaterThan(100);
     const proof = await page.evaluate(() => sessionStorage.getItem('qa-session-proof')!);
-    const onsets = await page.evaluate(
+    const decodedAudio = await page.evaluate(
       async ({ id, audio, proof }) => {
         const buffers = [];
         for (const c of audio) {
@@ -218,10 +234,27 @@ test('Five real minutes: synthetic microphone markers align with genuine browser
             last = seconds;
           }
         }
-        return result;
+        return {
+          onsets: result,
+          durationSeconds: decoded.duration,
+          sampleRate: decoded.sampleRate,
+        };
       },
       { id, audio: record.audio, proof },
     );
+    const onsets = decodedAudio.onsets;
+    writeFileSync(
+      'test-results/recording-clock-diagnostic.json',
+      JSON.stringify(
+        { decodedAudio, elapsedMs: record.durationMs, audioStart, chunks: record.audio, markers },
+        null,
+        2,
+      ),
+    );
+    const retainedAudio = Buffer.concat(
+      record.audio.map((c) => p.recorder.repository.read(id, c.artifact).bytes),
+    );
+    writeFileSync('test-results/synthetic-recorded-narration.webm', retainedAudio);
     expect(onsets).toHaveLength(2);
     expect(markers).toHaveLength(2);
     const comparisons = onsets.map((seconds, index) => ({
@@ -235,6 +268,11 @@ test('Five real minutes: synthetic microphone markers align with genuine browser
     const evidence = {
       source:
         'Web Audio synthetic MediaStream at getUserMedia boundary; actual MediaRecorder, transport and storage; physical microphone not tested',
+      os: process.platform,
+      architecture: process.arch,
+      node: process.version,
+      syntheticOutputSink: 'none',
+      ciCommit: process.env.GITHUB_SHA || null,
       elapsedMs: record.durationMs,
       chunks: record.audio.length,
       comparisons,
@@ -246,10 +284,6 @@ test('Five real minutes: synthetic microphone markers align with genuine browser
       body: Buffer.from(JSON.stringify(evidence, null, 2)),
       contentType: 'application/json',
     });
-    const audioBytes = Buffer.concat(
-      record.audio.map((c) => p.recorder.repository.read(id, c.artifact).bytes),
-    );
-    writeFileSync('test-results/synthetic-recorded-narration.webm', audioBytes);
   } finally {
     await capture?.stop();
     await browser.close();
