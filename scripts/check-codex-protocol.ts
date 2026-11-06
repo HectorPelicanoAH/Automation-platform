@@ -10,6 +10,7 @@ import {
   prepareCodexHome,
 } from '../packages/generation/provider.ts';
 import { hash } from '../packages/domain/gherkin.ts';
+import { tools } from '../packages/generation/prompts.ts';
 
 const binary = realpathSync(process.argv[2] || process.env.QA_CODEX_BINARY || 'codex');
 const root = realpathSync(mkdtempSync(join(tmpdir(), 'qa-codex-protocol-')));
@@ -54,14 +55,36 @@ try {
   const catalog = asObject(await connection.catalog());
   assert.equal(account.account, null, 'Isolated metadata probe must not inherit authentication');
   assert.ok(Array.isArray(catalog.data) && catalog.data.length > 0);
+  const models = (catalog.data as unknown[]).map(asObject);
+  const selected = models.find((m) => m.isDefault) || models[0];
+  const started = asObject(
+    await connection.request('thread/start', {
+      cwd,
+      model: selected.model,
+      approvalPolicy: 'never',
+      sandbox: 'read-only',
+      ephemeral: true,
+      allowProviderModelFallback: false,
+      environments: [],
+      runtimeWorkspaceRoots: [],
+      selectedCapabilityRoots: [],
+      baseInstructions: 'Use only application-provided tools. No execution, writes or approval.',
+      dynamicTools: tools.map((tool) => ({ type: 'function', ...tool })),
+    }),
+  );
+  assert.equal(started.model, selected.model);
+  assert.ok(asObject(started.thread).id);
+  assert.ok(!Array.isArray(started.instructionSources) || started.instructionSources.length === 0);
   const evidence = {
-    source: 'Actual pinned Codex CLI; handshake/catalog/schema only, no inference or credentials',
+    source:
+      'Actual pinned Codex CLI; handshake/catalog/schema/isolated thread only, no turn, inference or credentials',
     version,
     os: process.platform,
     architecture: process.arch,
     node: process.version,
     ciCommit: process.env.GITHUB_SHA || null,
     authenticated: false,
+    isolatedThreadCreatedWithoutInference: true,
     catalogModels: (catalog.data as unknown[]).length,
     catalogDoesNotVerifyEntitlement: true,
     schemaSha256: schemas,

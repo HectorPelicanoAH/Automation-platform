@@ -95,17 +95,27 @@ test('Unregistered provider tools fail closed and never reach the application ha
   assert.throws(() => process.kill(-notes.pid, 0));
 });
 
-test('Cancelling an app-server turn terminates its process group and preserves no successful result', async () => {
-  const p = fixture(),
-    abort = new AbortController();
-  const work = p.connection.run(request('WAIT', abort.signal));
-  const deadline = Date.now() + 3000;
-  while (!existsSync(join(p.cwd, 'fixture-rpc.jsonl')) && Date.now() < deadline)
-    await new Promise((r) => setTimeout(r, 10));
-  const start = performance.now();
-  abort.abort();
-  await assert.rejects(() => work, /cancel|exited/i);
-  assert.ok(performance.now() - start < 3500);
-  const notes = JSON.parse(readFileSync(join(p.cwd, 'fixture-process.json'), 'utf8'));
-  assert.throws(() => process.kill(-notes.pid, 0));
-});
+for (const method of ['initialize', 'turn/start'])
+  test(
+    'Cancelling during ' + method + ' terminates the process group without a successful result',
+    async () => {
+      const p = fixture(),
+        abort = new AbortController();
+      const work = p.connection.run(request('WAIT', abort.signal));
+      const deadline = Date.now() + 5000;
+      const observed = () =>
+        existsSync(join(p.cwd, 'fixture-rpc.jsonl')) &&
+        readFileSync(join(p.cwd, 'fixture-rpc.jsonl'), 'utf8')
+          .split('\n')
+          .filter(Boolean)
+          .some((line) => JSON.parse(line).method === method);
+      while (!observed() && Date.now() < deadline) await new Promise((r) => setTimeout(r, 10));
+      assert.ok(observed(), 'Fixture must reach the requested protocol phase');
+      const start = performance.now();
+      abort.abort();
+      await assert.rejects(() => work, /cancel|exited/i);
+      assert.ok(performance.now() - start < 3500);
+      const notes = JSON.parse(readFileSync(join(p.cwd, 'fixture-process.json'), 'utf8'));
+      assert.throws(() => process.kill(-notes.pid, 0));
+    },
+  );

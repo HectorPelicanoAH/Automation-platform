@@ -386,6 +386,9 @@ export class CodexConnection {
         throw new Error('Codex transport disconnected');
       });
       return await Promise.race([completion, disconnected]);
+    } catch (error) {
+      if (request.signal.aborted) throw new Error('Task cancelled', { cause: error });
+      throw error;
     } finally {
       request.signal.removeEventListener('abort', cancel);
       await this.close();

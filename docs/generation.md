@@ -24,7 +24,7 @@ Choose the managed target and opt-in source repositories. Workspace controls sou
 
 Extraction supports TypeScript/TSX/JavaScript/JSX syntax and official Gherkin parsing: Pages/components, methods, steps, fixtures/builders, imports, accessible attributes and literal locator hints. Dynamic behavior and unsupported syntax are incomplete. Scans are bounded to 500 files, 8 MB, 200 KB per parsed file, 10,000 visited entries and 12 levels. Default secret/dependency/generated/instruction exclusions cannot be bypassed by includes; symlinks are excluded. Oversized/unsupported input requires narrowing or manual work. UI responses use index summaries and relevant facts.
 
-A task can invoke only scoped lookup and indexed-file reads. Full reads are limited to eight files / 64 KB total, 16 KB each; 32 provenance dependencies and 16 tool calls. Recording context is also bounded and disclosed as selective. No unbounded repository dump, raw audio or secret store is provided to the model. Known sensitive text is redacted; arbitrary literals cannot be universally identified. Files containing redacted content cannot be automatically replaced lossily.
+A task can invoke only scoped lookup and indexed-file reads. All tool-result JSON, including capability lookup, shares a 64 KB retrieval budget; full reads are limited to eight files, 16 KB each, with 32 provenance dependencies and 16 tool calls. Recording context is also bounded and disclosed as selective. No unbounded repository dump, raw audio or secret store is provided to the model. Known sensitive text is redacted; arbitrary literals cannot be universally identified. Files containing redacted content cannot be automatically replaced lossily.
 
 ## Review and execute
 

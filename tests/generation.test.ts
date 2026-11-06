@@ -268,6 +268,42 @@ test('Revoking contract approval cancels in-flight implementation without creati
   }
 });
 
+test('The retrieval budget counts lookup JSON and repeated file deliveries before sending them', async () => {
+  let lookupBytes = 0;
+  let deliveredBytes = 0;
+  let deliveredFiles = 0;
+  const p = generationFixture({
+    async run(request) {
+      const input = JSON.parse(request.prompt);
+      const source = input.repositories.find((r: { kind: string }) => r.kind === 'source');
+      const result = await request.onTool('qa_lookup', { query: 'promotions' });
+      lookupBytes = Buffer.byteLength(JSON.stringify(result));
+      deliveredBytes += lookupBytes;
+      for (let i = 0; i < 8; i++) {
+        const file = await request.onTool('qa_read_file', { ...source, path: 'Large.ts' });
+        deliveredBytes += Buffer.byteLength(JSON.stringify(file));
+        deliveredFiles++;
+      }
+      throw new Error('Unexpected completion of protocol fixture');
+    },
+  });
+  try {
+    writeFileSync(
+      join(p.source.path, 'Large.ts'),
+      'export const value = 1;\n/*' + 'bounded context '.repeat(900) + '*/',
+    );
+    const result = await finished(p, (await analyze(p)).id);
+    assert.equal(result.status, 'FAILED');
+    assert.match(result.error!, /Context retrieval budget reached/);
+    assert.ok(lookupBytes > 2);
+    assert.equal(result.retrievalBytes, deliveredBytes);
+    assert.ok(deliveredBytes <= 64000 && deliveredFiles >= 3 && deliveredFiles < 8);
+    assert.equal(p.generation.repository.list('contracts').length, 0);
+  } finally {
+    await p.app.close();
+  }
+});
+
 test('Index traversal prunes excluded directories before repository preview limits', async () => {
   const p = generationFixture();
   try {

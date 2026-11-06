@@ -698,7 +698,7 @@ export function GenerationPanel({
                           : {
                               estimate: Math.ceil((task.promptBytes + task.retrievalBytes) / 4),
                               method:
-                                '(initial prompt bytes + retrieved text bytes) / 4; excludes protocol/history overhead; not billing tokens',
+                                '(initial prompt bytes + tool result JSON bytes) / 4; excludes instructions/schema/protocol/history overhead; not billing tokens',
                             },
                         usageStatus: task.usage
                           ? 'provider reported'

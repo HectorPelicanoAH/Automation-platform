@@ -308,6 +308,16 @@ export class GenerationManager {
       }
       save();
     };
+    const retrieved = (payload: unknown) => {
+      const bytes = Buffer.byteLength(JSON.stringify(payload));
+      if (task.retrievalBytes + bytes > 64000) {
+        abort.abort('Context retrieval budget reached');
+        throw new AppError(413, '64 KB context retrieval budget reached');
+      }
+      task.retrievalBytes += bytes;
+      save();
+      return payload;
+    };
     const onTool: AgentRequest['onTool'] = async (name, args) => {
       if (abort.signal.aborted) throw new AppError(409, 'Cancelled task');
       if (++task.toolCalls > 16) {
@@ -322,10 +332,12 @@ export class GenerationManager {
           .sort((a, b) => b.score - a.score)
           .slice(0, 8);
         for (const hit of hits) if (!hit.stale) remember(hit.ref, hit.path, hit.hash, 0);
-        return hits.map((h) => ({
-          ...h,
-          capabilities: h.capabilities.map((c) => ({ ...c, name: clean(c.name) })),
-        }));
+        return retrieved(
+          hits.map((h) => ({
+            ...h,
+            capabilities: h.capabilities.map((c) => ({ ...c, name: clean(c.name) })),
+          })),
+        );
       }
       if (name !== 'qa_read_file') throw new AppError(403, 'Tool is not authorized');
       const ref: RootRef = {
@@ -342,16 +354,13 @@ export class GenerationManager {
         throw new AppError(413, 'Eight context files maximum');
       const cleaned = clean(file.text);
       const bytes = Buffer.byteLength(cleaned);
-      if (task.retrievalBytes + bytes > 64000)
-        throw new AppError(413, '64 KB context retrieval budget reached');
-      task.retrievalBytes += bytes;
       remember(ref, file.path, file.hash, bytes);
-      return {
+      return retrieved({
         ...file,
         text: cleaned,
         capabilities: file.capabilities.map((c) => ({ ...c, name: clean(c.name) })),
         redacted: cleaned !== file.text,
-      };
+      });
     };
     const done = (async () => {
       await Promise.resolve();
