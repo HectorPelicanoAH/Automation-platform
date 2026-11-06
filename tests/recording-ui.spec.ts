@@ -51,6 +51,17 @@ test('Record UI: real worker, denied microphone, manual revisions, cancellation 
       .fill('I expect the promotional title and amount to be visible.');
     await page.getByRole('button', { name: 'Save transcript revision' }).click();
     await expect.poll(() => p.recorder.repository.get(id).transcript.length).toBe(2);
+    // Explicit lost-producer metadata fixture, not a claim that a physical microphone was captured.
+    p.recorder.microphone(id, 'RECORDING');
+    await page.reload();
+    await page.getByRole('button', { name: 'Record', exact: true }).click();
+    await page.getByRole('button', { name: 'Stop microphone', exact: true }).click();
+    await expect.poll(() => p.recorder.repository.get(id).microphone).toBe('ERROR');
+    expect(
+      p.recorder.repository
+        .events(id)
+        .some((e) => e.kind === 'gap' && e.detail.includes('Microphone capture error')),
+    ).toBe(true);
     // Navigating the workbench must retain recording controls and the live microphone indicator.
     await page.getByRole('button', { name: 'Dashboard', exact: true }).click();
     await expect(page.getByText(/● Recording:/)).toBeVisible();

@@ -99,6 +99,8 @@ test('Audio acknowledgment, missing chunks, timing budgets, revisions and retent
         { kind: 'gap', detail: 'overflow', timeMs: 0, receivedMs: 0, provenance: 'OBSERVED' },
       ),
     );
+    manager.microphone(r.id, 'STOPPED');
+    assert.throws(() => manager.microphone(r.id, 'RECORDING'));
     const saved = manager.transcript(
       r.id,
       [

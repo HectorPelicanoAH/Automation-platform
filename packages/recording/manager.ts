@@ -265,6 +265,11 @@ export class RecordingManager {
   microphone(id: string, status: Recording['microphone']) {
     const r = this.repository.get(id);
     if (!recordingActive(r.status)) throw new AppError(409, 'Recording is no longer active');
+    if (status === 'RECORDING' && r.audio.length > 0 && r.microphone !== 'RECORDING')
+      throw new AppError(
+        409,
+        'Start a new recording to capture another audio stream; manual narration remains available',
+      );
     if (status === 'RECORDING' && !r.policy.audioConsent)
       throw new AppError(403, 'Audio consent was not granted for this recording');
     r.microphone = status;

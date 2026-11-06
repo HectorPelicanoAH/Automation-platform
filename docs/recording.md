@@ -71,3 +71,7 @@ Clock calibration retains source/offset/round-trip uncertainty and repeats every
 ### Manual physical-device check
 
 Automated tests use explicit synthetic input, not the host microphone. In your normal browser, start a consented session, allow browser/OS microphone access, speak a non-sensitive phrase while interacting, stop the microphone, load local audio, inspect timing and stop the recording. Repeat denial to confirm the manual fallback. This hardware/OS permission check has not been automatically certified. A local native Chromium fake-device diagnostic timed out and is recorded as a limitation, not a passing device test.
+
+A recording currently supports one continuous audio stream. After stopping audio, start a new recording for another stream; manual transcript editing can continue in the existing session. Reloading the platform tab loses its microphone producer; Stop microphone records the loss as a gap. Keep one platform control tab open during capture.
+
+The controlled top-level windows show a passive recording badge. It belongs to the recorder, not the application business UI; stop from the platform or close the controlled browser to retain a partial session.

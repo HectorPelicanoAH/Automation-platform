@@ -202,8 +202,13 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
     run(async () => {
       const capture = mic.current;
       mic.current = undefined;
-      await capture?.stop();
-      setAudioMessage('Microphone stopped; acknowledged audio retained.');
+      if (capture) await capture.stop();
+      else if (record) await api(`/recordings/${record.id}/microphone`, { status: 'ERROR' });
+      setAudioMessage(
+        capture
+          ? 'Microphone stopped; acknowledged audio retained.'
+          : 'Microphone producer unavailable after reload; manual narration remains available.',
+      );
       await refresh();
     });
   const changeSegment = (index: number, patch: Partial<TranscriptSegment>) => {
@@ -434,7 +439,8 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
                         busy ||
                         micStarting ||
                         !record.policy.audioConsent ||
-                        record.microphone === 'RECORDING'
+                        record.microphone === 'RECORDING' ||
+                        record.audio.length > 0
                       }
                       onClick={() => void startMic()}
                     >
@@ -454,6 +460,11 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
                   intent, not observed UI behavior. Timestamps are seconds from recording start.
                 </p>
                 <p>{record.audio.length} acknowledged audio chunk(s)</p>
+                {record.audio.length > 0 && record.microphone !== 'RECORDING' && (
+                  <p className="muted">
+                    Start a new recording to capture more audio. Manual narration can continue here.
+                  </p>
+                )}
                 {record.audio.length > 0 && (
                   <button
                     className="button secondary"

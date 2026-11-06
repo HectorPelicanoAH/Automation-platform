@@ -98,6 +98,7 @@ test('Public headed capture: real actions, frames, popups, privacy and origin de
   });
   try {
     const page = await capture.start(false);
+    await expect(page.locator('[data-qa-recorder-indicator]')).toBeVisible();
     await page.getByRole('textbox', { name: 'Email', exact: true }).fill('new-private-value-7815');
     await page.getByLabel('Password', { exact: true }).fill('new-password-9024');
     await page

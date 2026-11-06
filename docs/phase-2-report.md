@@ -35,7 +35,7 @@ Updated recorder operation/privacy/limitations, README, runtime ADR, [recorder c
 
 ## QUALITY
 
-Workers are not host sandboxes. Unsupported browser-native surfaces, closed shadow DOM, file content, drag/drop, WebSockets and service-worker behavior remain gaps/limits. Temporary observation attributes can affect mutation-sensitive apps. Screenshots follow actions; source timestamps and acquisition times are separate. Known private regions/form fields are masked, but arbitrary visible/spoken secrets require deliberate user policy. Native hardware consent remains unverified. Automatic transcription is unavailable. Retention runs at startup. Timing measurements are narrow synthetic samples, not a universal drift guarantee.
+Workers are not host sandboxes. Unsupported browser-native surfaces, closed shadow DOM, file content, drag/drop, WebSockets and service-worker behavior remain gaps/limits. Temporary observation attributes can affect mutation-sensitive apps. Screenshots follow actions; source timestamps and acquisition times are separate. Known private regions/form fields are masked, but arbitrary visible/spoken secrets require deliberate user policy. Native hardware consent remains unverified. Automatic transcription is unavailable. Audio capture is one continuous stream per recording; start a new recording after stopping audio. Platform-tab reload loses its microphone producer and must retain a gap/manual fallback. Retention runs at startup. Timing measurements are narrow synthetic samples, not a universal drift guarantee.
 
 ## NEXT PHASE
 

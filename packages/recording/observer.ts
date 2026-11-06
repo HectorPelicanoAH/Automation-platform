@@ -1,6 +1,15 @@
 // Kept as plain browser JavaScript: no transpiler helpers or imported page instructions.
 export const OBSERVER_SCRIPT = String.raw`(config) => {
   const binding = window[config.binding];
+  const indicator=()=>{
+    if(window.top!==window||document.querySelector('[data-qa-recorder-indicator]'))return;
+    const host=document.createElement('div');host.setAttribute('data-qa-recorder-indicator','');host.setAttribute('aria-label','Recording active. Stop from QA Local.');
+    Object.assign(host.style,{position:'fixed',top:'12px',right:'12px',zIndex:'2147483647',pointerEvents:'none'});
+    const shadow=host.attachShadow({mode:'closed'});const badge=document.createElement('span');badge.textContent='● Recording · Stop in QA Local';
+    Object.assign(badge.style,{display:'block',background:'#163d32',color:'#fff',padding:'10px 14px',borderRadius:'9px',font:'13px system-ui',boxShadow:'0 2px 10px #0004'});shadow.append(badge);document.documentElement.append(host);
+  };
+  if(document.readyState==='loading')addEventListener('DOMContentLoaded',indicator,{once:true});else indicator();
+
   let calibration = null;
   let serial = 0;
   let eventNumber=0;const documentId=Math.random().toString(36).slice(2);
