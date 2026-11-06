@@ -1,11 +1,49 @@
-import { test, expect, chromium } from '@playwright/test';
+import { test, expect, chromium, type Page } from '@playwright/test';
 import { mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { createPlatform } from '../apps/server/app.ts';
 import { demoApp } from '../apps/demo/app.ts';
 import { BrowserCapture } from '../packages/recording/capture.ts';
-import { monotonicMs, type EvidenceEvent } from '../packages/recording/model.ts';
+import { monotonicMs, type EvidenceEvent, type AudioChunk } from '../packages/recording/model.ts';
+
+async function decodeRecordedAudio(page: Page, id: string, audio: AudioChunk[]) {
+  const proof = await page.evaluate(() => sessionStorage.getItem('qa-session-proof')!);
+  return await page.evaluate(
+    async ({ id, audio, proof }) => {
+      const buffers = [];
+      for (const c of audio) {
+        const r = await fetch(`/api/recordings/${id}/artifacts/${c.artifact}`, {
+          headers: { 'X-QA-Session': proof },
+        });
+        if (!r.ok) throw new Error('Audio artifact missing');
+        buffers.push(await r.arrayBuffer());
+      }
+      const bytes = await new Blob(buffers, { type: 'audio/webm' }).arrayBuffer();
+      const decoder = new OfflineAudioContext(1, 1, 16000);
+      const decoded = await decoder.decodeAudioData(bytes);
+      const data = decoded.getChannelData(0);
+      const result: number[] = [];
+      let last = -10;
+      for (let i = 0; i < data.length; i += 160) {
+        let peak = 0;
+        for (let j = i; j < Math.min(i + 160, data.length); j++)
+          peak = Math.max(peak, Math.abs(data[j]));
+        const seconds = i / decoded.sampleRate;
+        if (peak > 0.04 && seconds - last > 1) {
+          result.push(seconds);
+          last = seconds;
+        }
+      }
+      return {
+        onsets: result,
+        durationSeconds: decoded.duration,
+        sampleRate: decoded.sampleRate,
+      };
+    },
+    { id, audio, proof },
+  );
+}
 
 test.use({ launchOptions: { args: ['--use-fake-device-for-media-stream'] } });
 
@@ -137,7 +175,7 @@ test('Five real minutes: synthetic microphone markers align with genuine browser
         const options = { sampleRate: 48000, sinkId: { type: 'none' as const } };
         const audio = new AudioContext(options);
         await audio.resume();
-        const rate = 16000;
+        const rate = audio.sampleRate;
         const buffer = audio.createBuffer(1, 312 * rate, rate);
         const data = buffer.getChannelData(0);
         for (const marker of [7, 307])
@@ -147,6 +185,19 @@ test('Five real minutes: synthetic microphone markers align with genuine browser
         source.buffer = buffer;
         const destination = audio.createMediaStreamDestination();
         source.connect(destination);
+        source.connect(audio.destination);
+        const sourceTime = audio.currentTime;
+        const wallTime = performance.now();
+        Object.defineProperty(navigator.mediaDevices, 'qaSyntheticProbe', {
+          configurable: true,
+          value: () => ({
+            state: audio.state,
+            sampleRate: audio.sampleRate,
+            sourceSeconds: audio.currentTime - sourceTime,
+            wallSeconds: (performance.now() - wallTime) / 1000,
+            track: destination.stream.getAudioTracks()[0].getSettings(),
+          }),
+        });
         source.start();
         destination.stream.getAudioTracks()[0].addEventListener('ended', () => void audio.close());
         return destination.stream;
@@ -189,6 +240,25 @@ test('Five real minutes: synthetic microphone markers align with genuine browser
         throw error;
       });
     const audioStart = p.recorder.repository.get(id).audio[0].startMs;
+    await expect
+      .poll(() => p.recorder.repository.get(id).audio.length, { timeout: 15000 })
+      .toBeGreaterThanOrEqual(2);
+    const preflightRecord = p.recorder.repository.get(id);
+    const preflight = await decodeRecordedAudio(page, id, preflightRecord.audio);
+    const sourceProbe = await page.evaluate(() => {
+      const media = navigator.mediaDevices as MediaDevices & { qaSyntheticProbe: () => unknown };
+      return media.qaSyntheticProbe();
+    });
+    const preflightWallMs = preflightRecord.audio.at(-1)!.endMs - preflightRecord.audio[0].startMs;
+    writeFileSync(
+      'test-results/recording-source-diagnostic.json',
+      JSON.stringify({ preflight, sourceProbe, preflightWallMs }, null, 2),
+    );
+    expect(
+      Math.abs(preflight.durationSeconds * 1000 - preflightWallMs),
+      'Synthetic PCM duration must match real capture time',
+    ).toBeLessThan(500);
+
     for (const [index, at] of [7000, 307000].entries()) {
       while (p.recorder.clock(id).timeMs < audioStart + at)
         await new Promise((r) =>
@@ -207,41 +277,7 @@ test('Five real minutes: synthetic microphone markers align with genuine browser
     await expect.poll(() => p.recorder.repository.get(id).status).toBe('COMPLETED');
     const record = p.recorder.repository.get(id);
     expect(record.audio.length).toBeGreaterThan(100);
-    const proof = await page.evaluate(() => sessionStorage.getItem('qa-session-proof')!);
-    const decodedAudio = await page.evaluate(
-      async ({ id, audio, proof }) => {
-        const buffers = [];
-        for (const c of audio) {
-          const r = await fetch(`/api/recordings/${id}/artifacts/${c.artifact}`, {
-            headers: { 'X-QA-Session': proof },
-          });
-          if (!r.ok) throw new Error('Audio artifact missing');
-          buffers.push(await r.arrayBuffer());
-        }
-        const bytes = await new Blob(buffers, { type: 'audio/webm' }).arrayBuffer();
-        const decoder = new OfflineAudioContext(1, 1, 16000);
-        const decoded = await decoder.decodeAudioData(bytes);
-        const data = decoded.getChannelData(0);
-        const result: number[] = [];
-        let last = -10;
-        for (let i = 0; i < data.length; i += 160) {
-          let peak = 0;
-          for (let j = i; j < Math.min(i + 160, data.length); j++)
-            peak = Math.max(peak, Math.abs(data[j]));
-          const seconds = i / decoded.sampleRate;
-          if (peak > 0.04 && seconds - last > 1) {
-            result.push(seconds);
-            last = seconds;
-          }
-        }
-        return {
-          onsets: result,
-          durationSeconds: decoded.duration,
-          sampleRate: decoded.sampleRate,
-        };
-      },
-      { id, audio: record.audio, proof },
-    );
+    const decodedAudio = await decodeRecordedAudio(page, id, record.audio);
     const onsets = decodedAudio.onsets;
     writeFileSync(
       'test-results/recording-clock-diagnostic.json',
@@ -255,6 +291,10 @@ test('Five real minutes: synthetic microphone markers align with genuine browser
       record.audio.map((c) => p.recorder.repository.read(id, c.artifact).bytes),
     );
     writeFileSync('test-results/synthetic-recorded-narration.webm', retainedAudio);
+    expect(
+      Math.abs(decodedAudio.durationSeconds * 1000 - (record.audio.at(-1)!.endMs - audioStart)),
+      'Continuous PCM must preserve the real five-minute span',
+    ).toBeLessThan(500);
     expect(onsets).toHaveLength(2);
     expect(markers).toHaveLength(2);
     const comparisons = onsets.map((seconds, index) => ({

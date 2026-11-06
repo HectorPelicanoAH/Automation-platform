@@ -16,3 +16,5 @@ Source: Phase 2 implementation and synthetic acceptance fixtures; confidence lim
 - The passive recording badge is recorder instrumentation, never an application requirement or business assertion. One continuous audio stream belongs to each recording; restarting audio requires a new session.
 
 - Persist observed intent before optional DOM/ARIA/screenshot enrichment; retain separately linked context and a deadline. Never block action intake on a document that may be unloading. A save response must not clear edits made after that save began.
+
+- PCM decoded duration can differ from container presentation time when samples arrive discontinuously. The benchmark checks actual PCM duration against monotonic capture span before scoring tone alignment. A virtual AudioContext source is not a physical microphone; use its native sample rate and an active null-output graph, and retain diagnostics when it fails.
