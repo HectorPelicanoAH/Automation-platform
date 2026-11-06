@@ -2,7 +2,7 @@
 
 A local functional testing workbench: connect read-only application sources, manage a separate automation target, edit business Gherkin, execute real Playwright-BDD and Karate tests, and inspect outcomes and native evidence without AI.
 
-**Phases 1–2 are complete. Phase 3 is approved and in progress.** Recording and manual timestamped narration are implemented; reviewed AI generation is under validation. Automatic transcription, repair and autonomous skill evolution are not implemented. See [phase status](docs/phase-status.md) for the current acceptance evidence.
+**Phases 1–2 are complete. Phase 3 remains in validation.** Recording, manual timestamped narration and reviewed Codex-to-Playwright generation have real local execution evidence. Final three-system CI is blocked by GitHub account billing before any job starts. API code generation, automatic transcription, repair and autonomous skill evolution are not implemented. See [phase status](docs/phase-status.md) for acceptance evidence and the remaining gate.
 
 ## Run locally
 

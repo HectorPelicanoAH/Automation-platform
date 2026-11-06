@@ -210,5 +210,6 @@
       "provenance": "NARRATED",
       "text": "Synthetic acceptance narration: a guest visits promotions for es/es/demo and pt/pt/demo. Expected visible fields respectively: Envío gratis; 50€; En pedidos superiores a 50€. Envio grátis; 60€; Em compras superiores a 60€. These amounts describe free-shipping order thresholds, not price reductions. No other country or checkout eligibility is evidenced."
     }
-  ]
+  ],
+  "projection": "Selected non-sensitive event fields for review. The original storage digest in live proposals is not the byte hash of this exported JSON."
 }

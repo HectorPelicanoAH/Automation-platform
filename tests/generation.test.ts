@@ -1,4 +1,5 @@
 import { test } from 'node:test';
+import { execFileSync } from 'node:child_process';
 import { unlinkSync } from 'node:fs';
 import assert from 'node:assert/strict';
 import { writeFileSync, readFileSync, mkdirSync, symlinkSync, existsSync } from 'node:fs';
@@ -24,6 +25,107 @@ const analyze = (p: ReturnType<typeof generationFixture>) =>
     featurePath,
     sourceIds: [p.source.id],
   });
+
+test('Multiple opt-in source roots retain Git revision and dirty content identity in one scoped task', async () => {
+  let sharedId = '';
+  const p = generationFixture({
+    async run(request) {
+      const input = JSON.parse(request.prompt);
+      assert.equal(
+        input.repositories.filter((r: { kind: string }) => r.kind === 'source').length,
+        2,
+      );
+      const hits = (await request.onTool('qa_lookup', { query: 'promotionsFixture' })) as {
+        ref: { id: string };
+      }[];
+      assert.ok(hits.some((h) => h.ref.id === sharedId));
+      const file = (await request.onTool('qa_read_file', {
+        kind: 'source',
+        id: sharedId,
+        path: 'PromotionData.ts',
+      })) as { text: string };
+      assert.match(file.text, /updated/);
+      return fixtureProvider.run(request);
+    },
+  });
+  try {
+    const directory = join(p.root, 'shared');
+    mkdirSync(directory);
+    const git = (...args: string[]) =>
+      execFileSync(
+        'git',
+        [
+          '-c',
+          'core.hooksPath=/dev/null',
+          '-c',
+          'commit.gpgSign=false',
+          '-c',
+          'user.name=Synthetic Fixture',
+          '-c',
+          'user.email=fixture@example.invalid',
+          '-C',
+          directory,
+          ...args,
+        ],
+        {
+          encoding: 'utf8',
+          env: { ...process.env, GIT_CONFIG_NOSYSTEM: '1', GIT_CONFIG_GLOBAL: '/dev/null' },
+          stdio: ['ignore', 'pipe', 'ignore'],
+        },
+      ).trim();
+    writeFileSync(
+      join(directory, 'PromotionData.ts'),
+      'export const promotionsFixture = () => "initial";\n',
+    );
+    git('init', '--quiet');
+    git('add', '--', 'PromotionData.ts');
+    git('commit', '-qm', 'Synthetic context baseline');
+    const revision = git('rev-parse', 'HEAD'),
+      branch = git('rev-parse', '--abbrev-ref', 'HEAD');
+    const shared = p.workspace.addSource({
+      name: 'Synthetic shared Git source',
+      path: directory,
+      kind: 'shared',
+      enabled: true,
+      indexEnabled: true,
+      preferredRef: 'review-only-label',
+      include: [],
+      exclude: [],
+    });
+    sharedId = shared.id;
+    const ref = { kind: 'source' as const, id: shared.id };
+    const first = await p.generation.index.scan(ref);
+    assert.equal(first.revision, revision);
+    assert.equal(first.branch, branch);
+    assert.equal(first.preferredRef, 'review-only-label');
+    assert.equal(first.files.length, 1);
+    assert.equal((await p.generation.index.scan(ref)).reused, 1);
+    writeFileSync(
+      join(directory, 'PromotionData.ts'),
+      'export const promotionsFixture = () => "updated";\n',
+    );
+    const dirty = await p.generation.index.scan(ref);
+    assert.equal(dirty.revision, revision);
+    assert.notEqual(dirty.treeHash, first.treeHash);
+    assert.equal(dirty.parsed, 1);
+    const task = await finished(
+      p,
+      (
+        await p.generation.analyze({
+          targetId: p.target.id,
+          recordingId: p.recordingId,
+          featurePath,
+          sourceIds: [p.source.id, shared.id],
+        })
+      ).id,
+    );
+    assert.equal(task.status, 'SUCCEEDED', task.error);
+    assert.ok(task.contextFiles.some((f) => f.ref.id === shared.id && f.bytes > 0));
+    assert.equal(git('rev-parse', 'HEAD'), revision);
+  } finally {
+    await p.app.close();
+  }
+});
 
 test('Opt-in capability index caches syntax, tracks edits/deletions and excludes secrets/symlinks', async () => {
   const p = generationFixture();

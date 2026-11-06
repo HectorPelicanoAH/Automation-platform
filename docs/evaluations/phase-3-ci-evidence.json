@@ -1,0 +1,428 @@
+{
+  "evidenceVersion": 1,
+  "codeCommit": "9145c8c19ababe8f497641f3dde464eae5fbe0ae",
+  "latestRun": 42221332271,
+  "latestRunUrl": "https://github.com/HectorPelicanoAH/Automation-platform/actions/runs/42221332271",
+  "githubConclusion": "failure",
+  "acceptance": "INCOMPLETE",
+  "finalMatrix": [
+    {
+      "label": "ubuntu-24.04",
+      "jobId": 127903837223,
+      "githubConclusion": "failure",
+      "testExecution": "NOT_RUN",
+      "executedSteps": 0,
+      "reason": "Account payment or spending-limit block reported by GitHub",
+      "diagnostic": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings"
+    },
+    {
+      "label": "macos-15-intel",
+      "jobId": 127903837448,
+      "githubConclusion": "failure",
+      "testExecution": "NOT_RUN",
+      "executedSteps": 0,
+      "reason": "Account payment or spending-limit block reported by GitHub",
+      "diagnostic": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings"
+    },
+    {
+      "label": "macos-15",
+      "jobId": 127903837460,
+      "githubConclusion": "failure",
+      "testExecution": "NOT_RUN",
+      "executedSteps": 0,
+      "reason": "Account payment or spending-limit block reported by GitHub",
+      "diagnostic": "The job was not started because recent account payments have failed or your spending limit needs to be increased. Please check the 'Billing & plans' section in your settings"
+    }
+  ],
+  "priorSuccessfulJobs": [
+    {
+      "label": "ubuntu-24.04",
+      "codeCommit": "94f3eea85ed6ef5e6e3c999ce3c61340a32f275c",
+      "run": 42213312002,
+      "conclusion": "success",
+      "node": "v24.22.2",
+      "os": "linux",
+      "architecture": "x64",
+      "deterministicTests": 31,
+      "browserStats": {
+        "startTime": "2026-11-06T11:54:00.965Z",
+        "duration": 529671.475,
+        "expected": 8,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "nativeRuns": [
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 3572,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 3549,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 3439,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 3538,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 12058,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 12358,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 11913,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 12062,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "FAILED",
+          "tests": 2,
+          "durationMs": 8563,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 11518,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 3425,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "missing-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 3690,
+          "idsMapped": 0
+        },
+        {
+          "framework": "playwright",
+          "selection": "malformed-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 3686,
+          "idsMapped": 0
+        }
+      ],
+      "generation": {
+        "source": "Deterministic provider fixture; actual browser recording, web review actor and native Playwright execution",
+        "recordingEvents": 19,
+        "independentNativeTests": {
+          "startTime": "2026-11-06T11:57:15.327Z",
+          "duration": 2367.5560000000005,
+          "expected": 2,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        },
+        "validationStatus": "PASSED",
+        "validationTests": 2
+      },
+      "audio": {
+        "elapsedMs": 311060.772244,
+        "decodedDurationSeconds": 308.1,
+        "errorsMs": [93.61095100003877, 54.28455199993914],
+        "maxProducerLagMs": 23.599999999976717,
+        "status": "COMPLETED"
+      },
+      "protocol": {
+        "source": "Actual pinned Codex CLI; handshake/catalog/schema/isolated thread only, no turn, inference or credentials",
+        "version": "codex-cli 0.162.0-alpha.2",
+        "os": "linux",
+        "architecture": "x64",
+        "node": "v24.22.2",
+        "ciCommit": "94f3eea85ed6ef5e6e3c999ce3c61340a32f275c",
+        "authenticated": false,
+        "isolatedThreadCreatedWithoutInference": true,
+        "catalogModels": 8,
+        "catalogDoesNotVerifyEntitlement": true,
+        "schemaSha256": {
+          "ThreadStartParams": "80a40a7fac15b4bf70efb7f893fb353acc0a0d30c68f54aee4f01923deca85de",
+          "TurnStartParams": "f4a07f33f33d5962bf5a770d1c1bb6a6de1412ccef9fb62705c4d9a83a956dbf",
+          "DynamicToolCallParams": "401bba20cfbd95762bef0467d840430c46be53369093ad9f26425ba757e34efc"
+        },
+        "userAgent": "ai_native_qa_local/0.162.0-alpha.2 (Ubuntu 24.4.0; x86_64) unknown (ai_native_qa_local; 0.1.0)"
+      },
+      "evidenceSha256": {
+        "phase1-evidence.json": "76dc9b4550957f741c6ed5ec10bb54f11c7a8ba4628bec60b0ac27ff18ff7fdd",
+        "platform-results.json": "d2264850acda29c0f7943f1594004241e0f2039f926310506ae80c679db055de",
+        "recording-clock-evidence.json": "ffa0281a7c7607bfd6c0c0c47da21ac75358d904593f8c2ba18a63670f0422a0",
+        "phase3-fixture-evidence.json": "2a67e912e9e6444502e9f817cd4490311fc2866b61b1d475198aae77116e591f",
+        "codex-protocol-evidence.json": "0a7c87939248f0fd6785d6f0573d928a431523fa23b44282e1e6b3d0eb474e5f"
+      }
+    },
+    {
+      "label": "macos-15",
+      "codeCommit": "94f3eea85ed6ef5e6e3c999ce3c61340a32f275c",
+      "run": 42213312002,
+      "conclusion": "success",
+      "node": "v24.22.2",
+      "os": "darwin",
+      "architecture": "arm64",
+      "deterministicTests": 31,
+      "browserStats": {
+        "startTime": "2026-11-06T11:53:20.838Z",
+        "duration": 426040.197,
+        "expected": 8,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "nativeRuns": [
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 1342,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 1555,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 1580,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 1553,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 5677,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 5553,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 5258,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 5577,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "FAILED",
+          "tests": 2,
+          "durationMs": 6574,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 5630,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 1246,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "missing-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 1395,
+          "idsMapped": 0
+        },
+        {
+          "framework": "playwright",
+          "selection": "malformed-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 1461,
+          "idsMapped": 0
+        }
+      ],
+      "generation": {
+        "source": "Deterministic provider fixture; actual browser recording, web review actor and native Playwright execution",
+        "recordingEvents": 19,
+        "independentNativeTests": {
+          "startTime": "2026-11-06T11:54:59.093Z",
+          "duration": 692.06,
+          "expected": 2,
+          "skipped": 0,
+          "unexpected": 0,
+          "flaky": 0
+        },
+        "validationStatus": "PASSED",
+        "validationTests": 2
+      },
+      "audio": {
+        "elapsedMs": 309805.008667,
+        "decodedDurationSeconds": 308.1,
+        "errorsMs": [48.53195800003596, 91.1187079999363],
+        "maxProducerLagMs": 181.5,
+        "status": "COMPLETED"
+      },
+      "protocol": {
+        "source": "Actual pinned Codex CLI; handshake/catalog/schema/isolated thread only, no turn, inference or credentials",
+        "version": "codex-cli 0.162.0-alpha.2",
+        "os": "darwin",
+        "architecture": "arm64",
+        "node": "v24.22.2",
+        "ciCommit": "94f3eea85ed6ef5e6e3c999ce3c61340a32f275c",
+        "authenticated": false,
+        "isolatedThreadCreatedWithoutInference": true,
+        "catalogModels": 8,
+        "catalogDoesNotVerifyEntitlement": true,
+        "schemaSha256": {
+          "ThreadStartParams": "80a40a7fac15b4bf70efb7f893fb353acc0a0d30c68f54aee4f01923deca85de",
+          "TurnStartParams": "f4a07f33f33d5962bf5a770d1c1bb6a6de1412ccef9fb62705c4d9a83a956dbf",
+          "DynamicToolCallParams": "401bba20cfbd95762bef0467d840430c46be53369093ad9f26425ba757e34efc"
+        },
+        "userAgent": "ai_native_qa_local/0.162.0-alpha.2 (Mac OS 15.8.2; arm64) unknown (ai_native_qa_local; 0.1.0)"
+      },
+      "evidenceSha256": {
+        "phase1-evidence.json": "d67bed491e38ff761626660cf74e71fa4633d085c665a35cf634f16b2636f9d5",
+        "platform-results.json": "bc6cc38d729d6891c157dd34f08ba0d526c180b96033cdfc9bd626833a0822b1",
+        "recording-clock-evidence.json": "b76ce501ad6d189e5d01ba48f5c9c72c1d90c930801a8f8ee0701751f5a8ea25",
+        "phase3-fixture-evidence.json": "3b3c25267cd619bfbbb51d34f013152ba48f41a4469edc759834a2f09b4b9bba",
+        "codex-protocol-evidence.json": "0ed64688aa437d10102c72da7341e08a2198aa25167e8ba04aa28746897c7de3"
+      }
+    }
+  ],
+  "localIntel": {
+    "os": "macOS 15.7.3",
+    "architecture": "x86_64",
+    "node": "v24.22.2",
+    "fullBrowserSuiteCodeAtStart": "94f3eea85ed6ef5e6e3c999ce3c61340a32f275c",
+    "fullBrowserStats": {
+      "startTime": "2026-11-06T12:05:58.290Z",
+      "duration": 639938.391,
+      "expected": 8,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "finalCodeChecks": {
+      "typecheck": "PASS",
+      "lint": "PASS",
+      "unitTests": 33,
+      "unitFailures": 0,
+      "generationWebFlow": "PASS",
+      "generationWebFlowDurationSeconds": 34.8,
+      "actualCodexProtocol": {
+        "source": "Actual pinned Codex CLI; handshake/catalog/schema/isolated thread only, no turn, inference or credentials",
+        "version": "codex-cli 0.162.0-alpha.2",
+        "os": "darwin",
+        "architecture": "x64",
+        "node": "v24.22.2",
+        "ciCommit": null,
+        "authenticated": false,
+        "isolatedThreadCreatedWithoutInference": true,
+        "catalogModels": 8,
+        "catalogDoesNotVerifyEntitlement": true,
+        "schemaSha256": {
+          "ThreadStartParams": "80a40a7fac15b4bf70efb7f893fb353acc0a0d30c68f54aee4f01923deca85de",
+          "TurnStartParams": "f4a07f33f33d5962bf5a770d1c1bb6a6de1412ccef9fb62705c4d9a83a956dbf",
+          "DynamicToolCallParams": "401bba20cfbd95762bef0467d840430c46be53369093ad9f26425ba757e34efc"
+        },
+        "userAgent": "ai_native_qa_local/0.162.0-alpha.2 (Mac OS 15.7.3; x86_64) unknown (ai_native_qa_local; 0.1.0)"
+      },
+      "additionalRegression": "Two opt-in sources and target, real Git commit, unchanged HEAD with dirty-tree invalidation and scoped read: PASS",
+      "unitSuiteScope": "Runtime code 9145c8c plus the follow-up multi-source Git regression included on the final branch.",
+      "generationTestSha256": "a04a43377e7c38ff99228610395ac0a7ecabe3418dbd1f47041981c195eca3fc"
+    },
+    "actualLiveInference": "phase-3-live-evidence.json"
+  },
+  "limits": [
+    "No final-revision CI test ran: all jobs were rejected before startup.",
+    "Prior Linux/ARM successes and local Intel checks do not constitute final-revision three-system CI acceptance.",
+    "Raw GitHub artifacts are retained seven days; selected hashes and measurements are preserved here."
+  ]
+}

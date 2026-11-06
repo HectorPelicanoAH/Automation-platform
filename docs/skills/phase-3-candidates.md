@@ -1,14 +1,15 @@
 # Phase 3 skill candidates
 
-These are versioned proposals, not installed/active skills. They live outside runtime discovery and can be exported as standard standalone bundles after evaluation and explicit owner approval. Phase approval does not activate them. No `.agents/skills` or user-global skill directory has been modified.
+These proposals live outside runtime discovery. No `.agents/skills` or user-global skill directory was modified; phase approval does not activate a skill.
 
-| Candidate                                                                            | Purpose                                                                            | Format validation | Behavioral evaluation | Activation   |
-| ------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- | ----------------- | --------------------- | ------------ |
-| [discover-business-scenarios v1](candidates/v1/discover-business-scenarios/SKILL.md) | Evidence-linked Gherkin and unanswered requirements; portable recording exports    | PASS              | PENDING E01/E02       | NOT_APPROVED |
-| [implement-playwright v1](candidates/v1/implement-playwright/SKILL.md)               | Bounded capability reuse, thin steps and separately reviewed execution/application | PASS              | PENDING E04/E12       | NOT_APPROVED |
+| Candidate                                                          | Format | Behavioral evaluation                                                 | Activation   |
+| ------------------------------------------------------------------ | ------ | --------------------------------------------------------------------- | ------------ |
+| [Discovery v1](candidates/v1/discover-business-scenarios/SKILL.md) | PASS   | REJECTED E01: repository/parser observations used as recording claims | NOT_APPROVED |
+| [Discovery v2](candidates/v2/discover-business-scenarios/SKILL.md) | PASS   | E01/E02 exploratory PASS, one trial per case                          | NOT_APPROVED |
+| [Playwright v1](candidates/v1/implement-playwright/SKILL.md)       | PASS   | E04/E12 exploratory PASS; real negative/positive native validation    | NOT_APPROVED |
 
-Observed problems: repeating broad repository exploration, promoting observed text into business rules, recreating existing Pages/steps, and treating test success as write approval. Expected benefits are more focused retrieval and better preservation of intent; no measured improvement is claimed yet.
+[Proposal 0001](proposal-0001-recording-provenance.md) preserves the observed failure, exact proposed change and expected benefit. [The manifest](../evaluations/phase-3-skill-manifest.json) records bundle hashes; [actual outputs/usage](../evaluations/phase-3-live-evidence.json) and [comparison results](../evaluations/phase-3-results.md) preserve baseline and candidate evidence. V1 was not silently overwritten.
 
-Both bundles are self-contained and do not require the web application or private database. The skill-creator format validator passed locally using PyYAML 6.0.2 from a temporary tool directory. The system and bundled Python initially lacked YAML; those attempts failed and are not passes. No product runtime dependency was added for skill validation.
+All bundles are self-contained standard SKILL.md procedures usable with supplied safe evidence and authorized repository files. Skill-creator's format validator passed with temporary PyYAML 6.0.2; no product dependency was added. Behavioral trials supplied the procedure text as an evaluation-only prefix, without installation or activation.
 
-Before activation, compare the baseline application procedure with the exact candidate on the same case/evidence/model configuration. Retain outputs, safety failures, retrieval/usage and uncertainty. Current platform fixtures validate host boundaries, not the behavior of a model using these candidates. Record candidate hashes and actual behavioral outcomes before requesting activation. Any content change invalidates its prior evaluation. Full automatic skill evolution/rollback remains Phase 6.
+One paired trial is exploratory. No general quality improvement or token savings is established; the Playwright candidate used more context/tokens in E04. Any future activation requires owner approval of the evaluated exact hash. Full automatic evolution, activation/rollback services and long-term monitoring remain Phase 6.

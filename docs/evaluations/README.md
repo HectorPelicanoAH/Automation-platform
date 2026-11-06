@@ -39,3 +39,5 @@ All E01–E14 cases are `NOT_RUN` at Phase 0. They become applicable as their ow
 Phase 1 deterministic coverage is recorded in [phase-1-results.md](phase-1-results.md). It does not constitute an AI or skill evaluation, and does not change the historical Phase 0 NOT_RUN record.
 
 Phase 2 deterministic capture/privacy and five-minute synthetic audio evidence is recorded in [phase-2-results.md](phase-2-results.md). Device and OS microphone consent remain explicitly unverified hardware checks.
+
+Phase 3 host-boundary, provider-protocol fixture and real native UI evidence is recorded in [phase-3-results.md](phase-3-results.md). Authenticated synthetic model trials and inactive skill comparisons are recorded there; final three-system CI remains blocked by account billing.
