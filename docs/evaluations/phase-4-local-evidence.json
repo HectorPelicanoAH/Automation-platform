@@ -252,5 +252,6 @@
     "path": "test-results/phase4-coverage.png",
     "sha256": "7bee4ee40064891e40285e0827d3b044eab561aaf79251837edd3dcffa74dfca",
     "review": "Visually inspected actual UI/API native outcomes before minor header padding adjustment."
-  }
+  },
+  "snapshot": "Initial fixture acceptance at code checkpoint 81f5ae4 before live-model authorization. Current real-output acceptance and updated checks are in phase-4-live-evidence.json."
 }

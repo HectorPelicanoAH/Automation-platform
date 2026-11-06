@@ -1,6 +1,7 @@
 import { hybridPlan } from './hybrid.ts';
 import {
   boundApiFeaturePath,
+  equivalentSchemaAssertions,
   bindKarate,
   requireSupportedOperation,
   validateKarate,
@@ -776,6 +777,7 @@ export class GenerationManager {
           throw new AppError(422, 'Generated contract differs from reviewed Gherkin');
         if (!proposed.some((f) => f.path === contract.featurePath))
           proposed.push({ path: contract.featurePath, content: contract.gherkin });
+        let schemaEquivalence: ReadonlySet<string> = new Set();
         if (framework === 'karate' && endpoint?.operation) {
           if (
             !task.contextFiles.some(
@@ -795,6 +797,7 @@ export class GenerationManager {
               'New API helpers require separate manual review; reuse existing indexed helpers',
             );
           const calls = [...api.content.matchAll(/call read\(['"]classpath:([^'"]+)['"]\)/g)];
+          const inspectedHelpers = new Map<string, string>();
           for (const call of calls) {
             const path = 'api/src/test/resources/' + call[1];
             if (
@@ -804,7 +807,16 @@ export class GenerationManager {
               )
             )
               throw new AppError(422, 'API helpers must be read and included in the reuse plan');
+            inspectedHelpers.set(
+              path,
+              this.index.read({ kind: 'target', id: target.id }, path).text,
+            );
           }
+          schemaEquivalence = equivalentSchemaAssertions(
+            currentText(target.path, apiPath),
+            api.content,
+            inspectedHelpers,
+          );
           proposed.push({
             path: 'contracts/manifest.json',
             content: bindKarate(
@@ -826,7 +838,12 @@ export class GenerationManager {
           )
             throw new AppError(403, 'Only the approved feature may change');
           const before = currentText(target.path, f.path);
-          preserveExistingCapabilities(before, f.content, f.path);
+          preserveExistingCapabilities(
+            before,
+            f.content,
+            f.path,
+            f.path === apiPath ? schemaEquivalence : undefined,
+          );
           if (before !== null && f.path !== 'contracts/manifest.json' && clean(before) !== before)
             throw new AppError(
               422,

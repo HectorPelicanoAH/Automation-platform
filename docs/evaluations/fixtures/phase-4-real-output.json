@@ -1,0 +1,22 @@
+{
+  "plan": {
+    "summary": "Strengthen the existing API feature with independent business-field assertions for both approved datasets. Preserve @scenario:free-shipping and two examples. Reuse the safe schema helper; exclude the context-creation helper because it causes side effects. Coverage verifies API business state, not UI rendering. Only the requested API feature changes.",
+    "reuse": [
+      {
+        "path": "api/src/test/resources/features/promotions.feature",
+        "symbol": "Promotional free shipping API state"
+      },
+      {
+        "path": "api/src/test/resources/helpers/promotion-schema.feature",
+        "symbol": "promotionSchema"
+      }
+    ],
+    "files": ["api/src/test/resources/features/promotions.feature"]
+  },
+  "files": [
+    {
+      "path": "api/src/test/resources/features/promotions.feature",
+      "content": "Feature: Promotional free shipping API state\n\n  Background:\n    * url baseUrl\n    * def result = call read('classpath:helpers/promotion-schema.feature')\n\n  # API business-state coverage only; does not verify visible UI rendering.\n  @promotion @smoke @scenario:free-shipping\n  Scenario Outline: Return the correct promotion business state\n    Given path '/api/promotions/free-shipping'\n    And params { countryIso: '<countryIso>', languageIso: '<languageIso>', brand: '<brand>' }\n    When method get\n    Then status 200\n    And match response == result.promotionSchema\n    And match response.countryIso == '<countryIso>'\n    And match response.languageIso == '<languageIso>'\n    And match response.brand == '<brand>'\n    And match response.title == '<promoTitle>'\n    And match response.discount == '<discount>'\n    And match response.subtitle == '<subtitle>'\n    And match response.thresholdMinor == <thresholdMinor>\n\n    Examples:\n      | countryIso | languageIso | brand | promoTitle   | discount | subtitle                   | thresholdMinor |\n      | es         | es          | demo  | Envío gratis | 50€      | En pedidos superiores a 50€ | 5000           |\n      | pt         | pt          | demo  | Envio grátis | 60€      | Em compras superiores a 60€ | 6000           |\n"
+    }
+  ]
+}

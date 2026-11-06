@@ -267,7 +267,12 @@ export function applyFiles(root: string, proposal: ChangeProposal, journalPath: 
   }
 }
 
-export function preserveExistingCapabilities(before: string | null, after: string, path: string) {
+export function preserveExistingCapabilities(
+  before: string | null,
+  after: string,
+  path: string,
+  equivalentApiAssertions: ReadonlySet<string> = new Set(),
+) {
   if (before === null) return;
   if (path.endsWith('.feature')) {
     if (path.startsWith('api/')) {
@@ -276,7 +281,7 @@ export function preserveExistingCapabilities(before: string | null, after: strin
         .map((s) => s.trim())
         .filter((s) => /^(Given|When|Then|And|But|\*)\s+(match|status|assert)\s/.test(s));
       const current = new Set(after.split('\n').map((s) => s.trim()));
-      if (assertions.some((s) => !current.has(s)))
+      if (assertions.some((s) => !current.has(s) && !equivalentApiAssertions.has(s)))
         throw new AppError(422, 'Existing API assertions must be preserved during generation');
     }
     return;

@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "case": "Real Codex gap-generation and safe schema reuse",
+  "canonicalPath": "templates/automation/contracts/features/promotions.feature",
+  "sourceSpecHash": "5edb5b1b4602378ed30951c221e327506a74d5ec966cc854be5db69b459bb551",
+  "beforeApiHash": "795899015a75c0d93e1fcabc57561b3bd07dbc85581c30baa2bca61248694836",
+  "beforeApi": "Feature: Promotional free shipping API state\n\n  Background:\n    * url baseUrl\n\n  @promotion @smoke @scenario:free-shipping\n  Scenario Outline: Return the correct promotion business state\n    Given path '/api/promotions/free-shipping'\n    And params { countryIso: '<countryIso>', languageIso: '<languageIso>', brand: 'demo' }\n    When method get\n    Then status 200\n    And match response == { countryIso: '#string', languageIso: '#string', brand: '#string', title: '#string', discount: '#string', subtitle: '#string', thresholdMinor: '#number', currency: '#string' }\n\n    Examples:\n      | countryIso | languageIso | title        | discount | subtitle                       | thresholdMinor |\n      | es         | es          | Envío gratis | 50€      | En pedidos superiores a 50€     | 5000           |\n      | pt         | pt          | Envio grátis | 60€      | Em compras superiores a 60€     | 6000           |\n",
+  "modelOutputPath": "phase-4-real-output.json",
+  "modelOutputSemanticHash": "adc69646581e85ea4831faca6071f1bc4164fda5416c6da2077179e38898b5d9",
+  "expected": "Exact recorded output passes corrected host checks and native tests on good data; fails both rows for schema-correct wrong business data. Replay is not new inference.",
+  "contractApprovalHash": "88f6a107c41ec8b1817e0ea0792ac4add5c83f561e01c5353ded3f1f938f95b6",
+  "canonicalFileHash": "8868faaa2891ef39e449c50bd76ddf42c76651f19e760f2489993f4390455ff4"
+}

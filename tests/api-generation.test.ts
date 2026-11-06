@@ -329,3 +329,102 @@ test('Live API evaluation refuses missing opt-in before discovering or copying c
   assert.match(result.stderr, /Explicit --allow-live-model/);
   assert.doesNotMatch(result.stdout, /credentialCopyCreated|changeId/);
 });
+
+test('Inline schema extraction preserves exact immutable helper semantics and rejects weaker or dynamic helpers', async () => {
+  const { equivalentSchemaAssertions } = await import('../packages/generation/karate.ts');
+  const { preserveExistingCapabilities } = await import('../packages/generation/staging.ts');
+  const path = 'api/src/test/resources/features/promotions.feature';
+  const helperPath = 'api/src/test/resources/helpers/promotion-schema.feature';
+  const before = readFileSync('templates/automation/' + path, 'utf8');
+  const helper = readFileSync('templates/automation/' + helperPath, 'utf8');
+  const after = before
+    .replace(
+      '  Background:\n',
+      "  Background:\n    * def schema = call read('classpath:helpers/promotion-schema.feature')\n",
+    )
+    .replace(
+      / {4}And match response == .*\n/,
+      '    And match response == schema.promotionSchema\n',
+    );
+  const proofs = equivalentSchemaAssertions(before, after, new Map([[helperPath, helper]]));
+  assert.equal(proofs.size, 1);
+  assert.throws(
+    () => preserveExistingCapabilities(before, after, path),
+    /assertions must be preserved/,
+  );
+  assert.doesNotThrow(() => preserveExistingCapabilities(before, after, path, proofs));
+  for (const unsafe of [
+    helper.replace("'#string'", "'#ignore'"),
+    helper + '\n    * eval something()\n',
+    helper.replace("'#string'", "'#(dynamicValue)'"),
+    helper.replace("'#string'", "'#number'"),
+    helper.replace(/ }\n$/, ' }, shadow = {}\n'),
+  ])
+    assert.equal(
+      equivalentSchemaAssertions(before, after, new Map([[helperPath, unsafe]])).size,
+      0,
+    );
+  assert.equal(
+    equivalentSchemaAssertions(
+      before,
+      after.replace('method get', 'params { x: schema.promotionSchema }\n    When method get'),
+      new Map([[helperPath, helper]]),
+    ).size,
+    0,
+  );
+  assert.equal(equivalentSchemaAssertions(before, after, new Map()).size, 0);
+});
+
+test('Recorded real Codex API output passes scoped host checks without a new inference or write grant', async () => {
+  const recorded = JSON.parse(
+    readFileSync('docs/evaluations/fixtures/phase-4-real-output.json', 'utf8'),
+  );
+  const fixture = JSON.parse(
+    readFileSync('docs/evaluations/fixtures/phase-4-live-v1.json', 'utf8'),
+  );
+  const p = apiFixture({
+    async run(request) {
+      const input = JSON.parse(request.prompt);
+      if (!input.endpoint)
+        return (await import('./helpers/generation.ts')).fixtureProvider.run(request);
+      const target = input.repositories.find((r: { kind: string }) => r.kind === 'target');
+      await request.onTool('qa_lookup', { query: 'promotion schema' });
+      await request.onTool('qa_read_file', { ...input.endpoint.ref, path: input.endpoint.path });
+      for (const path of [
+        'api/src/test/resources/features/promotions.feature',
+        'api/src/test/resources/helpers/promotion-schema.feature',
+      ])
+        await request.onTool('qa_read_file', { ...target, path });
+      return {
+        output: recorded,
+        model: 'recorded-real-output-fixture',
+        usage: null,
+        threadId: 'offline-no-inference',
+      };
+    },
+  });
+  try {
+    const path = join(p.target.path, 'api/src/test/resources/features/promotions.feature');
+    assert.equal(hash(fixture.beforeApi), fixture.beforeApiHash);
+    writeFileSync(path, fixture.beforeApi);
+    const contract = await reviewed(p),
+      endpoint = p.generation.endpoints(contract.id).find((e) => e.path === 'openapi.json')!;
+    assert.equal(endpoint.hash, fixture.sourceSpecHash);
+    const task = await finished(
+      p,
+      (await p.generation.implement(contract.id, contract.hash, { framework: 'karate', endpoint }))
+        .id,
+    );
+    assert.equal(task.status, 'SUCCEEDED', task.error);
+    assert.equal(task.usage, null);
+    const change = p.generation.change(task.changeId!);
+    assert.equal(
+      change.files.find((f) => f.path.startsWith('api/'))!.after,
+      recorded.files[0].content,
+    );
+    assert.equal(readFileSync(path, 'utf8'), fixture.beforeApi);
+    assert.throws(() => p.generation.apply(change.id, change.hash), /validate/);
+  } finally {
+    await p.app.close();
+  }
+});

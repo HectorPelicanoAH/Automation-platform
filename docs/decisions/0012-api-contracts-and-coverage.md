@@ -31,3 +31,7 @@ Schema/helper reuse and actual setup measurements are evaluated separately from 
 - [OpenAPI 3.1 specification](https://spec.openapis.org/oas/v3.1): operation parameters and security inheritance.
 - [Karate feature composition](https://docs.karatelabs.io/reusability/calling-features/): isolated calls and cache lifecycle.
 - [Karate parallel execution](https://docs.karatelabs.io/running-tests/parallel-execution/): independent scenarios and concurrency.
+
+## Live acceptance refinement
+
+A real model response exposed a false positive in textual preservation of schema assertions. A narrowly proven inline-schema extraction may reference an inspected unchanged helper with one identical flat immutable literal, in a single-scenario Background, with literal-only expressions and no alias reassignment. Other assertion rewrites remain denied. Exact recorded-output replay verifies the host correction without another provider call; actual Karate negative/positive controls and independent CLI retain separate evidence. Original failed host tasks remain recorded. See [live acceptance](../evaluations/phase-4-live-evidence.json).

@@ -1,0 +1,251 @@
+{
+  "phase": 4,
+  "status": "VALIDATION",
+  "scope": "Actual authenticated Codex proposals on predefined synthetic canonical contract; native verification after corrected host validation. No owner source/automation repository changes.",
+  "authorization": "Owner explicitly said Autorizo to temporary current-session reuse for Phase 4 synthetic testing, 2026-11-06. It grants no Phase 5 or skill activation.",
+  "provider": {
+    "cliVersion": "0.162.0-alpha.2",
+    "model": "gpt-6.1-sol",
+    "liveInvocations": 2,
+    "reportedTotalTokens": 50879,
+    "note": "Includes both live attempts. Offline replay has no model invocation or duplicated token accounting. Not total coding-chat usage, a price or a token-savings claim."
+  },
+  "liveAttempts": [
+    {
+      "case": "existing-complete",
+      "task": {
+        "id": "369ba0b2-bdb5-4ade-a6cc-fa9f0c53f262",
+        "kind": "implementation",
+        "status": "FAILED",
+        "model": "gpt-6.1-sol",
+        "toolCalls": 6,
+        "retrievalBytes": 14079,
+        "promptBytes": 4122,
+        "usage": {
+          "total": {
+            "totalTokens": 25671,
+            "inputTokens": 24804,
+            "cachedInputTokens": 14336,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 867,
+            "reasoningOutputTokens": 100
+          },
+          "last": {
+            "totalTokens": 11055,
+            "inputTokens": 10448,
+            "cachedInputTokens": 8192,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 607,
+            "reasoningOutputTokens": 100
+          },
+          "modelContextWindow": 475000
+        },
+        "error": "Reuse plan names an unknown capability: openapi.json · GET /api/promotions/free-shipping; use exact indexed names",
+        "createdAt": "2026-11-06T16:21:02.928Z",
+        "finishedAt": "2026-11-06T16:21:30.590Z"
+      },
+      "outcome": "Provider returned a proposal; host rejected source endpoint as target reuse. No proposal/application."
+    },
+    {
+      "case": "missing-business-assertion",
+      "task": {
+        "id": "2d6f55b6-1aa2-438f-8f31-328f481ab506",
+        "kind": "implementation",
+        "status": "FAILED",
+        "model": "gpt-6.1-sol",
+        "toolCalls": 5,
+        "retrievalBytes": 12676,
+        "promptBytes": 4262,
+        "usage": {
+          "total": {
+            "totalTokens": 25208,
+            "inputTokens": 24391,
+            "cachedInputTokens": 6144,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 817,
+            "reasoningOutputTokens": 128
+          },
+          "last": {
+            "totalTokens": 10647,
+            "inputTokens": 10001,
+            "cachedInputTokens": 0,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 646,
+            "reasoningOutputTokens": 128
+          },
+          "modelContextWindow": 475000
+        },
+        "error": "Existing API assertions must be preserved during generation",
+        "createdAt": "2026-11-06T16:22:42.777Z",
+        "finishedAt": "2026-11-06T16:23:09.178Z"
+      },
+      "outcome": "Provider returned the real generated feature; initial textual guard rejected equivalent inline-schema extraction."
+    }
+  ],
+  "hostCorrection": {
+    "reuseScope": "Plan schema explicitly distinguishes target automation from source endpoint context. Unknown reuse remains rejected.",
+    "schemaEquivalence": "Only one-scenario Background extraction to an inspected unchanged target helper containing a single immutable flat literal. Exact schema key/value identity, literal-only call-site expressions and no alias reassignment or weaker/dynamic matcher. Other assertion changes remain rejected.",
+    "rawOutputHash": "8f4f979321a99b9256d2f21b113758f65c1fe0ac70da3ea6beaeb0ecdbc7b29f",
+    "replay": {
+      "id": "87d61ac0-c0a2-48b0-accd-9e585297ad3d",
+      "kind": "implementation",
+      "status": "SUCCEEDED",
+      "model": "offline-replay-of-gpt-6.1-sol",
+      "toolCalls": 5,
+      "retrievalBytes": 12737,
+      "promptBytes": 4262,
+      "usage": null,
+      "createdAt": "2026-11-06T16:29:03.993Z",
+      "finishedAt": "2026-11-06T16:29:04.111Z"
+    },
+    "note": "Same raw real-model response and unchanged input file hashes; deterministic host replay, not a new authenticated turn on the final validator revision.",
+    "versionedOutputHash": "386082dde01c39fae0d7ad5aa8d6158057f71578022bf706c64ee7d95fa96dcb",
+    "projectionNote": "rawOutputHash identifies the original private response bytes used for replay. The versioned projection adds a terminal newline; JSON values and generated file contents are unchanged."
+  },
+  "proposal": {
+    "id": "9cce99ff-f8f0-4295-b02f-732b7aebc839",
+    "diffHash": "4c36f87ba29278b485a148d7ff10f3b3743c748ab1e61361cf81e0a548f416e6",
+    "plan": {
+      "summary": "Strengthen the existing API feature with independent business-field assertions for both approved datasets. Preserve @scenario:free-shipping and two examples. Reuse the safe schema helper; exclude the context-creation helper because it causes side effects. Coverage verifies API business state, not UI rendering. Only the requested API feature changes.",
+      "reuse": [
+        {
+          "path": "api/src/test/resources/features/promotions.feature",
+          "symbol": "Promotional free shipping API state"
+        },
+        {
+          "path": "api/src/test/resources/helpers/promotion-schema.feature",
+          "symbol": "promotionSchema"
+        }
+      ],
+      "files": [
+        "api/src/test/resources/features/promotions.feature",
+        "contracts/manifest.json",
+        "contracts/features/promotions.feature"
+      ]
+    },
+    "files": [
+      {
+        "path": "api/src/test/resources/features/promotions.feature",
+        "baseHash": "795899015a75c0d93e1fcabc57561b3bd07dbc85581c30baa2bca61248694836",
+        "afterHash": "fdf56712db156583099b030e95c253304458a94c969990012a55947b6cdde9fa"
+      },
+      {
+        "path": "contracts/manifest.json",
+        "baseHash": "a9fdd600c8bf2403bb81b2727c22d6afc53220e6b083c6ea49be58676e324058",
+        "afterHash": "bd709c854b43945f598a468a1972eb093a4e0fb4a5693c50a53a530070b79441"
+      }
+    ]
+  },
+  "nativeValidation": {
+    "baselineMissingAssertionAgainstBadApi": {
+      "status": "PASSED",
+      "tests": [
+        {
+          "scenarioId": "free-shipping",
+          "status": "PASSED",
+          "name": "Return the correct promotion business state"
+        },
+        {
+          "scenarioId": "free-shipping",
+          "status": "PASSED",
+          "name": "Return the correct promotion business state"
+        }
+      ],
+      "meaning": "Negative control: the deliberately incomplete baseline accepts incorrect business values with the correct schema."
+    },
+    "generatedAgainstBadApi": {
+      "id": "e5aa10ac-c0e6-443f-b914-381ddf0311fc",
+      "framework": "karate",
+      "status": "FAILED",
+      "tests": [
+        {
+          "scenarioId": "free-shipping",
+          "name": "Return the correct promotion business state",
+          "status": "FAILED",
+          "error": "match failed: EQUALS\n  $ | not equal (STRING:STRING)\n  'Incorrect synthetic title'\n  'Envío gratis'\n"
+        },
+        {
+          "scenarioId": "free-shipping",
+          "name": "Return the correct promotion business state",
+          "status": "FAILED",
+          "error": "match failed: EQUALS\n  $ | not equal (STRING:STRING)\n  'Incorrect synthetic title'\n  'Envio grátis'\n"
+        }
+      ],
+      "artifactCount": 14
+    },
+    "generatedAgainstGoodApi": {
+      "id": "69134705-4773-4a59-a7a0-b10b10923008",
+      "framework": "karate",
+      "status": "PASSED",
+      "tests": [
+        {
+          "scenarioId": "free-shipping",
+          "name": "Return the correct promotion business state",
+          "status": "PASSED",
+          "error": null
+        },
+        {
+          "scenarioId": "free-shipping",
+          "name": "Return the correct promotion business state",
+          "status": "PASSED",
+          "error": null
+        }
+      ],
+      "artifactCount": 14
+    },
+    "independentAppliedSuite": {
+      "status": "PASSED",
+      "tests": [
+        {
+          "scenarioId": "free-shipping",
+          "status": "PASSED",
+          "name": "Return the correct promotion business state"
+        },
+        {
+          "scenarioId": "free-shipping",
+          "status": "PASSED",
+          "name": "Return the correct promotion business state"
+        }
+      ]
+    }
+  },
+  "application": {
+    "id": "9cce99ff-f8f0-4295-b02f-732b7aebc839",
+    "status": "APPLIED",
+    "hash": "4c36f87ba29278b485a148d7ff10f3b3743c748ab1e61361cf81e0a548f416e6",
+    "approval": {
+      "hash": "4c36f87ba29278b485a148d7ff10f3b3743c748ab1e61361cf81e0a548f416e6",
+      "at": "2026-11-06T19:24:39.791Z",
+      "reviewer": "local-user"
+    },
+    "actor": "Predefined synthetic QA acceptance after coding-agent diff inspection; not owner approval of production changes"
+  },
+  "cleanup": [
+    {
+      "credentialHomeAbsent": true,
+      "aiDisabled": true
+    },
+    {
+      "credentialHomeAbsent": true,
+      "aiDisabled": true
+    }
+  ],
+  "skillActivation": "NOT_APPROVED",
+  "ci": "Current three-system matrix remains NOT_RUN; no new GitHub Actions execution was launched.",
+  "postCorrectionValidation": {
+    "deterministic": {
+      "tests": 47,
+      "passed": 47,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "command": "node --import tsx --test tests/*.test.ts"
+    },
+    "affectedBrowserFlows": {
+      "passed": 2,
+      "duration": "3.2 minutes",
+      "provider": "explicitly labeled deterministic fixture; native runners real"
+    },
+    "newInferenceAfterHostCorrection": false
+  }
+}

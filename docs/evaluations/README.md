@@ -42,4 +42,4 @@ Phase 2 deterministic capture/privacy and five-minute synthetic audio evidence i
 
 Phase 3 host-boundary, provider-protocol fixture and real native UI evidence is recorded in [phase-3-results.md](phase-3-results.md). Authenticated synthetic model trials and inactive skill comparisons are recorded there; final three-system CI remains blocked by account billing.
 
-Phase 4: [versioned synthetic cases](fixtures/phase-4-v1.json), [actual local native evidence](phase-4-local-evidence.json) and [validation report](../phase-4-report.md). Provider fixtures are labeled; real API inference and final three-system CI remain pending.
+Phase 4: [versioned synthetic cases](fixtures/phase-4-v1.json), [actual local native evidence](phase-4-local-evidence.json) and [validation report](../phase-4-report.md). Provider fixtures are labeled. [Actual Codex output and native evidence](phase-4-live-evidence.json) additionally record initial host failures and exact-output replay after correction; final three-system CI remains pending.

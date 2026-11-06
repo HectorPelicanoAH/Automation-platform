@@ -1,3 +1,4 @@
+import ts from 'typescript';
 import { AppError } from '../domain/model.ts';
 import { hash, parseFeature } from '../domain/gherkin.ts';
 import type { ApiOperation } from '../intelligence/api.ts';
@@ -189,4 +190,178 @@ export function bindKarate(
     entry,
   ];
   return JSON.stringify(manifest, null, 2) + '\n';
+}
+
+// Allow a concrete inline-schema extraction only when the existing helper is a single,
+// immutable flat literal and the same matcher is used in the same scenario scope.
+// This is deliberately narrower than general Karate/JavaScript equivalence.
+export function equivalentSchemaAssertions(
+  before: string | null,
+  after: string,
+  helpers: ReadonlyMap<string, string>,
+) {
+  const equivalent = new Set<string>();
+  if (!before || parseFeature(before, 'before.feature').scenarios.length !== 1) return equivalent;
+  const parsed = parseFeature(after, 'after.feature');
+  if (parsed.scenarios.length !== 1) return equivalent;
+  const flatSchema = (expression: string): string | null => {
+    const source = ts.createSourceFile(
+      'schema.ts',
+      'const schema = ' + expression,
+      ts.ScriptTarget.Latest,
+      true,
+    );
+    if (
+      (source as ts.SourceFile & { parseDiagnostics?: readonly ts.Diagnostic[] }).parseDiagnostics
+        ?.length
+    )
+      return null;
+    const statement = source.statements[0];
+    if (!statement || source.statements.length !== 1 || !ts.isVariableStatement(statement))
+      return null;
+    if (statement.declarationList.declarations.length !== 1) return null;
+    const value = statement.declarationList.declarations[0]?.initializer;
+    if (!value || !ts.isObjectLiteralExpression(value)) return null;
+    const fields: [string, string][] = [];
+    for (const property of value.properties) {
+      if (
+        !ts.isPropertyAssignment(property) ||
+        !(ts.isIdentifier(property.name) || ts.isStringLiteral(property.name)) ||
+        !ts.isStringLiteral(property.initializer)
+      )
+        return null;
+      const name = property.name.text,
+        value = property.initializer.text;
+      if (
+        ['__proto__', 'constructor', 'prototype'].includes(name) ||
+        fields.some(([key]) => key === name)
+      )
+        return null;
+      if (
+        value.startsWith('#') &&
+        !/^#(string|number|boolean|object|array|null|notnull)$/.test(value)
+      )
+        return null;
+      fields.push([name, value]);
+    }
+    return fields.length ? JSON.stringify(fields.sort(([a], [b]) => a.localeCompare(b))) : null;
+  };
+  const nativeSteps = after
+    .split('\n')
+    .map((s) => s.trim())
+    .filter((s) => /^(Given|When|Then|And|But|\*)\s/.test(s))
+    .map((s) => s.replace(/^(Given|When|Then|And|But|\*)\s+/, ''));
+  const calls = [
+    ...after.matchAll(
+      /^\s*\* def ([A-Za-z_]\w*) = call read\(['"]classpath:([A-Za-z0-9_/-]+\.feature)['"]\)\s*$/gm,
+    ),
+  ];
+  for (const call of calls) {
+    if (after.slice(0, call.index).split('\n').length >= parsed.scenarios[0].line) continue;
+    const helper = helpers.get('api/src/test/resources/' + call[2]);
+    if (!helper) continue;
+    const lines = helper
+      .split('\n')
+      .map((s) => s.trim())
+      .filter((s) => s && !s.startsWith('#'));
+    if (
+      lines.filter((s) => s.startsWith('Scenario:')).length !== 1 ||
+      lines.some((s) => !/^(@ignore$|Feature:|Scenario:|\* def )/.test(s))
+    )
+      continue;
+    const definitions = lines.filter((s) => s.startsWith('* def '));
+    if (definitions.length !== 1) continue;
+    const definition = /^\* def ([A-Za-z_]\w*) = (\{.*\})$/.exec(definitions[0]);
+    if (!definition) continue;
+    const schema = flatSchema(definition[2]);
+    if (!schema) continue;
+    // Prevent reassignment or other uses of the result alias in the supported extraction.
+    if (
+      [
+        ...nativeSteps
+          .join('\n')
+          .replace(/'(?:\\.|[^'\\])*'|"(?:\\.|[^"\\])*"/g, '""')
+          .matchAll(new RegExp('\\b' + call[1] + '\\b', 'g')),
+      ].length !== 2
+    )
+      continue;
+    const literalData = (expression: string) => {
+      const source = ts.createSourceFile(
+        'data.ts',
+        'const data = ' + expression.replace(/<[A-Za-z_]\w*>/g, '0'),
+        ts.ScriptTarget.Latest,
+        true,
+      );
+      if (
+        (source as ts.SourceFile & { parseDiagnostics?: readonly ts.Diagnostic[] }).parseDiagnostics
+          ?.length ||
+        source.statements.length !== 1
+      )
+        return false;
+      const declaration = source.statements[0];
+      if (
+        !ts.isVariableStatement(declaration) ||
+        declaration.declarationList.declarations.length !== 1
+      )
+        return false;
+      const literal = (node: ts.Node | undefined): boolean => {
+        if (!node) return false;
+        if (ts.isStringLiteral(node)) return !/#(?:#)?\(/.test(node.text);
+        if (
+          ts.isNumericLiteral(node) ||
+          [
+            ts.SyntaxKind.TrueKeyword,
+            ts.SyntaxKind.FalseKeyword,
+            ts.SyntaxKind.NullKeyword,
+          ].includes(node.kind)
+        )
+          return true;
+        if (ts.isPrefixUnaryExpression(node))
+          return node.operator === ts.SyntaxKind.MinusToken && ts.isNumericLiteral(node.operand);
+        return (
+          ts.isObjectLiteralExpression(node) &&
+          node.properties.every(
+            (p) =>
+              ts.isPropertyAssignment(p) &&
+              (ts.isIdentifier(p.name) || ts.isStringLiteral(p.name)) &&
+              literal(p.initializer),
+          )
+        );
+      };
+      return literal(declaration.declarationList.declarations[0]?.initializer);
+    };
+    const stepBodies = nativeSteps;
+    const helperCall = call[0].trim().replace(/^\*\s+/, '');
+    if (
+      stepBodies.some((step) => {
+        if (
+          step === helperCall ||
+          step === 'url baseUrl' ||
+          step === 'method get' ||
+          step === 'status 200' ||
+          step === 'match response == ' + call[1] + '.' + definition[1]
+        )
+          return false;
+        const expression =
+          /^(?:path |params |param [A-Za-z_]\w* = |match response(?:\.[A-Za-z_]\w*)? (?:==|contains) )(.+)$/.exec(
+            step,
+          )?.[1];
+        return !expression || !literalData(expression);
+      })
+    )
+      continue;
+    const replacement = new RegExp(
+      '^(Given|When|Then|And|But|\\*)\\s+match response == ' +
+        call[1] +
+        '\\.' +
+        definition[1] +
+        '$',
+    );
+    if (!after.split('\n').some((s) => replacement.test(s.trim()))) continue;
+    for (const line of before.split('\n').map((s) => s.trim())) {
+      const assertion = /^(?:Given|When|Then|And|But|\*)\s+match response == (\{.*\})$/.exec(line);
+      if (assertion && flatSchema(assertion[1]) === schema) equivalent.add(line);
+    }
+  }
+  return equivalent;
 }
