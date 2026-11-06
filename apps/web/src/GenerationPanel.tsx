@@ -344,6 +344,7 @@ export function GenerationPanel({
           </div>
           <div className="button-row">
             <button
+              className="button"
               disabled={busy || !trustCli || !binary}
               onClick={() =>
                 void act(async () => {
@@ -358,7 +359,7 @@ export function GenerationPanel({
               Verify Codex CLI
             </button>
             <button
-              className="secondary"
+              className="button secondary"
               disabled={busy || !state?.settings.binary}
               onClick={() =>
                 void act(async () => {
@@ -437,6 +438,7 @@ export function GenerationPanel({
           </datalist>
           <div className="button-row">
             <button
+              className="button"
               disabled={busy || !trustCli || !analysisModel || !implementationModel}
               onClick={() =>
                 void act(async () => {
@@ -458,7 +460,7 @@ export function GenerationPanel({
               Enable configured AI
             </button>
             <button
-              className="secondary"
+              className="button secondary"
               disabled={busy || !state?.settings.enabled}
               onClick={() =>
                 void act(async () => {
@@ -517,6 +519,7 @@ export function GenerationPanel({
               ))}
             </div>
             <button
+              className="button"
               disabled={busy}
               onClick={() =>
                 void act(async () => {
@@ -549,7 +552,7 @@ export function GenerationPanel({
                 />
               </label>
               <button
-                className="secondary"
+                className="button secondary"
                 disabled={busy || !query}
                 onClick={() =>
                   void act(async () => {
@@ -617,6 +620,7 @@ export function GenerationPanel({
               </label>
             </div>
             <button
+              className="button"
               disabled={
                 busy ||
                 !state?.settings.enabled ||
@@ -669,6 +673,7 @@ export function GenerationPanel({
                 {task.error && <p role="alert">{task.error}</p>}
                 {running(task.status) && (
                   <button
+                    className="button"
                     disabled={busy}
                     onClick={() =>
                       void act(async () => {
@@ -745,7 +750,7 @@ export function GenerationPanel({
                       </p>
                       {claim.evidenceIds.map((ref) => (
                         <button
-                          className="secondary"
+                          className="button secondary"
                           key={ref}
                           onClick={() => void act(() => inspectEvidence(ref))}
                         >
@@ -785,13 +790,14 @@ export function GenerationPanel({
                 ))}
                 <div className="button-row">
                   <button
-                    className="secondary"
+                    className="button secondary"
                     disabled={busy || contract.status === 'REJECTED'}
                     onClick={() => void act(() => review(false))}
                   >
                     Save contract draft
                   </button>
                   <button
+                    className="button"
                     disabled={
                       busy ||
                       contract.status === 'REJECTED' ||
@@ -802,7 +808,7 @@ export function GenerationPanel({
                     Approve this Gherkin revision
                   </button>
                   <button
-                    className="secondary"
+                    className="button secondary"
                     disabled={busy || contract.status === 'REJECTED'}
                     onClick={() =>
                       void act(async () => {
@@ -819,6 +825,7 @@ export function GenerationPanel({
                   </button>
                 </div>
                 <button
+                  className="button"
                   disabled={
                     busy ||
                     dirty ||
@@ -866,7 +873,10 @@ export function GenerationPanel({
                 <p>{change.plan.summary}</p>
                 <p className="muted">
                   Contract revision {change.contractHash.slice(0, 12)} ·{' '}
-                  <button className="secondary" onClick={() => setContractId(change.contractId)}>
+                  <button
+                    className="button secondary"
+                    onClick={() => setContractId(change.contractId)}
+                  >
                     View associated contract
                   </button>
                   {dirty && ' Save or discard contract edits before applying a diff.'}
@@ -885,7 +895,7 @@ export function GenerationPanel({
                 {change.error && <p role="alert">{change.error}</p>}
                 <div className="button-row">
                   <button
-                    className="secondary"
+                    className="button secondary"
                     disabled={busy || change.status !== 'STAGED'}
                     onClick={() =>
                       void act(async () => {
@@ -900,7 +910,7 @@ export function GenerationPanel({
                     Prepare private validation
                   </button>
                   <button
-                    className="secondary"
+                    className="button secondary"
                     disabled={busy || !['STAGED', 'VALIDATED'].includes(change.status)}
                     onClick={() =>
                       void act(async () => {
@@ -942,6 +952,7 @@ export function GenerationPanel({
                       I trust this staged code and dependencies for execution
                     </label>
                     <button
+                      className="button"
                       disabled={busy || !trustStage}
                       onClick={() =>
                         void act(async () => {
@@ -964,7 +975,10 @@ export function GenerationPanel({
                   </>
                 )}
                 {change.validationRunId && (
-                  <button className="secondary" onClick={() => onRun(change.validationRunId!)}>
+                  <button
+                    className="button secondary"
+                    onClick={() => onRun(change.validationRunId!)}
+                  >
                     Inspect validation run
                   </button>
                 )}
@@ -988,6 +1002,7 @@ export function GenerationPanel({
                       I approve applying this exact diff to {selectedTarget.name}
                     </label>
                     <button
+                      className="button"
                       disabled={
                         busy ||
                         !approveDiff ||
