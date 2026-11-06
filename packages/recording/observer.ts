@@ -31,6 +31,7 @@ export const OBSERVER_SCRIPT = String.raw`(config) => {
       el.setAttribute('data-qa-observation',token);
       const privateNode = el.closest('[data-private],[data-sensitive],input[type=password],input[type=hidden]') || el.querySelector('[data-private],[data-sensitive],input[type=password],input[type=hidden]') || config.maskSelectors.some(s => el.matches(s)||el.closest(s)||el.querySelector(s));
       const roles = {BUTTON:'button',A:'link',SELECT:'combobox',TEXTAREA:'textbox'};
+      if(el.tagName==='SELECT')roles.SELECT=el.multiple||el.size>1?'listbox':'combobox';
       let role = el.getAttribute('role') || roles[el.tagName] || (el.tagName==='INPUT' ? (['checkbox','radio'].includes(el.type)?el.type:'textbox') : '');
       const label = el.getAttribute('aria-label') || (el.labels && el.labels[0] ? el.labels[0].textContent : '') || '';
       const name = label || (['BUTTON','A','OPTION'].includes(el.tagName) ? el.textContent : '') || '';
