@@ -1,6 +1,6 @@
 # Phase 6 — Controlled knowledge improvement and Autohealth
 
-Status: APPROVED. The owner sent `APPROVE PHASE 6` on 2026-11-06. Implementation has not started: the Phase 5 sequencing exception did not authorize beginning Phase 6 while Phases 3–5 remain in VALIDATION with outstanding three-system CI. A new explicit sequencing exception or completion of those checks is required by the roadmap. Planning and approval recording do not waive validation.
+Status: VALIDATION. Local implementation and checks are recorded in the [report](phase-6-report.md); required three-system CI remains pending. The owner approved Phase 6 and explicitly authorized its start with Phases 3–5 CI pending on 2026-11-06. This is a sequencing exception, not a validation waiver or skill activation grant.
 
 ## Objective and scope
 
@@ -47,7 +47,7 @@ Existing knowledge/skill lifecycle policy and evaluation rubrics remain authorit
 
 Primary risks are misleading metrics, permanent documentation noise, secret-bearing workflow evidence, overfitted skill comparisons, conflicting active instructions, stale source identities and noisy unused/flaky/setup heuristics. Limit the initial deterministic supported patterns and disclose gaps. Keep all hard safety gates independent of aggregate scores.
 
-Entry exception is pending. Any live provider session reuse, provider spending budget, actual user skill activation or external write remains a separate authorization when a concrete reviewable result requires it. No such permission is inferred from phase approval. Avoid cloud jobs or billing changes solely to bypass existing CI debt.
+Entry exception is granted and recorded in phase-status.md. Any live provider session reuse, provider spending budget, actual user skill activation or external write remains a separate authorization when a concrete reviewable result requires it. No such permission is inferred from phase approval. Avoid cloud jobs or billing changes solely to bypass existing CI debt.
 
 ## Validation and stop
 

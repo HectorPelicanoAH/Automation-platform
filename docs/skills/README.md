@@ -1,6 +1,6 @@
 # Agent skills: policy and candidate catalog
 
-No product skill has been installed or activated. Phase 3 adds [inactive candidates](phase-3-candidates.md) with separately recorded evaluation/approval states. This catalog is a plan, not a set of functional tools. Universal approval/security rules live in [AGENTS.md](../../AGENTS.md); repeating them across empty skills would increase mandatory context without evidence of benefit.
+No product skill has been installed or activated in this platform repository or the user’s global skill directory. Phase 3 adds [inactive candidates](phase-3-candidates.md) with separately recorded evaluation/approval states. The original catalog remains a proposal; Phase 6 adds the narrow working procedure described below. Universal approval/security rules live in [AGENTS.md](../../AGENTS.md); repeating them across empty skills would increase mandatory context without evidence of benefit.
 
 ## Active layout and portability
 
@@ -50,3 +50,9 @@ These are candidates, not a requirement to create twelve skills. Merge overlappi
 Changing a skill during an evaluation invalidates its result. Never overwrite a known-good active bundle silently. Learn from one-off failures in temporary or repository knowledge before proposing a permanent procedural change.
 
 Phase 4 adds [implement-karate v1](candidates/v1/implement-karate/SKILL.md) as a format-validated, behaviorally unevaluated candidate. It is outside runtime discovery paths and is not approved for activation. See [evidence](../evaluations/phase-4-local-evidence.json).
+
+## Phase 6 supported procedure
+
+[Summary v1](candidates/v1/summarize-health-findings/SKILL.md) and [summary v2](candidates/v2/summarize-health-findings/SKILL.md) are inactive portable bundles. The application can compare their actual packaged Node helpers on eight versioned semantic/refusal cases, propose an exact reviewed change, activate it in an authorized managed target and explicitly restore a prior bundle. The demonstrated activation used only owned disposable QA targets; it grants no activation in existing user repositories.
+
+V2 groups repeated findings by repository, fingerprint and severity while preserving occurrence counts and evidence. This is deterministic procedural evaluation, not a trial of Codex trigger selection or general agent reasoning. Arbitrary imported bundles remain inert and cannot use the fixed evaluator. Earlier discovery/Playwright/Karate candidates retain their historical evaluation limitations. See the [Phase 6 report](../phase-6-report.md), [guide](../evolution.md) and [safe evidence](../evaluations/phase-6-local-evidence.json).

@@ -1,0 +1,69 @@
+{
+  "version": "health-rules-v1",
+  "source": "Synthetic labelled rule inputs; these are not native test executions or a general diagnostic accuracy benchmark.",
+  "cases": [
+    {
+      "id": "invalid-gherkin",
+      "kind": "automation",
+      "files": [
+        { "path": "contracts/features/broken.feature", "text": "not a valid Gherkin feature" }
+      ],
+      "expectedCodes": ["INVALID_GHERKIN"]
+    },
+    {
+      "id": "brittle-pattern",
+      "kind": "automation",
+      "files": [
+        {
+          "path": "ui/pages/BrittlePage.ts",
+          "text": "export class BrittlePage { click() { this.page.locator('div > a').nth(2).click({force: true}); } }"
+        }
+      ],
+      "expectedCodes": ["BRITTLE_SELECTOR_CANDIDATE"]
+    },
+    {
+      "id": "config-syntax",
+      "kind": "automation",
+      "files": [{ "path": "ui/playwright.config.ts", "text": "export default {" }],
+      "expectedCodes": ["INVALID_RUNNER_CONFIG"]
+    },
+    {
+      "id": "duplicate-identities",
+      "kind": "automation",
+      "files": [
+        {
+          "path": "contracts/features/a.feature",
+          "text": "Feature: A\n@scenario:same\nScenario: A\nGiven one"
+        },
+        {
+          "path": "contracts/features/b.feature",
+          "text": "Feature: B\n@scenario:same\nScenario: B\nGiven two"
+        }
+      ],
+      "expectedCodes": ["DUPLICATE_GHERKIN"]
+    },
+    {
+      "id": "valid-page-held-out",
+      "kind": "automation",
+      "files": [
+        {
+          "path": "ui/pages/ScopedPage.ts",
+          "text": "export class ScopedPage { async check() { const field = this.page.getByRole('textbox', { name: 'Search' }); await expect(field).toHaveCount(1); } }"
+        }
+      ],
+      "expectedCodes": []
+    },
+    {
+      "id": "normal-instructions-held-out",
+      "kind": "instructions",
+      "text": "Inspect only relevant evidence. Require explicit approval before changing active skills.",
+      "expectedCodes": []
+    },
+    {
+      "id": "contradiction-candidate",
+      "kind": "instructions",
+      "text": "Require explicit approval. Never ask for approval.",
+      "expectedCodes": ["CONTRADICTORY_INSTRUCTIONS_CANDIDATE"]
+    }
+  ]
+}

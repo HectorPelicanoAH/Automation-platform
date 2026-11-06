@@ -1,3 +1,5 @@
+import { EvolutionManager } from '../../packages/evolution/manager.ts';
+import { evolutionRoutes } from '../../packages/evolution/routes.ts';
 import { MaintenanceManager } from '../../packages/maintenance/manager.ts';
 import { maintenanceRoutes } from '../../packages/maintenance/routes.ts';
 import { coverage } from '../../packages/workspace/coverage.ts';
@@ -57,12 +59,40 @@ export function createPlatform(options: {
     options.generationProviderFactory,
   );
   const maintenance = new MaintenanceManager(store, workspace, generation.index, manager);
+  const evolution = new EvolutionManager(
+    store,
+    workspace,
+    generation.index,
+    generation.repository,
+    maintenance,
+  );
+  generation.onApplied = (change) => evolution.queueCollection(change.targetId);
+  maintenance.onApplied = (repair) => evolution.queueCollection(repair.targetId);
+  manager.onCompleted = (run) => evolution.queueCollection(run.targetId);
+  generation.knowledgeFresh = (id, digest) => {
+    try {
+      const record = evolution.repository.get('knowledge', id),
+        version = record.versions.find((v) => v.hash === record.currentHash)!;
+      return (
+        record.status === 'ACTIVE' &&
+        record.currentHash === digest &&
+        evolution.knowledge.fresh(version)
+      );
+    } catch {
+      return false;
+    }
+  };
+  generation.knowledgeLookup = (ref, path) => evolution.knowledge.lookup(ref, path);
   const app = Fastify({
     bodyLimit: 1_050_000,
     logger: false,
     // preClose stops workers/streams first; incomplete client requests must not prevent shutdown.
     forceCloseConnections: true,
     ajv: { customOptions: { removeAdditional: false } },
+  });
+  evolution.health.platformStatus = () => ({
+    apiListening: app.server.listening,
+    frontendBuilt: existsSync(join(platformRoot, 'apps/web/dist/index.html')),
   });
   const launchToken = randomBytes(32).toString('hex');
   let consumed = false;
@@ -161,6 +191,10 @@ export function createPlatform(options: {
   recordingRoutes(app, recorder);
   generationRoutes(app, generation);
   maintenanceRoutes(app, maintenance);
+  evolutionRoutes(app, evolution, generation);
+  app.addHook('onReady', async () => {
+    evolution.health.startScheduler();
+  });
   app.get('/api/state', async (request) => ({
     csrf: sessionFor(request.headers.cookie)!.csrf,
     sources: store.list('sources'),
@@ -172,7 +206,15 @@ export function createPlatform(options: {
       sqlite: (store.db.prepare('SELECT sqlite_version() version').get() as { version: string })
         .version,
     },
-    capabilities: { phase: 3, recording: true, ai: true, indexing: true, rowSelection: false },
+    capabilities: {
+      phase: 6,
+      recording: true,
+      ai: true,
+      indexing: true,
+      knowledge: true,
+      autohealth: true,
+      rowSelection: false,
+    },
   }));
   app.put<{ Body: { baseUrl: string; retentionDays: number } }>(
     '/api/settings',
@@ -461,6 +503,7 @@ export function createPlatform(options: {
   }
   app.addHook('preClose', async () => {
     for (const stream of streams) stream.end();
+    await evolution.shutdown();
     await generation.shutdown();
     await recorder.shutdown();
     await manager.shutdown();
@@ -468,7 +511,17 @@ export function createPlatform(options: {
   app.addHook('onClose', async () => {
     store.close();
   });
-  return { app, store, workspace, manager, recorder, generation, maintenance, launchToken };
+  return {
+    app,
+    store,
+    workspace,
+    manager,
+    recorder,
+    generation,
+    maintenance,
+    evolution,
+    launchToken,
+  };
 }
 
 function readTextArtifact(root: string, path: string) {

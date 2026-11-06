@@ -1,4 +1,4 @@
-name: Platform acceptance (phases 1–5)
+name: Platform acceptance (phases 1–6)
 on:
   push:
     branches: ['main', 'codex/**']

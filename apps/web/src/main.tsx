@@ -1,3 +1,5 @@
+import { KnowledgePanel } from './KnowledgePanel.tsx';
+import { HealthPanel, HealthSummary } from './HealthPanel.tsx';
 import { MaintenancePanel } from './MaintenancePanel.tsx';
 import { CoveragePanel } from './CoveragePanel.tsx';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -10,7 +12,16 @@ import { RecordPanel } from './RecordPanel.tsx';
 import { GenerationPanel } from './GenerationPanel.tsx';
 import { WorkspacePanel } from './WorkspacePanel.tsx';
 
-type View = 'Dashboard' | 'Workspace' | 'Scenarios' | 'Repository' | 'Runs' | 'Record' | 'Generate';
+type View =
+  | 'Dashboard'
+  | 'Workspace'
+  | 'Scenarios'
+  | 'Repository'
+  | 'Runs'
+  | 'Record'
+  | 'Generate'
+  | 'Knowledge & Skills'
+  | 'Autohealth';
 type Check = { name: string; ready: boolean; detail: string };
 const active = (run: Run) => ['QUEUED', 'RUNNING', 'CANCEL_REQUESTED'].includes(run.status);
 const time = (value: string) => new Date(value).toLocaleString();
@@ -232,6 +243,8 @@ function App() {
               'Runs',
               'Record',
               'Generate',
+              'Knowledge & Skills',
+              'Autohealth',
             ] as View[]
           ).map((name, index) => (
             <button
@@ -240,14 +253,14 @@ function App() {
               className={view === name ? 'nav-item selected' : 'nav-item'}
               onClick={() => setView(name)}
             >
-              <span>{['◫', '▦', '≡', '⌘', '▷', '●', '✧'][index]}</span>
+              <span>{['◫', '▦', '≡', '⌘', '▷', '●', '✧', '◇', '✚'][index]}</span>
               {name}
               {name === 'Runs' && state?.runs.some(active) ? <i className="dot" /> : null}
             </button>
           ))}
         </nav>
         <div className="sidebar-note">
-          <span className="phase-label">PHASE 05</span>
+          <span className="phase-label">PHASE 06</span>
           <p>
             A local foundation.
             <br />
@@ -296,6 +309,8 @@ function App() {
                       Runs: 'Execution with evidence.',
                       Record: 'Capture what actually happened.',
                       Generate: 'From evidence to reviewed tests.',
+                      'Knowledge & Skills': 'Knowledge with evidence and review.',
+                      Autohealth: 'Inspect health. Preserve control.',
                     }[view]}
               </h1>
               <p className="muted">
@@ -309,9 +324,13 @@ function App() {
                         ? 'Read the target files behind your functional coverage.'
                         : view === 'Generate'
                           ? 'Inspect evidence, review requirements and validate staged UI/API automation.'
-                          : view === 'Record'
-                            ? 'Capture interactions and narration, preserve evidence and inspect gaps.'
-                            : 'Independent UI and API coverage, with native reports and honest outcomes.'}
+                          : view === 'Knowledge & Skills'
+                            ? 'Source-linked discoveries, evaluated procedures and explicit reversible activation.'
+                            : view === 'Autohealth'
+                              ? 'Read-only local checks with evidence, limits and recommended actions.'
+                              : view === 'Record'
+                                ? 'Capture interactions and narration, preserve evidence and inspect gaps.'
+                                : 'Independent UI and API coverage, with native reports and honest outcomes.'}
               </p>
             </div>
             {state && (
@@ -363,6 +382,13 @@ function App() {
                   setView('Runs');
                 }}
               />
+              {view === 'Knowledge & Skills' && (
+                <KnowledgePanel key={targetId} targetId={targetId} />
+              )}
+              {view === 'Autohealth' && <HealthPanel key={targetId} targetId={targetId} />}
+              {view === 'Dashboard' && (
+                <HealthSummary targetId={targetId} onOpen={() => setView('Autohealth')} />
+              )}
               {view === 'Dashboard' && (
                 <>
                   <section className="welcome">
@@ -923,7 +949,7 @@ function App() {
           )}
           <footer className="page-footer">
             <span>
-              QA LOCAL <i>/</i> PHASE 05 FOUNDATION
+              QA LOCAL <i>/</i> PHASE 06 FOUNDATION
             </span>
             <span>
               {state

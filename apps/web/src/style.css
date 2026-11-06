@@ -1321,3 +1321,10 @@ code {
 .maintenance-workbench {
   padding: 24px;
 }
+
+.health-overview {
+  padding: 24px;
+}
+.evolution-workbench pre {
+  max-height: 420px;
+}

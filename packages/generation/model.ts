@@ -19,6 +19,9 @@ export interface ContextFile {
 export interface GenerationTask {
   id: string;
   kind: 'analysis' | 'implementation';
+  executionClass?: 'CODEX' | 'CUSTOM';
+  knowledgeRefs?: { id: string; hash: string }[];
+  searches?: { queryHash: string; scopeHash: string }[];
   status: 'RUNNING' | 'SUCCEEDED' | 'FAILED' | 'CANCEL_REQUESTED' | 'CANCELLED' | 'INTERRUPTED';
   targetId: string;
   recordingId: string;

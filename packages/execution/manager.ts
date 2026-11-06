@@ -26,6 +26,7 @@ import { karateResults, playwrightResults, readJson, redact, reportFiles } from 
 
 const terminal = new Set(['PASSED', 'FAILED', 'CANCELLED', 'INTERRUPTED']);
 export class ExecutionManager {
+  onCompleted?: (run: Run) => void;
   private active?: { run: Run; child?: ChildProcess };
   private closing = false;
   private logs = new Map<string, string>();
@@ -420,6 +421,13 @@ export class ExecutionManager {
         }
         this.logs.delete(run.id);
         this.active = undefined;
+        if (!run.proposalId) {
+          try {
+            this.onCompleted?.(run);
+          } catch {
+            /* Collection is advisory and cannot alter native evidence. */
+          }
+        }
         void this.pump();
       }
     }

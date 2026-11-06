@@ -58,6 +58,7 @@ export function failureHypotheses(evidence: Diagnosis['evidence']): Diagnosis['h
 }
 export class MaintenanceManager {
   readonly directory: string;
+  onApplied?: (repair: Repair) => void;
   constructor(
     readonly store: Store,
     readonly workspace: Workspace,
@@ -478,7 +479,13 @@ export class MaintenanceManager {
       this.put('repair', r);
       throw e;
     }
-    return this.put('repair', r);
+    const saved = this.put('repair', r);
+    try {
+      this.onApplied?.(saved);
+    } catch {
+      /* Advisory collection cannot change validated application. */
+    }
+    return saved;
   }
   prepareRollback(id: string, expectedHash: string) {
     const r = this.repair(id);

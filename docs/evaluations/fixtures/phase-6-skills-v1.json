@@ -1,0 +1,56 @@
+{
+  "version": "health-summary-cases-v1",
+  "source": "packages/evolution/skills.ts#SKILL_CASES",
+  "caseSetHash": "e034b23b4198c89b8fdd8985eb14e08e2c6b6199c9250aac7985be169c1b2f8e",
+  "limits": "Versioned deterministic semantic/refusal cases. Held-out identifiers name fixed variants, not blinded independent trials. Input hashes below avoid duplicating the 65 KB refusal payload; runnable inputs are in the referenced versioned module.",
+  "cases": [
+    {
+      "id": "single",
+      "inputHash": "7cb2968e3d7cc825d32290bd8b493fd22e36bddd028a718f39465fce4eac41ac",
+      "inputBytes": 105,
+      "expectedRefusal": false
+    },
+    {
+      "id": "repeated-evidence",
+      "inputHash": "1643b1b5bfa4832d8e822b1522cc68451c70b7b2749f42fbf78edde771a4c83d",
+      "inputBytes": 1105,
+      "expectedRefusal": false
+    },
+    {
+      "id": "distinct-roots-held-out",
+      "inputHash": "ba67714258a319b91ea1375717cac9d9f7fdab2a3e555d3039f703f6f3294e8b",
+      "inputBytes": 265,
+      "expectedRefusal": false
+    },
+    {
+      "id": "severity-held-out",
+      "inputHash": "8071cfca9876ac9c66949a246b427dffc8912f82cf3f14964c25d1fbd9b4fa1b",
+      "inputBytes": 151,
+      "expectedRefusal": false
+    },
+    {
+      "id": "empty",
+      "inputHash": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "inputBytes": 2,
+      "expectedRefusal": false
+    },
+    {
+      "id": "invalid",
+      "inputHash": "3adc7e2f377cd4c2f34a1b85c84fa2317cde026a1020f9590301addc9fe5a784",
+      "inputBytes": 66,
+      "expectedRefusal": true
+    },
+    {
+      "id": "oversized",
+      "inputHash": "92c40b6398242dd98a1c2a985cf112aca508a62983e606bc34d578962704b3a5",
+      "inputBytes": 65076,
+      "expectedRefusal": true
+    },
+    {
+      "id": "union-held-out",
+      "inputHash": "6abba03b138ced4c3bb382e45f379d963be89065271f72a082fcd47bdeb89bd0",
+      "inputBytes": 259,
+      "expectedRefusal": false
+    }
+  ]
+}

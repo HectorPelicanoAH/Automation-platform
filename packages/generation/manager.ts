@@ -94,6 +94,13 @@ export class GenerationManager {
   readonly stagingRoot: string;
   private active?: { id: string; abort: AbortController; done: Promise<void> };
   private connections = new Set<CodexConnection>();
+  readonly executionClass: 'CODEX' | 'CUSTOM';
+  onApplied?: (change: ChangeProposal) => void;
+  knowledgeLookup?: (
+    ref: RootRef,
+    path: string,
+  ) => { id: string; hash: string; [key: string]: unknown }[];
+  knowledgeFresh?: (id: string, hash: string) => boolean;
   private providerFactory: (settings: AiSettings, cwd: string) => AgentProvider;
   constructor(
     readonly store: Store,
@@ -102,6 +109,7 @@ export class GenerationManager {
     readonly runner: ExecutionManager,
     providerFactory?: (settings: AiSettings, cwd: string) => AgentProvider,
   ) {
+    this.executionClass = providerFactory ? 'CUSTOM' : 'CODEX';
     this.repository = new GenerationRepository(store);
     this.index = new CapabilityIndex(store, workspace);
     const root = join(store.directory, 'generation');
@@ -254,6 +262,12 @@ export class GenerationManager {
     return target;
   }
   private dependenciesFresh(task: GenerationTask) {
+    for (const fact of task.knowledgeRefs || [])
+      if (!this.knowledgeFresh?.(fact.id, fact.hash))
+        throw new AppError(
+          409,
+          'Retrieved knowledge approval/content changed; repeat generation with current evidence',
+        );
     for (const f of task.contextFiles) {
       const root = this.index.root(f.ref);
       if (
@@ -292,6 +306,9 @@ export class GenerationManager {
       retrievalBytes: 0,
       promptBytes: 0,
       toolCalls: 0,
+      searches: [],
+      knowledgeRefs: [],
+      executionClass: this.executionClass,
       model: kind === 'analysis' ? settings.analysisModel : settings.implementationModel,
       usage: null,
     };
@@ -343,16 +360,36 @@ export class GenerationManager {
       const input = asObject(args);
       if (name === 'qa_lookup') {
         const query = text(input.query, 200);
+        task.searches!.push({
+          queryHash: hash(query.trim().toLowerCase().replace(/\s+/g, ' ')),
+          scopeHash: hash(
+            JSON.stringify(
+              refs.map((ref) => ({ ref, treeHash: this.index.get(ref)?.treeHash || null })),
+            ),
+          ),
+        });
+        save();
         const hits = refs
           .flatMap((ref) => this.index.lookup(ref, query))
           .sort((a, b) => b.score - a.score)
           .slice(0, 8);
         for (const hit of hits) if (!hit.stale) remember(hit.ref, hit.path, hit.hash, 0);
         return retrieved(
-          hits.map((h) => ({
-            ...h,
-            capabilities: scrub(h.capabilities),
-          })),
+          hits.map((h) => {
+            const advisoryKnowledge = this.knowledgeLookup?.(h.ref, h.path) || [];
+            for (const fact of advisoryKnowledge)
+              if (!task.knowledgeRefs!.some((k) => k.id === fact.id && k.hash === fact.hash)) {
+                if (task.knowledgeRefs!.length >= 32)
+                  throw new AppError(413, 'Knowledge dependency limit reached');
+                task.knowledgeRefs!.push({ id: fact.id, hash: fact.hash });
+              }
+            save();
+            return {
+              ...h,
+              capabilities: scrub(h.capabilities),
+              ...(advisoryKnowledge.length ? { advisoryKnowledge: scrub(advisoryKnowledge) } : {}),
+            };
+          }),
         );
       }
       if (name !== 'qa_read_file') throw new AppError(403, 'Tool is not authorized');
@@ -1079,7 +1116,13 @@ export class GenerationManager {
       this.repository.put('changes', change);
       throw e;
     }
-    return this.repository.put('changes', change);
+    const saved = this.repository.put('changes', change);
+    try {
+      this.onApplied?.(saved);
+    } catch {
+      /* Advisory knowledge cannot alter application evidence. */
+    }
+    return saved;
   }
   rejectChange(id: string, expectedHash: string) {
     const change = this.change(id);

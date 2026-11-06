@@ -1,6 +1,6 @@
 # Knowledge lifecycle
 
-Phase 0 introduced curated architecture decisions. Phase 3 adds a bounded capability index and evidence-linked proposal/task history; it does not automatically promote observations into permanent knowledge. There is no automatic documentation writer or learning engine. Full knowledge evolution belongs to Phase 6.
+Phase 0 introduced curated architecture decisions. Phase 3 adds a bounded capability index and evidence-linked proposal/task history; it does not automatically promote observations into permanent knowledge. Phase 6 adds bounded automatic candidate collection, reviewed private documentation, freshness checks and reversible history; see [runtime conventions](evolution-conventions.md) and the [user guide](../evolution.md). No collected observation silently becomes an active instruction.
 
 ## Classification and promotion
 

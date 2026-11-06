@@ -1,0 +1,1122 @@
+{
+  "source": "Actual native Playwright target run, automatic knowledge ingestion, real fixed-script evaluations and owned synthetic web/API QA actor approvals; no provider inference or user/global skill changes.",
+  "nativeRun": {
+    "targetId": "935e1563-1105-4cfa-8173-7c4f3943e99a",
+    "framework": "playwright",
+    "selection": {
+      "kind": "suite"
+    },
+    "id": "066ebecc-4ab8-482d-acec-f453ad003ca8",
+    "status": "PASSED",
+    "createdAt": "2026-11-06T23:28:04.481Z",
+    "tests": [
+      {
+        "nativeId": "promotions.feature.spec.js:8:0:0",
+        "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #1",
+        "status": "PASSED",
+        "durationMs": 1040,
+        "scenarioId": "free-shipping",
+        "featurePath": "contracts/features/promotions.feature",
+        "row": null,
+        "steps": [
+          {
+            "name": "Given a guest customer from \"es\" using language \"es\" and brand \"demo\"",
+            "status": "PASSED",
+            "durationMs": 1
+          },
+          {
+            "name": "When the customer visits the promotions page",
+            "status": "PASSED",
+            "durationMs": 265
+          },
+          {
+            "name": "Then the free shipping promotion shows title \"Envío gratis\", discount \"50€\" and subtitle \"En pedidos superiores a 50€\"",
+            "status": "PASSED",
+            "durationMs": 287
+          }
+        ]
+      },
+      {
+        "nativeId": "promotions.feature.spec.js:14:0:0",
+        "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #2",
+        "status": "PASSED",
+        "durationMs": 1007,
+        "scenarioId": "free-shipping",
+        "featurePath": "contracts/features/promotions.feature",
+        "row": null,
+        "steps": [
+          {
+            "name": "Given a guest customer from \"pt\" using language \"pt\" and brand \"demo\"",
+            "status": "PASSED",
+            "durationMs": 1
+          },
+          {
+            "name": "When the customer visits the promotions page",
+            "status": "PASSED",
+            "durationMs": 160
+          },
+          {
+            "name": "Then the free shipping promotion shows title \"Envio grátis\", discount \"60€\" and subtitle \"Em compras superiores a 60€\"",
+            "status": "PASSED",
+            "durationMs": 335
+          }
+        ]
+      }
+    ],
+    "artifacts": [
+      {
+        "name": "artifacts/.last-run.json",
+        "size": 45,
+        "hash": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903"
+      },
+      {
+        "name": "contract-snapshot.json",
+        "size": 1423,
+        "hash": "771704432bef416dd46fb32a96641c1b94f318830a8ffe4fe5b162f8011d589c"
+      },
+      {
+        "name": "html/index.html",
+        "size": 520730,
+        "hash": "2c169e083454fd230487e393c835b7dd377b01d7878f9e87d931aff4dbc08c4e"
+      },
+      {
+        "name": "results.json",
+        "size": 8446,
+        "hash": "d22ccd7ce3f5eaae63e19d630aef7f5125de9a3961a4eab089931735ea11a737"
+      },
+      {
+        "name": "runner.log",
+        "size": 440,
+        "hash": "a8afaf0cc1cda470ab073113c617cd24d30b83c13ef4ac4fc838eedefe177d9f"
+      }
+    ],
+    "snapshot": [
+      {
+        "path": "contracts/features/promotions.feature",
+        "hash": "8868faaa2891ef39e449c50bd76ddf42c76651f19e760f2489993f4390455ff4",
+        "scenarios": [
+          {
+            "id": "free-shipping",
+            "name": "Show the correct free shipping promotion",
+            "line": 4,
+            "tags": ["@promotion", "@smoke", "@scenario:free-shipping"],
+            "examples": [
+              {
+                "row": 11,
+                "values": {
+                  "countryIso": "es",
+                  "languageIso": "es",
+                  "brand": "demo",
+                  "promoTitle": "Envío gratis",
+                  "discount": "50€",
+                  "subtitle": "En pedidos superiores a 50€"
+                }
+              },
+              {
+                "row": 12,
+                "values": {
+                  "countryIso": "pt",
+                  "languageIso": "pt",
+                  "brand": "demo",
+                  "promoTitle": "Envio grátis",
+                  "discount": "60€",
+                  "subtitle": "Em compras superiores a 60€"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "executableHash": "2783478bc4a66ce90f1faf93ea4d3f334a7b8a1ff7f221b9eb9aa804c4032bdb",
+    "toolchain": {
+      "node": "v24.22.2",
+      "framework": "1.65.0"
+    },
+    "startedAt": "2026-11-06T23:28:04.489Z",
+    "exitCode": 0,
+    "finishedAt": "2026-11-06T23:28:10.222Z"
+  },
+  "automatic": {
+    "id": "cce01f67-8671-43b3-b29b-65e44f339f0a",
+    "kind": "COLLECT",
+    "status": "SUCCEEDED",
+    "createdAt": "2026-11-06T23:28:10.978Z",
+    "result": {
+      "created": 8,
+      "changed": 0,
+      "unchanged": 0,
+      "indexedFiles": 10,
+      "limitations": [
+        "Static capability facts are not proof of executed interactions.",
+        "Only current-contract/current-executable completed target runs establish native outcome knowledge."
+      ]
+    },
+    "finishedAt": "2026-11-06T23:28:11.129Z"
+  },
+  "knowledge": {
+    "nativeRecordId": "fced2e20-48fd-4786-9584-7e7841fb51d9",
+    "pageRecordId": "0afe8fa6-81f9-49c7-af9c-2e737d9cba87",
+    "firstDocumentHash": "1e6b015a4b5493dac2ee7a948826a41b5e0e7565b88d19cbdea864bf08c2ff75",
+    "secondDocumentHash": "a2aabe6aa19ca74f52c1e10bdae6751291347bb4181caed0d9b0b11e306ac094",
+    "restoredDocumentHash": "1e6b015a4b5493dac2ee7a948826a41b5e0e7565b88d19cbdea864bf08c2ff75",
+    "restoredFresh": false
+  },
+  "health": [
+    {
+      "id": "ec133b74-e931-4440-81af-30a30934fd23",
+      "targetId": "935e1563-1105-4cfa-8173-7c4f3943e99a",
+      "origin": "SCHEDULED",
+      "status": "SUCCEEDED",
+      "createdAt": "2026-11-06T23:28:15.278Z",
+      "checks": [
+        {
+          "name": "AI connectivity",
+          "status": "UNAVAILABLE",
+          "detail": "Not probed automatically; use the explicit configured-provider connection action. No inference or credential reuse occurs."
+        },
+        {
+          "name": "Platform and dependencies",
+          "status": "PASSED",
+          "detail": "Read-only supported checks completed; heuristic limits accompany findings."
+        },
+        {
+          "name": "Workspace permissions and runner configuration",
+          "status": "FINDINGS",
+          "detail": "Read-only supported checks completed; heuristic limits accompany findings."
+        },
+        {
+          "name": "Automation syntax, reuse and execution evidence",
+          "status": "FINDINGS",
+          "detail": "Read-only supported checks completed; heuristic limits accompany findings."
+        },
+        {
+          "name": "Knowledge and skill health",
+          "status": "FINDINGS",
+          "detail": "Read-only supported checks completed; heuristic limits accompany findings."
+        }
+      ],
+      "findings": [
+        {
+          "fingerprint": "74e005c407be6af4b4798c787f6664d620eb72b95c6181b45263040a199f0de9",
+          "code": "EXECUTION_TRUST_STALE",
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "severity": "WARNING",
+          "confidence": "DETERMINISTIC",
+          "evidence": ["Executable project fingerprint is not currently trusted."],
+          "action": "Inspect the current configuration and explicitly trust before native execution."
+        },
+        {
+          "fingerprint": "d7e658c0f6d2fd86be78abfe5013267b562d9f06d410082af0d36beed6d53919",
+          "code": "UNUSED_PAGE_CANDIDATE",
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "severity": "INFO",
+          "confidence": "HEURISTIC",
+          "evidence": [
+            "ui/pages/GuestSetupPage.ts",
+            "No static indexed named import; dynamic references and excluded files are unknown."
+          ],
+          "action": "Inspect all consumers before removing a Page/component."
+        },
+        {
+          "fingerprint": "aa21c724cbfb026d79651281578e44049d3d3cc7d15cfd94e449b64943f7a711",
+          "code": "KNOWLEDGE_STALE",
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "severity": "WARNING",
+          "confidence": "DETERMINISTIC",
+          "evidence": [
+            "knowledge:fced2e20-48fd-4786-9584-7e7841fb51d9",
+            "Source content/policy no longer matches the recorded version."
+          ],
+          "action": "Revalidate the relevant source and review a replacement."
+        },
+        {
+          "fingerprint": "06f61bf8d51ea790c0fd1d03e31ddd22a62d902ca91a9b00ead5ea70d8de123d",
+          "code": "DOCUMENT_STALE",
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "severity": "WARNING",
+          "confidence": "DETERMINISTIC",
+          "evidence": [
+            "knowledge:fced2e20-48fd-4786-9584-7e7841fb51d9",
+            "Published private document refers to outdated evidence."
+          ],
+          "action": "Review the current sourced revision before publishing a replacement."
+        },
+        {
+          "fingerprint": "579ba015e400ed64c62db43f414293ee0c41e2dbace0b4efe1157105385cb2bb",
+          "code": "DOCUMENT_STALE",
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "severity": "WARNING",
+          "confidence": "DETERMINISTIC",
+          "evidence": [
+            "knowledge:0afe8fa6-81f9-49c7-af9c-2e737d9cba87",
+            "Published private document refers to outdated evidence."
+          ],
+          "action": "Review the current sourced revision before publishing a replacement."
+        }
+      ],
+      "finishedAt": "2026-11-06T23:28:15.474Z"
+    },
+    {
+      "id": "10b07545-9f54-4fad-b5c4-8d3cb876e1dd",
+      "targetId": "935e1563-1105-4cfa-8173-7c4f3943e99a",
+      "origin": "MANUAL",
+      "status": "SUCCEEDED",
+      "createdAt": "2026-11-06T23:28:14.778Z",
+      "checks": [
+        {
+          "name": "AI connectivity",
+          "status": "UNAVAILABLE",
+          "detail": "Not probed automatically; use the explicit configured-provider connection action. No inference or credential reuse occurs."
+        },
+        {
+          "name": "Platform and dependencies",
+          "status": "PASSED",
+          "detail": "Read-only supported checks completed; heuristic limits accompany findings."
+        },
+        {
+          "name": "Workspace permissions and runner configuration",
+          "status": "FINDINGS",
+          "detail": "Read-only supported checks completed; heuristic limits accompany findings."
+        },
+        {
+          "name": "Automation syntax, reuse and execution evidence",
+          "status": "FINDINGS",
+          "detail": "Read-only supported checks completed; heuristic limits accompany findings."
+        },
+        {
+          "name": "Knowledge and skill health",
+          "status": "FINDINGS",
+          "detail": "Read-only supported checks completed; heuristic limits accompany findings."
+        }
+      ],
+      "findings": [
+        {
+          "fingerprint": "74e005c407be6af4b4798c787f6664d620eb72b95c6181b45263040a199f0de9",
+          "code": "EXECUTION_TRUST_STALE",
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "severity": "WARNING",
+          "confidence": "DETERMINISTIC",
+          "evidence": ["Executable project fingerprint is not currently trusted."],
+          "action": "Inspect the current configuration and explicitly trust before native execution."
+        },
+        {
+          "fingerprint": "d7e658c0f6d2fd86be78abfe5013267b562d9f06d410082af0d36beed6d53919",
+          "code": "UNUSED_PAGE_CANDIDATE",
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "severity": "INFO",
+          "confidence": "HEURISTIC",
+          "evidence": [
+            "ui/pages/GuestSetupPage.ts",
+            "No static indexed named import; dynamic references and excluded files are unknown."
+          ],
+          "action": "Inspect all consumers before removing a Page/component."
+        },
+        {
+          "fingerprint": "aa21c724cbfb026d79651281578e44049d3d3cc7d15cfd94e449b64943f7a711",
+          "code": "KNOWLEDGE_STALE",
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "severity": "WARNING",
+          "confidence": "DETERMINISTIC",
+          "evidence": [
+            "knowledge:fced2e20-48fd-4786-9584-7e7841fb51d9",
+            "Source content/policy no longer matches the recorded version."
+          ],
+          "action": "Revalidate the relevant source and review a replacement."
+        },
+        {
+          "fingerprint": "06f61bf8d51ea790c0fd1d03e31ddd22a62d902ca91a9b00ead5ea70d8de123d",
+          "code": "DOCUMENT_STALE",
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "severity": "WARNING",
+          "confidence": "DETERMINISTIC",
+          "evidence": [
+            "knowledge:fced2e20-48fd-4786-9584-7e7841fb51d9",
+            "Published private document refers to outdated evidence."
+          ],
+          "action": "Review the current sourced revision before publishing a replacement."
+        },
+        {
+          "fingerprint": "579ba015e400ed64c62db43f414293ee0c41e2dbace0b4efe1157105385cb2bb",
+          "code": "DOCUMENT_STALE",
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "severity": "WARNING",
+          "confidence": "DETERMINISTIC",
+          "evidence": [
+            "knowledge:0afe8fa6-81f9-49c7-af9c-2e737d9cba87",
+            "Published private document refers to outdated evidence."
+          ],
+          "action": "Review the current sourced revision before publishing a replacement."
+        }
+      ],
+      "finishedAt": "2026-11-06T23:28:14.952Z"
+    },
+    {
+      "id": "b52e5b48-9e28-45db-a814-47c9cecc8691",
+      "targetId": "935e1563-1105-4cfa-8173-7c4f3943e99a",
+      "origin": "MANUAL",
+      "status": "SUCCEEDED",
+      "createdAt": "2026-11-06T23:28:13.806Z",
+      "checks": [
+        {
+          "name": "AI connectivity",
+          "status": "UNAVAILABLE",
+          "detail": "Not probed automatically; use the explicit configured-provider connection action. No inference or credential reuse occurs."
+        },
+        {
+          "name": "Platform and dependencies",
+          "status": "PASSED",
+          "detail": "Read-only supported checks completed; heuristic limits accompany findings."
+        },
+        {
+          "name": "Workspace permissions and runner configuration",
+          "status": "FINDINGS",
+          "detail": "Read-only supported checks completed; heuristic limits accompany findings."
+        },
+        {
+          "name": "Automation syntax, reuse and execution evidence",
+          "status": "FINDINGS",
+          "detail": "Read-only supported checks completed; heuristic limits accompany findings."
+        },
+        {
+          "name": "Knowledge and skill health",
+          "status": "FINDINGS",
+          "detail": "Read-only supported checks completed; heuristic limits accompany findings."
+        }
+      ],
+      "findings": [
+        {
+          "fingerprint": "74e005c407be6af4b4798c787f6664d620eb72b95c6181b45263040a199f0de9",
+          "code": "EXECUTION_TRUST_STALE",
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "severity": "WARNING",
+          "confidence": "DETERMINISTIC",
+          "evidence": ["Executable project fingerprint is not currently trusted."],
+          "action": "Inspect the current configuration and explicitly trust before native execution."
+        },
+        {
+          "fingerprint": "d7e658c0f6d2fd86be78abfe5013267b562d9f06d410082af0d36beed6d53919",
+          "code": "UNUSED_PAGE_CANDIDATE",
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "severity": "INFO",
+          "confidence": "HEURISTIC",
+          "evidence": [
+            "ui/pages/GuestSetupPage.ts",
+            "No static indexed named import; dynamic references and excluded files are unknown."
+          ],
+          "action": "Inspect all consumers before removing a Page/component."
+        },
+        {
+          "fingerprint": "aa21c724cbfb026d79651281578e44049d3d3cc7d15cfd94e449b64943f7a711",
+          "code": "KNOWLEDGE_STALE",
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "severity": "WARNING",
+          "confidence": "DETERMINISTIC",
+          "evidence": [
+            "knowledge:fced2e20-48fd-4786-9584-7e7841fb51d9",
+            "Source content/policy no longer matches the recorded version."
+          ],
+          "action": "Revalidate the relevant source and review a replacement."
+        },
+        {
+          "fingerprint": "06f61bf8d51ea790c0fd1d03e31ddd22a62d902ca91a9b00ead5ea70d8de123d",
+          "code": "DOCUMENT_STALE",
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "severity": "WARNING",
+          "confidence": "DETERMINISTIC",
+          "evidence": [
+            "knowledge:fced2e20-48fd-4786-9584-7e7841fb51d9",
+            "Published private document refers to outdated evidence."
+          ],
+          "action": "Review the current sourced revision before publishing a replacement."
+        },
+        {
+          "fingerprint": "579ba015e400ed64c62db43f414293ee0c41e2dbace0b4efe1157105385cb2bb",
+          "code": "DOCUMENT_STALE",
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "severity": "WARNING",
+          "confidence": "DETERMINISTIC",
+          "evidence": [
+            "knowledge:0afe8fa6-81f9-49c7-af9c-2e737d9cba87",
+            "Published private document refers to outdated evidence."
+          ],
+          "action": "Review the current sourced revision before publishing a replacement."
+        }
+      ],
+      "finishedAt": "2026-11-06T23:28:14.220Z"
+    }
+  ],
+  "schedules": [
+    {
+      "targetId": "935e1563-1105-4cfa-8173-7c4f3943e99a",
+      "enabled": false,
+      "intervalMinutes": 1,
+      "slowSetupMs": 2000,
+      "id": "935e1563-1105-4cfa-8173-7c4f3943e99a",
+      "nextAt": null,
+      "lastRunId": "ec133b74-e931-4440-81af-30a30934fd23",
+      "missed": 0,
+      "skippedOverlap": 0
+    }
+  ],
+  "baseline": {
+    "name": "summarize-health-findings",
+    "version": "v1",
+    "files": [
+      {
+        "path": "SKILL.md",
+        "content": "---\nname: summarize-health-findings\ndescription: Summarize existing redacted Autohealth finding JSON when reviewing repeated checks. Does not inspect repositories or apply fixes.\n---\n\nUse supplied redacted finding JSON. Preserve the root, fingerprint, severity and every evidence reference; a repeated finding is not a new defect. Input is an array of objects with root, fingerprint, severity and evidence.\n\nRun `node scripts/summarize.mjs <input.json>` from this skill directory and inspect the JSON output. The script only reads the selected input and writes its result to stdout. Report unsupported inputs rather than inventing evidence. Keep heuristic findings uncertain and distinguish absence of evidence from a successful check. The summary grants no permission to change a repository, test, instruction or active skill.\n"
+      },
+      {
+        "path": "scripts/summarize.mjs",
+        "content": "import process from 'node:process';\nimport { Buffer } from 'node:buffer';\nimport { log } from 'node:console';\nimport { readFileSync } from 'node:fs';\nconst text = readFileSync(process.argv[2], 'utf8');\nif (Buffer.byteLength(text) > 64000) throw new Error('Input exceeds summary budget');\nconst input = JSON.parse(text);\nif (!Array.isArray(input) || input.length > 100)\n  throw new Error('Expected at most 100 redacted findings');\nfor (const item of input) {\n  if (\n    !item ||\n    typeof item !== 'object' ||\n    typeof item.root !== 'string' ||\n    typeof item.fingerprint !== 'string' ||\n    !['INFO', 'WARNING', 'ERROR'].includes(item.severity) ||\n    !Array.isArray(item.evidence) ||\n    item.evidence.some((s) => typeof s !== 'string')\n  )\n    throw new Error('Unsupported finding input');\n}\nconst findings = input.map((item) => ({\n  root: item.root,\n  fingerprint: item.fingerprint,\n  severity: item.severity,\n  evidence: item.evidence,\n  occurrences: 1,\n}));\nlog(JSON.stringify({ findings }));\n"
+      }
+    ],
+    "problem": "A portable read-only summary procedure is not yet an active product skill.",
+    "benefit": "Preserve complete supplied finding evidence without requiring the platform.",
+    "evidence": ["initial portable procedure; not installed or active"],
+    "id": "9695fafb-5399-4b71-8574-c31bfa77e53e",
+    "hash": "7926939b8a64e3bed72d830881bef57eba31ef64771a5bdefa47f252b5b6055b",
+    "createdAt": "2026-11-06T23:28:16.055Z",
+    "status": "PROPOSED",
+    "evaluator": "health-summary-v1"
+  },
+  "candidate": {
+    "name": "summarize-health-findings",
+    "version": "v2",
+    "parentId": "9695fafb-5399-4b71-8574-c31bfa77e53e",
+    "files": [
+      {
+        "path": "SKILL.md",
+        "content": "---\nname: summarize-health-findings\ndescription: Summarize existing redacted Autohealth finding JSON when reviewing repeated checks. Does not inspect repositories or apply fixes.\n---\n\nUse supplied redacted finding JSON. Preserve the root, fingerprint, severity and every evidence reference; a repeated finding is not a new defect. Input is an array of objects with root, fingerprint, severity and evidence.\n\nRun `node scripts/summarize.mjs <input.json>` from this skill directory and inspect the JSON output. The script only reads the selected input and writes its result to stdout. Report unsupported inputs rather than inventing evidence. Keep heuristic findings uncertain and distinguish absence of evidence from a successful check. The summary grants no permission to change a repository, test, instruction or active skill.\n"
+      },
+      {
+        "path": "scripts/summarize.mjs",
+        "content": "import process from 'node:process';\nimport { Buffer } from 'node:buffer';\nimport { log } from 'node:console';\nimport { readFileSync } from 'node:fs';\nconst text = readFileSync(process.argv[2], 'utf8');\nif (Buffer.byteLength(text) > 64000) throw new Error('Input exceeds summary budget');\nconst input = JSON.parse(text);\nif (!Array.isArray(input) || input.length > 100)\n  throw new Error('Expected at most 100 redacted findings');\nfor (const item of input) {\n  if (\n    !item ||\n    typeof item !== 'object' ||\n    typeof item.root !== 'string' ||\n    typeof item.fingerprint !== 'string' ||\n    !['INFO', 'WARNING', 'ERROR'].includes(item.severity) ||\n    !Array.isArray(item.evidence) ||\n    item.evidence.some((s) => typeof s !== 'string')\n  )\n    throw new Error('Unsupported finding input');\n}\nconst groups = new Map();\nfor (const item of input) {\n  const key = JSON.stringify([item.root, item.fingerprint, item.severity]);\n  const prior = groups.get(key);\n  if (prior) {\n    prior.occurrences++;\n    prior.evidence = [...new Set([...prior.evidence, ...item.evidence])];\n  } else\n    groups.set(key, {\n      root: item.root,\n      fingerprint: item.fingerprint,\n      severity: item.severity,\n      evidence: [...new Set(item.evidence)],\n      occurrences: 1,\n    });\n}\nlog(JSON.stringify({ findings: [...groups.values()] }));\n"
+      }
+    ],
+    "problem": "Repeated health sessions contain the same finding/evidence; the active summary repeats them.",
+    "benefit": "Group by root/fingerprint/severity, preserve all evidence and occurrence counts, and measure serialized output size on identical cases.",
+    "evidence": [
+      "health:ec133b74-e931-4440-81af-30a30934fd23",
+      "health:10b07545-9f54-4fad-b5c4-8d3cb876e1dd",
+      "health:b52e5b48-9e28-45db-a814-47c9cecc8691"
+    ],
+    "id": "dece7d79-f9c6-42eb-975d-c56fb1a7b63e",
+    "hash": "8ccf5d2ce5b9b5e43e93e239411a6b0c1252df00b6f344d000e16a6daee22d39",
+    "createdAt": "2026-11-06T23:28:18.641Z",
+    "status": "PROPOSED",
+    "evaluator": "health-summary-v1"
+  },
+  "baselineEvaluation": {
+    "id": "7a102cc6-2f82-46ad-af03-b55ba3f36b60",
+    "bundleId": "9695fafb-5399-4b71-8574-c31bfa77e53e",
+    "bundleHash": "7926939b8a64e3bed72d830881bef57eba31ef64771a5bdefa47f252b5b6055b",
+    "caseSetHash": "e034b23b4198c89b8fdd8985eb14e08e2c6b6199c9250aac7985be169c1b2f8e",
+    "evaluatorHash": "6b0b81f3cd4faa9b79ad41f38169fc11c8c9ad78e64cf5d8119a490d66f28b27",
+    "status": "PASSED",
+    "mode": "DETERMINISTIC_SCRIPT",
+    "cases": [
+      {
+        "id": "single",
+        "candidate": {
+          "valid": true,
+          "bytes": 135
+        },
+        "baseline": null
+      },
+      {
+        "id": "repeated-evidence",
+        "candidate": {
+          "valid": true,
+          "bytes": 1215
+        },
+        "baseline": null
+      },
+      {
+        "id": "distinct-roots-held-out",
+        "candidate": {
+          "valid": true,
+          "bytes": 327
+        },
+        "baseline": null
+      },
+      {
+        "id": "severity-held-out",
+        "candidate": {
+          "valid": true,
+          "bytes": 197
+        },
+        "baseline": null
+      },
+      {
+        "id": "empty",
+        "candidate": {
+          "valid": true,
+          "bytes": 16
+        },
+        "baseline": null
+      },
+      {
+        "id": "invalid",
+        "candidate": {
+          "valid": true,
+          "bytes": 0
+        },
+        "baseline": null
+      },
+      {
+        "id": "oversized",
+        "candidate": {
+          "valid": true,
+          "bytes": 0
+        },
+        "baseline": null
+      },
+      {
+        "id": "union-held-out",
+        "candidate": {
+          "valid": true,
+          "bytes": 321
+        },
+        "baseline": null
+      }
+    ],
+    "comparison": {
+      "candidateBytes": 2211,
+      "baselineBytes": null,
+      "correctness": "Same root/fingerprint/severity occurrence multiset and complete evidence union, including held-out root/severity cases and invalid-input refusal.",
+      "limits": "One deterministic execution per case/arm. Serialized stdout bytes are not model tokens, latency, provider cost or evidence of general agent decision quality."
+    },
+    "createdAt": "2026-11-06T23:28:16.965Z"
+  },
+  "comparison": {
+    "id": "1080dc85-05ea-40cc-881c-3c9780486fe1",
+    "bundleId": "dece7d79-f9c6-42eb-975d-c56fb1a7b63e",
+    "bundleHash": "8ccf5d2ce5b9b5e43e93e239411a6b0c1252df00b6f344d000e16a6daee22d39",
+    "baselineId": "9695fafb-5399-4b71-8574-c31bfa77e53e",
+    "baselineHash": "7926939b8a64e3bed72d830881bef57eba31ef64771a5bdefa47f252b5b6055b",
+    "caseSetHash": "e034b23b4198c89b8fdd8985eb14e08e2c6b6199c9250aac7985be169c1b2f8e",
+    "evaluatorHash": "6b0b81f3cd4faa9b79ad41f38169fc11c8c9ad78e64cf5d8119a490d66f28b27",
+    "status": "PASSED",
+    "mode": "DETERMINISTIC_SCRIPT",
+    "cases": [
+      {
+        "id": "single",
+        "candidate": {
+          "valid": true,
+          "bytes": 135
+        },
+        "baseline": {
+          "valid": true,
+          "bytes": 135
+        }
+      },
+      {
+        "id": "repeated-evidence",
+        "candidate": {
+          "valid": true,
+          "bytes": 215
+        },
+        "baseline": {
+          "valid": true,
+          "bytes": 1215
+        }
+      },
+      {
+        "id": "distinct-roots-held-out",
+        "candidate": {
+          "valid": true,
+          "bytes": 227
+        },
+        "baseline": {
+          "valid": true,
+          "bytes": 327
+        }
+      },
+      {
+        "id": "severity-held-out",
+        "candidate": {
+          "valid": true,
+          "bytes": 197
+        },
+        "baseline": {
+          "valid": true,
+          "bytes": 197
+        }
+      },
+      {
+        "id": "empty",
+        "candidate": {
+          "valid": true,
+          "bytes": 16
+        },
+        "baseline": {
+          "valid": true,
+          "bytes": 16
+        }
+      },
+      {
+        "id": "invalid",
+        "candidate": {
+          "valid": true,
+          "bytes": 0
+        },
+        "baseline": {
+          "valid": true,
+          "bytes": 0
+        }
+      },
+      {
+        "id": "oversized",
+        "candidate": {
+          "valid": true,
+          "bytes": 0
+        },
+        "baseline": {
+          "valid": true,
+          "bytes": 0
+        }
+      },
+      {
+        "id": "union-held-out",
+        "candidate": {
+          "valid": true,
+          "bytes": 224
+        },
+        "baseline": {
+          "valid": true,
+          "bytes": 321
+        }
+      }
+    ],
+    "comparison": {
+      "candidateBytes": 1014,
+      "baselineBytes": 2211,
+      "correctness": "Same root/fingerprint/severity occurrence multiset and complete evidence union, including held-out root/severity cases and invalid-input refusal.",
+      "limits": "One deterministic execution per case/arm. Serialized stdout bytes are not model tokens, latency, provider cost or evidence of general agent decision quality."
+    },
+    "createdAt": "2026-11-06T23:28:21.589Z"
+  },
+  "baselineSummary": {
+    "bundleHash": "7926939b8a64e3bed72d830881bef57eba31ef64771a5bdefa47f252b5b6055b",
+    "workflowIds": ["ec133b74-e931-4440-81af-30a30934fd23", "10b07545-9f54-4fad-b5c4-8d3cb876e1dd"],
+    "inputCount": 10,
+    "inputBytes": 2695,
+    "outputBytes": 2869,
+    "output": {
+      "findings": [
+        {
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "fingerprint": "74e005c407be6af4b4798c787f6664d620eb72b95c6181b45263040a199f0de9",
+          "severity": "WARNING",
+          "evidence": ["Executable project fingerprint is not currently trusted."],
+          "occurrences": 1
+        },
+        {
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "fingerprint": "d7e658c0f6d2fd86be78abfe5013267b562d9f06d410082af0d36beed6d53919",
+          "severity": "INFO",
+          "evidence": [
+            "ui/pages/GuestSetupPage.ts",
+            "No static indexed named import; dynamic references and excluded files are unknown."
+          ],
+          "occurrences": 1
+        },
+        {
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "fingerprint": "aa21c724cbfb026d79651281578e44049d3d3cc7d15cfd94e449b64943f7a711",
+          "severity": "WARNING",
+          "evidence": [
+            "knowledge:fced2e20-48fd-4786-9584-7e7841fb51d9",
+            "Source content/policy no longer matches the recorded version."
+          ],
+          "occurrences": 1
+        },
+        {
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "fingerprint": "06f61bf8d51ea790c0fd1d03e31ddd22a62d902ca91a9b00ead5ea70d8de123d",
+          "severity": "WARNING",
+          "evidence": [
+            "knowledge:fced2e20-48fd-4786-9584-7e7841fb51d9",
+            "Published private document refers to outdated evidence."
+          ],
+          "occurrences": 1
+        },
+        {
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "fingerprint": "579ba015e400ed64c62db43f414293ee0c41e2dbace0b4efe1157105385cb2bb",
+          "severity": "WARNING",
+          "evidence": [
+            "knowledge:0afe8fa6-81f9-49c7-af9c-2e737d9cba87",
+            "Published private document refers to outdated evidence."
+          ],
+          "occurrences": 1
+        },
+        {
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "fingerprint": "74e005c407be6af4b4798c787f6664d620eb72b95c6181b45263040a199f0de9",
+          "severity": "WARNING",
+          "evidence": ["Executable project fingerprint is not currently trusted."],
+          "occurrences": 1
+        },
+        {
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "fingerprint": "d7e658c0f6d2fd86be78abfe5013267b562d9f06d410082af0d36beed6d53919",
+          "severity": "INFO",
+          "evidence": [
+            "ui/pages/GuestSetupPage.ts",
+            "No static indexed named import; dynamic references and excluded files are unknown."
+          ],
+          "occurrences": 1
+        },
+        {
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "fingerprint": "aa21c724cbfb026d79651281578e44049d3d3cc7d15cfd94e449b64943f7a711",
+          "severity": "WARNING",
+          "evidence": [
+            "knowledge:fced2e20-48fd-4786-9584-7e7841fb51d9",
+            "Source content/policy no longer matches the recorded version."
+          ],
+          "occurrences": 1
+        },
+        {
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "fingerprint": "06f61bf8d51ea790c0fd1d03e31ddd22a62d902ca91a9b00ead5ea70d8de123d",
+          "severity": "WARNING",
+          "evidence": [
+            "knowledge:fced2e20-48fd-4786-9584-7e7841fb51d9",
+            "Published private document refers to outdated evidence."
+          ],
+          "occurrences": 1
+        },
+        {
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "fingerprint": "579ba015e400ed64c62db43f414293ee0c41e2dbace0b4efe1157105385cb2bb",
+          "severity": "WARNING",
+          "evidence": [
+            "knowledge:0afe8fa6-81f9-49c7-af9c-2e737d9cba87",
+            "Published private document refers to outdated evidence."
+          ],
+          "occurrences": 1
+        }
+      ]
+    },
+    "mode": "DETERMINISTIC_SCRIPT",
+    "limits": "Serialized summary bytes only; no inference, model-token saving or general agent-quality claim."
+  },
+  "candidateSummary": {
+    "bundleHash": "8ccf5d2ce5b9b5e43e93e239411a6b0c1252df00b6f344d000e16a6daee22d39",
+    "workflowIds": ["ec133b74-e931-4440-81af-30a30934fd23", "10b07545-9f54-4fad-b5c4-8d3cb876e1dd"],
+    "inputCount": 10,
+    "inputBytes": 2695,
+    "outputBytes": 1442,
+    "output": {
+      "findings": [
+        {
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "fingerprint": "74e005c407be6af4b4798c787f6664d620eb72b95c6181b45263040a199f0de9",
+          "severity": "WARNING",
+          "evidence": ["Executable project fingerprint is not currently trusted."],
+          "occurrences": 2
+        },
+        {
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "fingerprint": "d7e658c0f6d2fd86be78abfe5013267b562d9f06d410082af0d36beed6d53919",
+          "severity": "INFO",
+          "evidence": [
+            "ui/pages/GuestSetupPage.ts",
+            "No static indexed named import; dynamic references and excluded files are unknown."
+          ],
+          "occurrences": 2
+        },
+        {
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "fingerprint": "aa21c724cbfb026d79651281578e44049d3d3cc7d15cfd94e449b64943f7a711",
+          "severity": "WARNING",
+          "evidence": [
+            "knowledge:fced2e20-48fd-4786-9584-7e7841fb51d9",
+            "Source content/policy no longer matches the recorded version."
+          ],
+          "occurrences": 2
+        },
+        {
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "fingerprint": "06f61bf8d51ea790c0fd1d03e31ddd22a62d902ca91a9b00ead5ea70d8de123d",
+          "severity": "WARNING",
+          "evidence": [
+            "knowledge:fced2e20-48fd-4786-9584-7e7841fb51d9",
+            "Published private document refers to outdated evidence."
+          ],
+          "occurrences": 2
+        },
+        {
+          "root": "target:935e1563-1105-4cfa-8173-7c4f3943e99a",
+          "fingerprint": "579ba015e400ed64c62db43f414293ee0c41e2dbace0b4efe1157105385cb2bb",
+          "severity": "WARNING",
+          "evidence": [
+            "knowledge:0afe8fa6-81f9-49c7-af9c-2e737d9cba87",
+            "Published private document refers to outdated evidence."
+          ],
+          "occurrences": 2
+        }
+      ]
+    },
+    "mode": "DETERMINISTIC_SCRIPT",
+    "limits": "Serialized summary bytes only; no inference, model-token saving or general agent-quality claim."
+  },
+  "changes": [
+    {
+      "id": "9e6ecc7c-71a0-4509-b246-377436ca4537",
+      "targetId": "935e1563-1105-4cfa-8173-7c4f3943e99a",
+      "name": "summarize-health-findings",
+      "operation": "ROLLBACK",
+      "bundleId": "9695fafb-5399-4b71-8574-c31bfa77e53e",
+      "bundleHash": "7926939b8a64e3bed72d830881bef57eba31ef64771a5bdefa47f252b5b6055b",
+      "priorBundleId": "dece7d79-f9c6-42eb-975d-c56fb1a7b63e",
+      "priorHash": "8ccf5d2ce5b9b5e43e93e239411a6b0c1252df00b6f344d000e16a6daee22d39",
+      "evaluationId": "7a102cc6-2f82-46ad-af03-b55ba3f36b60",
+      "targetRevision": "7e3e461e90c3842041c2d7264542b3ae54afd9a47440f5a868fa2f7b58d121c0",
+      "diff": "--- a/.agents/skills/summarize-health-findings/SKILL.md\n+++ b/.agents/skills/summarize-health-findings/SKILL.md\n----\n-name: summarize-health-findings\n-description: Summarize existing redacted Autohealth finding JSON when reviewing repeated checks. Does not inspect repositories or apply fixes.\n----\n-\n-Use supplied redacted finding JSON. Preserve the root, fingerprint, severity and every evidence reference; a repeated finding is not a new defect. Input is an array of objects with root, fingerprint, severity and evidence.\n-\n-Run `node scripts/summarize.mjs <input.json>` from this skill directory and inspect the JSON output. The script only reads the selected input and writes its result to stdout. Report unsupported inputs rather than inventing evidence. Keep heuristic findings uncertain and distinguish absence of evidence from a successful check. The summary grants no permission to change a repository, test, instruction or active skill.\n-\n+---\n+name: summarize-health-findings\n+description: Summarize existing redacted Autohealth finding JSON when reviewing repeated checks. Does not inspect repositories or apply fixes.\n+---\n+\n+Use supplied redacted finding JSON. Preserve the root, fingerprint, severity and every evidence reference; a repeated finding is not a new defect. Input is an array of objects with root, fingerprint, severity and evidence.\n+\n+Run `node scripts/summarize.mjs <input.json>` from this skill directory and inspect the JSON output. The script only reads the selected input and writes its result to stdout. Report unsupported inputs rather than inventing evidence. Keep heuristic findings uncertain and distinguish absence of evidence from a successful check. The summary grants no permission to change a repository, test, instruction or active skill.\n+\n--- a/.agents/skills/summarize-health-findings/scripts/summarize.mjs\n+++ b/.agents/skills/summarize-health-findings/scripts/summarize.mjs\n-import process from 'node:process';\n-import { Buffer } from 'node:buffer';\n-import { log } from 'node:console';\n-import { readFileSync } from 'node:fs';\n-const text = readFileSync(process.argv[2], 'utf8');\n-if (Buffer.byteLength(text) > 64000) throw new Error('Input exceeds summary budget');\n-const input = JSON.parse(text);\n-if (!Array.isArray(input) || input.length > 100)\n-  throw new Error('Expected at most 100 redacted findings');\n-for (const item of input) {\n-  if (\n-    !item ||\n-    typeof item !== 'object' ||\n-    typeof item.root !== 'string' ||\n-    typeof item.fingerprint !== 'string' ||\n-    !['INFO', 'WARNING', 'ERROR'].includes(item.severity) ||\n-    !Array.isArray(item.evidence) ||\n-    item.evidence.some((s) => typeof s !== 'string')\n-  )\n-    throw new Error('Unsupported finding input');\n-}\n-const groups = new Map();\n-for (const item of input) {\n-  const key = JSON.stringify([item.root, item.fingerprint, item.severity]);\n-  const prior = groups.get(key);\n-  if (prior) {\n-    prior.occurrences++;\n-    prior.evidence = [...new Set([...prior.evidence, ...item.evidence])];\n-  } else\n-    groups.set(key, {\n-      root: item.root,\n-      fingerprint: item.fingerprint,\n-      severity: item.severity,\n-      evidence: [...new Set(item.evidence)],\n-      occurrences: 1,\n-    });\n-}\n-log(JSON.stringify({ findings: [...groups.values()] }));\n-\n+import process from 'node:process';\n+import { Buffer } from 'node:buffer';\n+import { log } from 'node:console';\n+import { readFileSync } from 'node:fs';\n+const text = readFileSync(process.argv[2], 'utf8');\n+if (Buffer.byteLength(text) > 64000) throw new Error('Input exceeds summary budget');\n+const input = JSON.parse(text);\n+if (!Array.isArray(input) || input.length > 100)\n+  throw new Error('Expected at most 100 redacted findings');\n+for (const item of input) {\n+  if (\n+    !item ||\n+    typeof item !== 'object' ||\n+    typeof item.root !== 'string' ||\n+    typeof item.fingerprint !== 'string' ||\n+    !['INFO', 'WARNING', 'ERROR'].includes(item.severity) ||\n+    !Array.isArray(item.evidence) ||\n+    item.evidence.some((s) => typeof s !== 'string')\n+  )\n+    throw new Error('Unsupported finding input');\n+}\n+const findings = input.map((item) => ({\n+  root: item.root,\n+  fingerprint: item.fingerprint,\n+  severity: item.severity,\n+  evidence: item.evidence,\n+  occurrences: 1,\n+}));\n+log(JSON.stringify({ findings }));\n+",
+      "hash": "c124fefd9b71c816b38e2a93469aeb664d0098ea4ba171525b118f417c72a811",
+      "status": "APPLIED",
+      "createdAt": "2026-11-06T23:28:23.152Z",
+      "approval": {
+        "hash": "c124fefd9b71c816b38e2a93469aeb664d0098ea4ba171525b118f417c72a811",
+        "reviewer": "local-user",
+        "at": "2026-11-06T23:28:23.373Z"
+      },
+      "appliedAt": "2026-11-06T23:28:23.388Z"
+    },
+    {
+      "id": "00745c92-e44e-475e-bb23-faa4a166ffd1",
+      "targetId": "935e1563-1105-4cfa-8173-7c4f3943e99a",
+      "name": "summarize-health-findings",
+      "operation": "ACTIVATE",
+      "bundleId": "dece7d79-f9c6-42eb-975d-c56fb1a7b63e",
+      "bundleHash": "8ccf5d2ce5b9b5e43e93e239411a6b0c1252df00b6f344d000e16a6daee22d39",
+      "priorBundleId": "9695fafb-5399-4b71-8574-c31bfa77e53e",
+      "priorHash": "7926939b8a64e3bed72d830881bef57eba31ef64771a5bdefa47f252b5b6055b",
+      "evaluationId": "1080dc85-05ea-40cc-881c-3c9780486fe1",
+      "targetRevision": "7e3e461e90c3842041c2d7264542b3ae54afd9a47440f5a868fa2f7b58d121c0",
+      "diff": "--- a/.agents/skills/summarize-health-findings/SKILL.md\n+++ b/.agents/skills/summarize-health-findings/SKILL.md\n----\n-name: summarize-health-findings\n-description: Summarize existing redacted Autohealth finding JSON when reviewing repeated checks. Does not inspect repositories or apply fixes.\n----\n-\n-Use supplied redacted finding JSON. Preserve the root, fingerprint, severity and every evidence reference; a repeated finding is not a new defect. Input is an array of objects with root, fingerprint, severity and evidence.\n-\n-Run `node scripts/summarize.mjs <input.json>` from this skill directory and inspect the JSON output. The script only reads the selected input and writes its result to stdout. Report unsupported inputs rather than inventing evidence. Keep heuristic findings uncertain and distinguish absence of evidence from a successful check. The summary grants no permission to change a repository, test, instruction or active skill.\n-\n+---\n+name: summarize-health-findings\n+description: Summarize existing redacted Autohealth finding JSON when reviewing repeated checks. Does not inspect repositories or apply fixes.\n+---\n+\n+Use supplied redacted finding JSON. Preserve the root, fingerprint, severity and every evidence reference; a repeated finding is not a new defect. Input is an array of objects with root, fingerprint, severity and evidence.\n+\n+Run `node scripts/summarize.mjs <input.json>` from this skill directory and inspect the JSON output. The script only reads the selected input and writes its result to stdout. Report unsupported inputs rather than inventing evidence. Keep heuristic findings uncertain and distinguish absence of evidence from a successful check. The summary grants no permission to change a repository, test, instruction or active skill.\n+\n--- a/.agents/skills/summarize-health-findings/scripts/summarize.mjs\n+++ b/.agents/skills/summarize-health-findings/scripts/summarize.mjs\n-import process from 'node:process';\n-import { Buffer } from 'node:buffer';\n-import { log } from 'node:console';\n-import { readFileSync } from 'node:fs';\n-const text = readFileSync(process.argv[2], 'utf8');\n-if (Buffer.byteLength(text) > 64000) throw new Error('Input exceeds summary budget');\n-const input = JSON.parse(text);\n-if (!Array.isArray(input) || input.length > 100)\n-  throw new Error('Expected at most 100 redacted findings');\n-for (const item of input) {\n-  if (\n-    !item ||\n-    typeof item !== 'object' ||\n-    typeof item.root !== 'string' ||\n-    typeof item.fingerprint !== 'string' ||\n-    !['INFO', 'WARNING', 'ERROR'].includes(item.severity) ||\n-    !Array.isArray(item.evidence) ||\n-    item.evidence.some((s) => typeof s !== 'string')\n-  )\n-    throw new Error('Unsupported finding input');\n-}\n-const findings = input.map((item) => ({\n-  root: item.root,\n-  fingerprint: item.fingerprint,\n-  severity: item.severity,\n-  evidence: item.evidence,\n-  occurrences: 1,\n-}));\n-log(JSON.stringify({ findings }));\n-\n+import process from 'node:process';\n+import { Buffer } from 'node:buffer';\n+import { log } from 'node:console';\n+import { readFileSync } from 'node:fs';\n+const text = readFileSync(process.argv[2], 'utf8');\n+if (Buffer.byteLength(text) > 64000) throw new Error('Input exceeds summary budget');\n+const input = JSON.parse(text);\n+if (!Array.isArray(input) || input.length > 100)\n+  throw new Error('Expected at most 100 redacted findings');\n+for (const item of input) {\n+  if (\n+    !item ||\n+    typeof item !== 'object' ||\n+    typeof item.root !== 'string' ||\n+    typeof item.fingerprint !== 'string' ||\n+    !['INFO', 'WARNING', 'ERROR'].includes(item.severity) ||\n+    !Array.isArray(item.evidence) ||\n+    item.evidence.some((s) => typeof s !== 'string')\n+  )\n+    throw new Error('Unsupported finding input');\n+}\n+const groups = new Map();\n+for (const item of input) {\n+  const key = JSON.stringify([item.root, item.fingerprint, item.severity]);\n+  const prior = groups.get(key);\n+  if (prior) {\n+    prior.occurrences++;\n+    prior.evidence = [...new Set([...prior.evidence, ...item.evidence])];\n+  } else\n+    groups.set(key, {\n+      root: item.root,\n+      fingerprint: item.fingerprint,\n+      severity: item.severity,\n+      evidence: [...new Set(item.evidence)],\n+      occurrences: 1,\n+    });\n+}\n+log(JSON.stringify({ findings: [...groups.values()] }));\n+",
+      "hash": "b04a2f8e5e64986aae0dd4828f06fdcac22784d28a9fa74e51b4d49532d3fb01",
+      "status": "APPLIED",
+      "createdAt": "2026-11-06T23:28:22.146Z",
+      "approval": {
+        "hash": "b04a2f8e5e64986aae0dd4828f06fdcac22784d28a9fa74e51b4d49532d3fb01",
+        "reviewer": "local-user",
+        "at": "2026-11-06T23:28:22.322Z"
+      },
+      "appliedAt": "2026-11-06T23:28:22.339Z"
+    },
+    {
+      "id": "f2e4645a-6dcb-466d-8971-63e6b2969160",
+      "targetId": "935e1563-1105-4cfa-8173-7c4f3943e99a",
+      "name": "summarize-health-findings",
+      "operation": "ACTIVATE",
+      "bundleId": "9695fafb-5399-4b71-8574-c31bfa77e53e",
+      "bundleHash": "7926939b8a64e3bed72d830881bef57eba31ef64771a5bdefa47f252b5b6055b",
+      "priorBundleId": null,
+      "priorHash": null,
+      "evaluationId": "7a102cc6-2f82-46ad-af03-b55ba3f36b60",
+      "targetRevision": "7e3e461e90c3842041c2d7264542b3ae54afd9a47440f5a868fa2f7b58d121c0",
+      "diff": "--- /dev/null\n+++ b/.agents/skills/summarize-health-findings/SKILL.md\n-\n+---\n+name: summarize-health-findings\n+description: Summarize existing redacted Autohealth finding JSON when reviewing repeated checks. Does not inspect repositories or apply fixes.\n+---\n+\n+Use supplied redacted finding JSON. Preserve the root, fingerprint, severity and every evidence reference; a repeated finding is not a new defect. Input is an array of objects with root, fingerprint, severity and evidence.\n+\n+Run `node scripts/summarize.mjs <input.json>` from this skill directory and inspect the JSON output. The script only reads the selected input and writes its result to stdout. Report unsupported inputs rather than inventing evidence. Keep heuristic findings uncertain and distinguish absence of evidence from a successful check. The summary grants no permission to change a repository, test, instruction or active skill.\n+\n--- /dev/null\n+++ b/.agents/skills/summarize-health-findings/scripts/summarize.mjs\n-\n+import process from 'node:process';\n+import { Buffer } from 'node:buffer';\n+import { log } from 'node:console';\n+import { readFileSync } from 'node:fs';\n+const text = readFileSync(process.argv[2], 'utf8');\n+if (Buffer.byteLength(text) > 64000) throw new Error('Input exceeds summary budget');\n+const input = JSON.parse(text);\n+if (!Array.isArray(input) || input.length > 100)\n+  throw new Error('Expected at most 100 redacted findings');\n+for (const item of input) {\n+  if (\n+    !item ||\n+    typeof item !== 'object' ||\n+    typeof item.root !== 'string' ||\n+    typeof item.fingerprint !== 'string' ||\n+    !['INFO', 'WARNING', 'ERROR'].includes(item.severity) ||\n+    !Array.isArray(item.evidence) ||\n+    item.evidence.some((s) => typeof s !== 'string')\n+  )\n+    throw new Error('Unsupported finding input');\n+}\n+const findings = input.map((item) => ({\n+  root: item.root,\n+  fingerprint: item.fingerprint,\n+  severity: item.severity,\n+  evidence: item.evidence,\n+  occurrences: 1,\n+}));\n+log(JSON.stringify({ findings }));\n+",
+      "hash": "220b3ba464fb76780e0a421dbde71b545cf4fe8ab02ae10db886b9a04301b613",
+      "status": "APPLIED",
+      "createdAt": "2026-11-06T23:28:17.909Z",
+      "approval": {
+        "hash": "220b3ba464fb76780e0a421dbde71b545cf4fe8ab02ae10db886b9a04301b613",
+        "reviewer": "local-user",
+        "at": "2026-11-06T23:28:18.061Z"
+      },
+      "appliedAt": "2026-11-06T23:28:18.072Z"
+    }
+  ],
+  "active": [
+    {
+      "id": "935e1563-1105-4cfa-8173-7c4f3943e99a:summarize-health-findings",
+      "targetId": "935e1563-1105-4cfa-8173-7c4f3943e99a",
+      "name": "summarize-health-findings",
+      "bundleId": "9695fafb-5399-4b71-8574-c31bfa77e53e",
+      "hash": "7926939b8a64e3bed72d830881bef57eba31ef64771a5bdefa47f252b5b6055b",
+      "history": [
+        {
+          "bundleId": "9695fafb-5399-4b71-8574-c31bfa77e53e",
+          "hash": "7926939b8a64e3bed72d830881bef57eba31ef64771a5bdefa47f252b5b6055b",
+          "changeId": "f2e4645a-6dcb-466d-8971-63e6b2969160",
+          "at": "2026-11-06T23:28:18.072Z"
+        },
+        {
+          "bundleId": "dece7d79-f9c6-42eb-975d-c56fb1a7b63e",
+          "hash": "8ccf5d2ce5b9b5e43e93e239411a6b0c1252df00b6f344d000e16a6daee22d39",
+          "changeId": "00745c92-e44e-475e-bb23-faa4a166ffd1",
+          "at": "2026-11-06T23:28:22.339Z"
+        },
+        {
+          "bundleId": "9695fafb-5399-4b71-8574-c31bfa77e53e",
+          "hash": "7926939b8a64e3bed72d830881bef57eba31ef64771a5bdefa47f252b5b6055b",
+          "changeId": "9e6ecc7c-71a0-4509-b246-377436ca4537",
+          "at": "2026-11-06T23:28:23.388Z"
+        }
+      ]
+    }
+  ],
+  "portableOutput": {
+    "findings": [
+      {
+        "root": "portable-fixture",
+        "fingerprint": "x",
+        "severity": "WARNING",
+        "evidence": ["first", "second"],
+        "occurrences": 2
+      }
+    ]
+  },
+  "metrics": {
+    "window": "Most recent 200 generation tasks and 100 maintenance records; not an all-time or wall-clock window.",
+    "definitions": {
+      "generation": "Validated and explicitly applied implementation tasks / recorded implementation tasks. Failed, cancelled, interrupted and running attempts stay in the denominator. Preflight rejections before task creation are unavailable, not counted as eligible tasks.",
+      "reuse": "Completed plans explicitly referencing at least one existing capability / completed implementation tasks; this is a plan-level reuse proxy, not opportunity-level coverage.",
+      "maintenance": "Reviewed current-executable locator-defect diagnoses with at least one validated/applied repair / reviewed current-executable locator-defect diagnoses. Reversal is reported separately.",
+      "providerTokens": "Expose recorded fields from the task total once. Cached input and reasoning output can be subsets; they are not added again to input/output/total. Absent fields remain null.",
+      "queries": "Repeated normalized exact query hash with identical indexed root tree hashes within a task; semantic similarity is not inferred.",
+      "invocation": "Execution-trusted fixed-bundle CLI invocations, including evaluations and explicit active-summary workflows, scoped to bundle hash. External Codex invocations are unavailable."
+    },
+    "generation": {
+      "numerator": 0,
+      "denominator": 0,
+      "rate": null
+    },
+    "reusePlanProxy": {
+      "numerator": 0,
+      "denominator": 0,
+      "rate": null
+    },
+    "maintenance": {
+      "numerator": 0,
+      "denominator": 0,
+      "rate": null
+    },
+    "states": {
+      "RUNNING": 0,
+      "SUCCEEDED": 0,
+      "FAILED": 0,
+      "CANCEL_REQUESTED": 0,
+      "CANCELLED": 0,
+      "INTERRUPTED": 0
+    },
+    "reversedRepairs": 0,
+    "productFindings": 0,
+    "tasks": [],
+    "activeSkills": [
+      {
+        "targetId": "935e1563-1105-4cfa-8173-7c4f3943e99a",
+        "name": "summarize-health-findings",
+        "bundleHash": "7926939b8a64e3bed72d830881bef57eba31ef64771a5bdefa47f252b5b6055b"
+      }
+    ],
+    "repositoryAnalysis": [
+      {
+        "ref": {
+          "kind": "target",
+          "id": "935e1563-1105-4cfa-8173-7c4f3943e99a"
+        },
+        "revision": null,
+        "treeHash": "bb1c4ef573ea018088a3af0ecce6a257c37f8541f206b38aa2855855de0f63b1",
+        "indexedAt": "2026-11-06T23:28:12.555Z",
+        "parsed": 1,
+        "reused": 9,
+        "skipped": 20,
+        "truncated": 0,
+        "cacheHitRatio": 0.9,
+        "meaning": "Last stored bounded scan; cache-hit ratio is not token savings or a source-freshness guarantee."
+      }
+    ],
+    "skillInvocations": 26,
+    "skillVersions": [
+      {
+        "bundleHash": "7926939b8a64e3bed72d830881bef57eba31ef64771a5bdefa47f252b5b6055b",
+        "invocations": 17,
+        "cancelled": 0,
+        "failed": 0,
+        "workflowInvocations": 1,
+        "name": "summarize-health-findings",
+        "version": "v1"
+      },
+      {
+        "bundleHash": "8ccf5d2ce5b9b5e43e93e239411a6b0c1252df00b6f344d000e16a6daee22d39",
+        "invocations": 9,
+        "cancelled": 0,
+        "failed": 0,
+        "workflowInvocations": 1,
+        "name": "summarize-health-findings",
+        "version": "v2"
+      }
+    ],
+    "claim": "No model-token savings, provider cost or general agent-quality improvement established. Deterministic script comparison is reported separately."
+  },
+  "browserErrors": [],
+  "validation": {
+    "date": "2026-11-07",
+    "environment": "macOS Intel; Node 24.22.2; pinned workspace dependencies, Chromium; Java 21.0.13 and Gradle cache for full native regression",
+    "fullDeterministic": {
+      "passed": 71,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "command": "node --import tsx --test tests/*.test.ts"
+    },
+    "fullBrowser": {
+      "passed": 12,
+      "failed": 0,
+      "command": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts",
+      "durationMinutes": 13,
+      "limits": "Regression checkpoint before final directory-publication refinements. The affected suite was rerun on final code below."
+    },
+    "finalAffectedDeterministic": {
+      "passed": 16,
+      "failed": 0,
+      "command": "node --import tsx --test tests/evolution.test.ts"
+    },
+    "finalAffectedBrowser": {
+      "passed": 1,
+      "failed": 0,
+      "durationSeconds": 27.1,
+      "command": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts tests/evolution-ui.spec.ts"
+    },
+    "typecheck": "PASSED",
+    "lint": "PASSED",
+    "build": "PASSED",
+    "skillFormat": ["v1 PASSED", "v2 PASSED"],
+    "CI": {
+      "ubuntu-x64": "NOT_RUN",
+      "macos-arm64": "NOT_RUN",
+      "macos-intel": "NOT_RUN",
+      "reason": "No new cloud job dispatched; prior recorded GitHub account billing/spending blocker remains unresolved in this session."
+    },
+    "healthLabels": {
+      "version": "phase-6-health-v1",
+      "cases": 7,
+      "falsePositives": 0,
+      "falseNegatives": 0,
+      "limits": "Synthetic labelled cases only, not a measured production false-positive rate."
+    },
+    "missing": [
+      "General Codex agent behavior/trigger comparison (not substituted by helper checks)",
+      "Cross-platform CI",
+      "Current online advisory audit (no dependency changes)"
+    ],
+    "approvalScope": "Runtime approvals in owned disposable synthetic managed targets only; no existing user/global skill activation, live provider inference, credential copy or external source write.",
+    "format": "PASSED",
+    "documentationLinks": {
+      "checked": 269,
+      "broken": 0
+    },
+    "changedFilePrivacyScan": {
+      "files": 44,
+      "patternFindings": 0,
+      "limits": "Pattern checks do not prove absence of every possible secret."
+    }
+  }
+}

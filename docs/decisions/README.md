@@ -22,3 +22,6 @@ Each ADR records context, decision, alternatives, consequences and a validation/
 - [ADR 0011 — Reviewed AI generation](0011-reviewed-ai-generation.md): Phase 3 scoped tools, index provenance, staged validation and exact application approval.
 
 - [0012 — API contracts and separate coverage](0012-api-contracts-and-coverage.md)
+
+- [0013 — Evidence-based maintenance](0013-evidence-based-maintenance.md)
+- [0014 — Controlled knowledge, skills and health](0014-controlled-knowledge-skills-and-health.md)

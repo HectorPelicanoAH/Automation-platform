@@ -1,6 +1,6 @@
 # Phase status
 
-Updated: 2026-11-06. This file records authorization and acceptance evidence. The roadmap describes scope, not permission to implement it.
+Updated: 2026-11-07. This file records authorization and acceptance evidence. The roadmap describes scope, not permission to implement it.
 
 | Phase | Name                                        | Status     | Authorization                                                                                    | Acceptance evidence                                                                                                                                                                   |
 | ----- | ------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -10,7 +10,7 @@ Updated: 2026-11-06. This file records authorization and acceptance evidence. Th
 | 3     | AI-assisted UI generation                   | VALIDATION | Human instruction `APPROVE PHASE 3` on 2026-11-06                                                | [Approved scope](phase-3-plan.md), [live/native evidence](evaluations/phase-3-results.md); final CI blocked by GitHub billing before any job starts                                   |
 | 4     | API generation and cross-layer intelligence | VALIDATION | Human instruction `APPROVE PHASE 4` on 2026-11-06                                                | [Report](phase-4-report.md), [live/native evidence](evaluations/phase-4-live-evidence.json); final CI pending                                                                         |
 | 5     | Intelligent maintenance                     | VALIDATION | Exact human instruction `APPROVE PHASE 5` on 2026-11-06                                          | [Plan](phase-5-plan.md), [report](phase-5-report.md), [local evidence](evaluations/phase-5-local-evidence.json); CI pending                                                           |
-| 6     | Self-improving knowledge and autohealth     | APPROVED   | Exact human instruction `APPROVE PHASE 6` on 2026-11-06                                          | [Plan](phase-6-plan.md); entry sequencing exception pending; implementation not started                                                                                               |
+| 6     | Self-improving knowledge and autohealth     | VALIDATION | Exact human instruction `APPROVE PHASE 6` on 2026-11-06                                          | [Plan](phase-6-plan.md), [report](phase-6-report.md), [local evidence](evaluations/phase-6-local-evidence.json); three-system CI pending                                              |
 
 ## Authorization record
 
@@ -97,3 +97,7 @@ Phase 5 transition: IN_PROGRESS → VALIDATION after local diagnosis/repair, ori
 ## Phase 6 authorization and entry gate
 
 On 2026-11-06 the owner sent `APPROVE PHASE 6`. Transition: PROPOSED → APPROVED. The [phase plan](phase-6-plan.md) records the approved roadmap scope, tradeoffs and measurable criteria. No implementation has started. The roadmap says “Do not begin a later phase to bypass a blocker.” Phases 3–5 still have required three-system CI pending. The earlier explicit exception permitted starting Phase 5 with Phases 3–4 CI pending; it did not grant a general exception for Phase 6. A new explicit sequencing exception or completed CI is required before IN_PROGRESS. Phase approval does not activate skills, authorize credential reuse, waive validation or permit external source writes. Earlier “Phase 6 remains PROPOSED” statements above describe historical checkpoints.
+
+On 2026-11-06 the owner explicitly authorized beginning Phase 6 while retaining CI validation pending for Phases 3, 4 and 5. Transition: APPROVED → IN_PROGRESS. This is a sequencing exception only; prior validation, exact-bundle activation review, credential and source-write boundaries remain in force.
+
+Phase 6 transition on 2026-11-07: IN_PROGRESS → VALIDATION. Local implementation, 71 deterministic and 12 browser regressions passed; final affected-code validation passed 16 deterministic cases and one real browser/native flow. Exact skill activation/rollback occurred only in owned disposable QA targets. Required three-system CI remains NOT_RUN for Phases 3–6. No later phase begins. See the [report](phase-6-report.md) for supported scope, evidence and missing checks.
