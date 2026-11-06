@@ -10,6 +10,7 @@ import {
 } from 'node:fs';
 import { join } from 'node:path';
 import { randomUUID } from 'node:crypto';
+import { StringDecoder } from 'node:string_decoder';
 import { privateDirectory } from './private-directory.ts';
 import { AppError } from '../domain/model.ts';
 
@@ -158,8 +159,9 @@ export class CodexConnection {
       this.pending.clear();
     });
     child.stderr.on('data', () => {}); // May contain credentials/paths: never display raw stderr.
+    const decoder = new StringDecoder('utf8');
     child.stdout.on('data', (bytes: Buffer) => {
-      this.buffer += bytes.toString('utf8');
+      this.buffer += decoder.write(bytes);
       if (Buffer.byteLength(this.buffer) > 2_000_000) {
         void this.close().catch(() => {});
         return;

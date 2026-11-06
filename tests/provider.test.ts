@@ -76,6 +76,12 @@ test('App-server protocol fixture streams scoped tools/results/usage with isolat
   assert.throws(() => process.kill(-notes.pid, 0));
 });
 
+test('Streaming JSON preserves UTF-8 characters split across transport chunks', async () => {
+  const p = fixture();
+  const result = await p.connection.run(request('UTF8'));
+  assert.deepEqual(result.output, { answer: 'Envío gratis 50€' });
+});
+
 test('Unregistered provider tools fail closed and never reach the application handler', async () => {
   const p = fixture();
   let calls = 0;

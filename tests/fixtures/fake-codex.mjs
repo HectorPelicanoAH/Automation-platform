@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // Deterministic protocol fixture. No model, authentication or network is used.
 import process from 'node:process';
+import { Buffer } from 'node:buffer';
 import { appendFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createInterface } from 'node:readline';
@@ -21,7 +22,8 @@ writeFileSync(
 const send = (value) => process.stdout.write(JSON.stringify(value) + '\n');
 const threadId = 'fixture-thread',
   turnId = 'fixture-turn';
-function complete() {
+let unicode = false;
+async function complete() {
   send({
     method: 'item/agentMessage/delta',
     params: { threadId, delta: '{"answer":"fixture-only"}' },
@@ -37,10 +39,23 @@ function complete() {
       },
     },
   });
-  send({
+  const message = {
     method: 'item/completed',
-    params: { threadId, item: { type: 'agentMessage', text: '{"answer":"fixture-only"}' } },
-  });
+    params: {
+      threadId,
+      item: {
+        type: 'agentMessage',
+        text: JSON.stringify({ answer: unicode ? 'Envío gratis 50€' : 'fixture-only' }),
+      },
+    },
+  };
+  if (unicode) {
+    const bytes = Buffer.from(JSON.stringify(message) + '\n');
+    const split = bytes.indexOf(Buffer.from('€')) + 1;
+    process.stdout.write(bytes.subarray(0, split));
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    process.stdout.write(bytes.subarray(split));
+  } else send(message);
   send({
     method: 'turn/completed',
     params: { threadId, turn: { id: turnId, status: 'completed' } },
@@ -50,7 +65,7 @@ createInterface({ input: process.stdin }).on('line', (line) => {
   const m = JSON.parse(line);
   appendFileSync(join(process.cwd(), 'fixture-rpc.jsonl'), JSON.stringify(m) + '\n');
   if (m.id === 700 && !m.method) {
-    complete();
+    void complete();
     return;
   }
   if (m.method === 'initialize')
@@ -71,6 +86,7 @@ createInterface({ input: process.stdin }).on('line', (line) => {
   if (m.method === 'turn/start') {
     send({ id: m.id, result: { turn: { id: turnId } } });
     const text = m.params.input[0].text;
+    unicode = text === 'UTF8';
     if (text === 'WAIT') return;
     setTimeout(
       () =>
