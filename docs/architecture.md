@@ -151,7 +151,7 @@ The agent task port exposes start, progress, tool visibility, cancellation, retr
 
 ## 9. Product surfaces and failure states
 
-P1 implements Dashboard, Settings/Workspace, basic Scenarios, Repository file browsing and Runs. Repository access is constrained to registered target files and permitted context excerpts. Record, Knowledge & Skills, and full Autohealth arrive in their phases; a roadmap link may explain availability, but no dead action is presented as working functionality.
+P1 implements Dashboard, Settings/Workspace, basic Scenarios, Repository file browsing and Runs. Repository access is constrained to registered target files and permitted context excerpts. P2 adds the Record workbench under [ADR 0010](decisions/0010-recorder-evidence-and-privacy.md). Knowledge & Skills and full Autohealth arrive in their phases; a roadmap link may explain availability, but no dead action is presented as working functionality.
 
 Every implemented action needs loading, actionable error, empty and cancellation states where relevant. Disable unsupported selections with a reason. AI unavailable, transcription unavailable and unsupported import configurations are explicit states; manual features remain accessible. Paths shown to the local user are authorized settings data, not publicly retrievable filesystem endpoints.
 

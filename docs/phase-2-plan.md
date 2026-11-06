@@ -1,0 +1,33 @@
+# Phase 2 implementation plan
+
+Status: VALIDATION. Explicit human instruction `APPROVE PHASE 2`, received 2026-11-06. Scope follows the approved roadmap. Phase 3 remains unapproved.
+
+Objective: record actual browser demonstrations with persisted, time-linked interaction evidence and optional narration, inspect them after restart, and retain honest privacy/capture gaps.
+
+## Scope and decisions
+
+- A supervised local recorder process owns a fresh headed Chromium and an isolated browser context. Public Playwright bindings/init scripts capture ordinary actions; no private Inspector API or new browser engine. The observation binding grants no tools or filesystem access.
+- Origin allowlist selected before launch. HTTP(S) only; platform control origin denied. Expansion is an explicit user action. Record bounded network method/status/resource metadata, never request/response bodies or headers. Redact query values and URL credentials/fragments before persistence.
+- Conservative input values suppressed by default (including ordinary free text); persist change type and selected option metadata only where safe. Screenshot capture is opt-in, masks form inputs and configured regions, and skips unsafe frames. Capture bounded sanitized target DOM/ARIA evidence, scoped locator uniqueness and explicit unsupported/capture gap events.
+- Microphone runs in the platform tab with explicit opt-in and OS/browser permission. Bounded sequenced MediaRecorder chunks, acknowledgments, gaps, clock calibration and visible stop controls. Audio is private, can contain secrets, expires separately. No cloud upload or bundled transcription model. Manual, versioned timestamped transcript is operational; automatic transcription boundary reports unavailable until an engine is explicitly supported/configured in a later reviewed change.
+- SQLite recording metadata/events/transcript revisions; private checksummed artifacts outside repositories. One active recorder; bounded event rate/count/session duration/audio/storage; stop/cancel preserves partial evidence; restart marks unfinished sessions interrupted.
+- Real Record UI: start/stop/cancel, capture policy, origin expansion/navigation, timeline, event detail/locators/screenshots, narration/audio, transcription mode/manual corrections and stale/error/loading states.
+
+## Acceptance
+
+| ID    | Required evidence                                                                                                                                                                                                                                                                                                                     |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| P2-01 | Headed Chromium captures genuine click, fill completion, select, submit, navigation/SPA, refresh, popup and same/cross-origin frame identity using public APIs; unsupported types are gaps.                                                                                                                                           |
+| P2-02 | Real demo recording persists and reloads timeline/source-linked DOM, ARIA, locator count and opt-in masked screenshot evidence after restart.                                                                                                                                                                                         |
+| P2-03 | Browser/microphone clocks retain source times, offset/round-trip uncertainty; real five-minute marker validation aligns within 500 ms or reports a failing criterion, never substitutes a fast simulated clock.                                                                                                                       |
+| P2-04 | Explicit microphone opt-in produces actual browser MediaRecorder chunks with acknowledgments. Denied microphone retains manual timestamped narration; dropped chunk and partial/cancelled capture remain incomplete. Synthetic audio fixture is labeled synthetic; physical microphone hardware permission requires user interaction. |
+| P2-05 | Password/token/query/header fixtures absent from ordinary persisted metadata/text/screenshots; raw audio sensitivity disclosed. URL/origin policy blocks file/internal/control origins and unapproved navigation.                                                                                                                     |
+| P2-06 | Stop/cancel closes browser/process; disconnect/restart preserves partial evidence; bounded payload, session, event, artifact and disk budgets; audio/artifact retention and integrity checks.                                                                                                                                         |
+| P2-07 | Real Record UI and persisted transcript revisions; no AI business inference or generated scenarios. Loading, errors, cancellation and gaps visible.                                                                                                                                                                                   |
+| P2-08 | Typecheck, lint, formatting, security/unit/integration tests, recorder/browser and existing Phase 1 regression checks pass on Ubuntu x64/macOS ARM64/Intel. Evidence includes actual commands, native artifacts, clocks and limitations.                                                                                              |
+
+## Dependencies and risks
+
+Reuse pinned Phase 1 toolchain, Chromium, session/CSRF controls, safe filesystem gateway and private SQLite store. Linux headed validation uses Xvfb, never silently relabels headless as headed. macOS needs a GUI session. Microphone codecs, device denial, background suspension, navigation races, cross-origin frames and page hostility can produce gaps. Screenshot/DOM/audio redaction cannot guarantee removal of arbitrary page-displayed secrets. No video/raw traces, automatic transcription engine, AI analysis or external-source writes in this phase.
+
+Feasibility precedes full timeline polish. Run focused actual-browser tests before integrating the whole UI. Final report must distinguish executed synthetic audio validation from unverified physical microphone hardware. Update documentation/ADRs/knowledge and stop for `APPROVE PHASE 3`.

@@ -2,15 +2,15 @@
 
 Updated: 2026-11-06. This file records authorization and acceptance evidence. The roadmap describes scope, not permission to implement it.
 
-| Phase | Name                                        | Status    | Authorization                                                                                    | Acceptance evidence                                                                                                                                |
-| ----- | ------------------------------------------- | --------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 0     | Architecture and planning                   | COMPLETED | Initial explicit user instruction: start Phase 0 only                                            | [Completion report](phase-0-report.md), [executed checks](phase-0-validation.md)                                                                   |
-| 1     | Platform foundation                         | COMPLETED | Human message `aAPPROVE PHASE 1` on 2026-11-05; explicit phase authorization with a leading typo | [Completion report](phase-1-report.md); [three-system CI passed](https://github.com/HectorPelicanoAH/Automation-platform/actions/runs/42125238265) |
-| 2     | Recorder                                    | PROPOSED  | None; requires `APPROVE PHASE 2`                                                                 | None                                                                                                                                               |
-| 3     | AI-assisted UI generation                   | PROPOSED  | None; requires `APPROVE PHASE 3`                                                                 | None                                                                                                                                               |
-| 4     | API generation and cross-layer intelligence | PROPOSED  | None; requires `APPROVE PHASE 4`                                                                 | None                                                                                                                                               |
-| 5     | Intelligent maintenance                     | PROPOSED  | None; requires `APPROVE PHASE 5`                                                                 | None                                                                                                                                               |
-| 6     | Self-improving knowledge and autohealth     | PROPOSED  | None; requires `APPROVE PHASE 6`                                                                 | None                                                                                                                                               |
+| Phase | Name                                        | Status     | Authorization                                                                                    | Acceptance evidence                                                                                                                                |
+| ----- | ------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0     | Architecture and planning                   | COMPLETED  | Initial explicit user instruction: start Phase 0 only                                            | [Completion report](phase-0-report.md), [executed checks](phase-0-validation.md)                                                                   |
+| 1     | Platform foundation                         | COMPLETED  | Human message `aAPPROVE PHASE 1` on 2026-11-05; explicit phase authorization with a leading typo | [Completion report](phase-1-report.md); [three-system CI passed](https://github.com/HectorPelicanoAH/Automation-platform/actions/runs/42125238265) |
+| 2     | Recorder                                    | VALIDATION | Human instruction `APPROVE PHASE 2` on 2026-11-06                                                | [Approved scope](phase-2-plan.md), [interim report](phase-2-report.md); final matrix pending                                                       |
+| 3     | AI-assisted UI generation                   | PROPOSED   | None; requires `APPROVE PHASE 3`                                                                 | None                                                                                                                                               |
+| 4     | API generation and cross-layer intelligence | PROPOSED   | None; requires `APPROVE PHASE 4`                                                                 | None                                                                                                                                               |
+| 5     | Intelligent maintenance                     | PROPOSED   | None; requires `APPROVE PHASE 5`                                                                 | None                                                                                                                                               |
+| 6     | Self-improving knowledge and autohealth     | PROPOSED   | None; requires `APPROVE PHASE 6`                                                                 | None                                                                                                                                               |
 
 ## Authorization record
 
@@ -53,4 +53,12 @@ No runtime functionality is verified in Phase 0. See [quality standards](quality
 
 ## Phase 1 owner decisions
 
-On 2026-11-05 the owner selected MIT and required retaining all planned system support; no reduction to the available Intel host was approved. The validation matrix covers Ubuntu 24.04 x86_64, macOS Apple Silicon and macOS Intel using available supported GitHub runner labels. Phase 2 remains unapproved.
+On 2026-11-05 the owner selected MIT and required retaining all planned system support; no reduction to the available Intel host was approved. The validation matrix covers Ubuntu 24.04 x86_64, macOS Apple Silicon and macOS Intel using available supported GitHub runner labels. Phase 2 was subsequently approved on 2026-11-06.
+
+## Phase 2 transition log
+
+| Date       | Transition               | Evidence                                                                                                                  |
+| ---------- | ------------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| 2026-11-06 | PROPOSED → APPROVED      | Explicit human instruction `APPROVE PHASE 2`                                                                              |
+| 2026-11-06 | APPROVED → IN_PROGRESS   | Recorder plan, public API feasibility and implementation within approved scope                                            |
+| 2026-11-06 | IN_PROGRESS → VALIDATION | Real headed browser, UI/worker and five-minute synthetic audio evidence passed locally; final multi-system checks pending |

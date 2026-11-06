@@ -2,7 +2,7 @@
 
 A local functional testing workbench: connect read-only application sources, manage a separate automation target, edit business Gherkin, execute real Playwright-BDD and Karate tests, and inspect outcomes and native evidence without AI.
 
-**Phase 1 is complete. Phase 2 is not approved.** Recording, transcription, AI generation, repair and autonomous skill evolution are not implemented. See [phase status](docs/phase-status.md) for the current acceptance evidence.
+**Phase 1 is complete. Phase 2 recorder is in validation. Phase 3 is not approved.** Recording and manual timestamped narration are implemented; automatic transcription, AI generation, repair and autonomous skill evolution are not implemented. See [phase status](docs/phase-status.md) for the current acceptance evidence.
 
 ## Run locally
 
@@ -38,6 +38,14 @@ Private state defaults to `~/.local/share/ai-native-qa` outside Git. Override wi
 
 The synthetic demo covers Spanish/Portuguese free-shipping messaging. The displayed `50€`/`60€` amount describes a threshold-related promotion, not a price reduction or tested checkout eligibility.
 
+## Record a demonstration
+
+Open **Record**, enter the application's HTTP(S) URL and approve any additional service origins. Start recording, then interact with the separate headed Chromium window. Form values and network headers/bodies are omitted; query values are redacted. Screenshots are opt-in and mask forms, frames and configured private regions.
+
+Microphone capture requires session consent and a separate **Start microphone** action in the platform tab. Browser/OS permission and codec support apply. Raw audio may contain secrets; it stays local. If microphone permission is denied, add timestamped manual transcript segments and save immutable revisions. No automatic transcription engine or cloud upload is configured. **Stop recording** flushes bounded acknowledged data and closes the controlled browser; cancellation preserves partial evidence.
+
+Inspect timeline events for page/frame identity, source-clock uncertainty, locator count/target match and masked screenshots. Gaps are explicit; observed actions do not prove business expectations. See [recorder setup and limits](docs/recording.md) and [Phase 2 evidence](docs/phase-2-report.md). Physical microphone hardware must be checked locally; synthetic audio validation does not certify a device.
+
 ## Validate
 
 ```sh
@@ -49,7 +57,7 @@ pnpm build
 pnpm test:smoke
 ```
 
-The smoke test starts actual loopback apps, creates isolated external fixtures, explicitly installs and independently executes both target CLIs, drives the platform UI, verifies each selector, introduces a UI-only defect while keeping API state correct, restores normal UI behavior, and checks cancellation/idempotency/restart. It needs Java 21, network for an uncached initial target setup, and Chromium. Fixtures use synthetic data, not user repositories.
+The smoke suite includes a real-time five-minute synthetic audio/clock check and headed Chromium recorder checks. On Linux run `xvfb-run --auto-servernum pnpm test:smoke` in a workstation/CI environment with Xvfb. The Phase 1 journey starts actual loopback apps, creates isolated external fixtures, explicitly installs and independently executes both target CLIs, drives the platform UI, verifies each selector, introduces a UI-only defect while keeping API state correct, restores normal UI behavior, and checks cancellation/idempotency/restart. It needs Java 21, network for an uncached initial target setup, and Chromium. Fixtures use synthetic data, not user repositories.
 
 The full acceptance workflow passed on Ubuntu 24.04 x86_64, macOS 15 Apple Silicon and macOS 15 Intel: [executed CI evidence](https://github.com/HectorPelicanoAH/Automation-platform/actions/runs/42125238265). The [workflow](.github/workflows/phase-1.yml) pins the setup. WSL2 remains unvalidated, and native Windows execution is outside the current POSIX worker implementation. No operating system is certified merely by this README.
 
@@ -69,4 +77,4 @@ The full acceptance workflow passed on Ubuntu 24.04 x86_64, macOS 15 Apple Silic
 
 Workers supervise processes; they are **not host security sandboxes**. Run only reviewed, trusted automation in explicitly authorized environments. Native reports may contain sensitive application evidence and are downloaded rather than executed in the privileged web origin. Runtime artifacts default to 14-day retention, configurable in Workspace and applied at startup. Credentials are not stored in source configuration or version control.
 
-[MIT licensed](LICENSE), selected by the owner. See [third-party notices](THIRD_PARTY_NOTICES.md). Only the exact human authorization for the next phase permits starting it; approval of Phase 1 does not authorize Phase 2.
+[MIT licensed](LICENSE), selected by the owner. See [third-party notices](THIRD_PARTY_NOTICES.md). Only the exact human authorization for the next phase permits starting it; Phase 3 requires `APPROVE PHASE 3`.

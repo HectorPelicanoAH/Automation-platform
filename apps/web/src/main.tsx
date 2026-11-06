@@ -4,9 +4,10 @@ import type { Feature, Run, Framework, Selection } from '../../../packages/domai
 import './style.css';
 import { api, setCsrf, type State } from './api.ts';
 import { Empty, Status, short } from './ui.tsx';
+import { RecordPanel } from './RecordPanel.tsx';
 import { WorkspacePanel } from './WorkspacePanel.tsx';
 
-type View = 'Dashboard' | 'Workspace' | 'Scenarios' | 'Repository' | 'Runs';
+type View = 'Dashboard' | 'Workspace' | 'Scenarios' | 'Repository' | 'Runs' | 'Record';
 type Check = { name: string; ready: boolean; detail: string };
 const active = (run: Run) => ['QUEUED', 'RUNNING', 'CANCEL_REQUESTED'].includes(run.status);
 const time = (value: string) => new Date(value).toLocaleString();
@@ -219,7 +220,7 @@ function App() {
         </a>
         <div className="nav-label">WORKBENCH</div>
         <nav>
-          {(['Dashboard', 'Workspace', 'Scenarios', 'Repository', 'Runs'] as View[]).map(
+          {(['Dashboard', 'Workspace', 'Scenarios', 'Repository', 'Runs', 'Record'] as View[]).map(
             (name, index) => (
               <button
                 key={name}
@@ -227,7 +228,7 @@ function App() {
                 className={view === name ? 'nav-item selected' : 'nav-item'}
                 onClick={() => setView(name)}
               >
-                <span>{['◫', '▦', '≡', '⌘', '▷'][index]}</span>
+                <span>{['◫', '▦', '≡', '⌘', '▷', '●'][index]}</span>
                 {name}
                 {name === 'Runs' && state?.runs.some(active) ? <i className="dot" /> : null}
               </button>
@@ -235,13 +236,13 @@ function App() {
           )}
         </nav>
         <div className="sidebar-note">
-          <span className="phase-label">PHASE 01</span>
+          <span className="phase-label">PHASE 02</span>
           <p>
             A local foundation.
             <br />
             Real tests. Clear evidence.
           </p>
-          <small>Recording and AI generation arrive in later approved phases.</small>
+          <small>Recording is available. AI generation requires Phase 3 approval.</small>
         </div>
         <div className="local-badge">
           <i className="dot" /> Local workstation<small>Bound to loopback</small>
@@ -280,6 +281,7 @@ function App() {
                       Scenarios: 'Behavior, written clearly.',
                       Repository: 'Understand what you run.',
                       Runs: 'Execution with evidence.',
+                      Record: 'Capture what actually happened.',
                     }[view]}
               </h1>
               <p className="muted">
@@ -291,7 +293,9 @@ function App() {
                       ? 'Review the canonical Gherkin contract before executing its implementation.'
                       : view === 'Repository'
                         ? 'Read the target files behind your functional coverage.'
-                        : 'Independent UI and API coverage, with native reports and honest outcomes.'}
+                        : view === 'Record'
+                          ? 'Capture interactions and narration, preserve evidence and inspect gaps.'
+                          : 'Independent UI and API coverage, with native reports and honest outcomes.'}
               </p>
             </div>
             {state && (
@@ -329,6 +333,9 @@ function App() {
             </Empty>
           ) : (
             <>
+              {state && (
+                <RecordPanel visible={view === 'Record'} defaultUrl={state.settings.baseUrl} />
+              )}
               {view === 'Dashboard' && (
                 <>
                   <section className="welcome">
@@ -885,7 +892,7 @@ function App() {
           )}
           <footer className="page-footer">
             <span>
-              QA LOCAL <i>/</i> PHASE 01 FOUNDATION
+              QA LOCAL <i>/</i> PHASE 02 FOUNDATION
             </span>
             <span>
               {state

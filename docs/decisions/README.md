@@ -16,3 +16,5 @@ Records 0001–0008 are **accepted planning baselines for Phase 0**; record 0009
 Phase 1 implementation amendment: [0009 — runtime and boundaries](0009-phase-1-runtime-and-boundaries.md).
 
 Each ADR records context, decision, alternatives, consequences and a validation/revisit trigger. Exact dependency pins are implementation evidence, not architecture-only claims. Research references are in [sources](../sources.md).
+
+- [ADR 0010 — Recorder evidence and privacy](0010-recorder-evidence-and-privacy.md): Phase 2 implementation, real capture boundaries, manual transcription and synthetic audio evaluation limits.

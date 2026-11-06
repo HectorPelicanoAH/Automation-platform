@@ -11,9 +11,15 @@ let csrf = '';
 export const setCsrf = (value: string) => {
   csrf = value;
 };
-export async function api<T>(path: string, body?: unknown, method = 'POST'): Promise<T> {
+export async function api<T>(
+  path: string,
+  body?: unknown,
+  method = 'POST',
+  signal?: AbortSignal,
+): Promise<T> {
   const response = await fetch('/api' + path, {
     method: body === undefined ? 'GET' : method,
+    signal: signal || AbortSignal.timeout(15000),
     headers: {
       'Content-Type': 'application/json',
       'X-QA-CSRF': csrf,

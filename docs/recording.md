@@ -1,6 +1,6 @@
 # Recorder architecture and feasibility
 
-This document designs Phase 2; no recorder is implemented in Phase 0 or Phase 1.
+Phase 2 implements this recorder within the approved scope. See [ADR 0010](decisions/0010-recorder-evidence-and-privacy.md), [phase plan](phase-2-plan.md) and [validation report](phase-2-report.md) for actual behavior and evidence. Design requirements below are qualified by the implemented limits at the end.
 
 ## Decision and constraint
 
@@ -51,3 +51,23 @@ Raw screenshots, DOM, audio and traces can contain personal data; follow [captur
 Before building a full timeline UI, prove public-API action capture in headed Chromium, sensitive-field suppression, frame/page handling, crash recovery, microphone permission denial fallback and clock alignment. If a public API is insufficient, report the missing event types and propose a narrowly scoped extension or Inspector-assisted workflow for approval. Do not silently replace the requirement with screenshots or simulated events.
 
 The final P2 demonstration captures the real promotion demo, reloads its persisted timeline, links action/evidence/narration spans, and shows a deliberately missing chunk as incomplete. Scenario discovery and generated Gherkin wait for Phase 3.
+
+## Implemented operation and limits
+
+Use the Record section after a private local launch. Only HTTP(S) origins explicitly approved for the session may load; add backend/service origins as needed. The control origin and loopback aliases at its port are denied. Origin changes require the explicit approval button, not a navigation redirect. No application/source repository is modified.
+
+One supervised recorder opens a fresh headed Chromium. Public observation supports ordinary clicks, completed fill/change, selection, submit, keyboard activation, document/SPA navigation, refresh, pages/popups and instrumentable frames. Input values and keystrokes are omitted. Locator evidence retains count and whether the candidate matches the observed target. Native dialogs are dismissed with a gap; downloads are cancelled. Canvas, closed shadow roots, drag/drop, file contents and browser-native UI are unsupported; incomplete evidence is not inferred behavior. Service workers and WebSockets are blocked, so affected applications need an explicit gap rather than a claimed complete capture.
+
+Default network storage is method/status/resource type and redacted URL, never headers/bodies. All query values are suppressed, not only known secret keys. Target DOM is structural; form/private ARIA values and ARIA URL fields are omitted. Screenshots are optional; form/private regions and iframe rectangles are masked. They are acquired after an interaction and retain acquisition time. Arbitrary secrets displayed elsewhere, short path tokens and raw spoken secrets need explicit user care/masking; no universal redaction guarantee.
+
+Microphone capture uses the platform tab, never the application window. Explicit per-session consent and a separate user action request `getUserMedia`; supported MediaRecorder codecs are detected. If permission remains pending, Stop recording cancels capture and any later granted stream is closed. Denial/unavailability leaves manual timestamped narration operational. Server disconnection stops live microphone tracks. Chunks upload sequentially with bounded backlog, hash/idempotency acknowledgments and sequence gaps. Playback concatenates the ordered stream; individual later chunks are not necessarily independently playable. A missing chunk can make playback incomplete.
+
+The only available transcription mode is manual. Transcript revisions preserve NARRATED provenance, source and timestamps with conflict detection. No automatic engine is configured or contacted. A typed provider boundary allows later explicitly configured integration, but there is no working automatic provider to select today.
+
+Budgets: one recording, 30 minutes, 10,000 events, 128 MiB session data, 32 MiB audio, 512 KiB per audio chunk, 2 MiB per artifact, 8 pages and 64 frames over a session. Network/backlog omissions become gaps. Ordinary uploads and shutdown are bounded; a forced shutdown is interrupted/incomplete. Retention defaults to 14 days for screenshots and 7 days for audio, configurable before capture and applied at startup. All payloads are private/checksummed and downloaded using the authenticated session; raw traces/video are absent.
+
+Clock calibration retains source/offset/round-trip uncertainty and repeats every 30 seconds when the producer is running. Background suspension can reduce precision; long audio chunks are coarse and gap-marked. Manual segments do not claim word-level transcription accuracy.
+
+### Manual physical-device check
+
+Automated tests use explicit synthetic input, not the host microphone. In your normal browser, start a consented session, allow browser/OS microphone access, speak a non-sensitive phrase while interacting, stop the microphone, load local audio, inspect timing and stop the recording. Repeat denial to confirm the manual fallback. This hardware/OS permission check has not been automatically certified. A local native Chromium fake-device diagnostic timed out and is recorded as a limitation, not a passing device test.

@@ -83,6 +83,8 @@ importers:
 
   packages/execution: {}
 
+  packages/recording: {}
+
   packages/storage: {}
 
   packages/workspace: {}

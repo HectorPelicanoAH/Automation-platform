@@ -1,3 +1,5 @@
+import { RecordingManager } from '../../packages/recording/manager.ts';
+import { recordingRoutes } from '../../packages/recording/routes.ts';
 import Fastify from 'fastify';
 import fastifyStatic from '@fastify/static';
 import { randomBytes, timingSafeEqual } from 'node:crypto';
@@ -33,6 +35,7 @@ export function createPlatform(options: { dataDir: string; platformRoot?: string
   const store = new Store(options.dataDir);
   const workspace = new Workspace(store, platformRoot);
   const manager = new ExecutionManager(store, workspace);
+  const recorder = new RecordingManager(store);
   const app = Fastify({
     bodyLimit: 1_050_000,
     logger: false,
@@ -71,7 +74,7 @@ export function createPlatform(options: { dataDir: string; platformRoot?: string
     reply.header('Referrer-Policy', 'no-referrer');
     reply.header(
       'Content-Security-Policy',
-      "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
+      "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
     );
     reply.header('Cache-Control', 'no-store');
     if (!request.url.startsWith('/api/')) return;
@@ -132,6 +135,7 @@ export function createPlatform(options: { dataDir: string; platformRoot?: string
       return { ok: true, proof };
     },
   );
+  recordingRoutes(app, recorder);
   app.get('/api/state', async (request) => ({
     csrf: sessionFor(request.headers.cookie)!.csrf,
     sources: store.list('sources'),
@@ -143,7 +147,7 @@ export function createPlatform(options: { dataDir: string; platformRoot?: string
       sqlite: (store.db.prepare('SELECT sqlite_version() version').get() as { version: string })
         .version,
     },
-    capabilities: { phase: 1, recording: false, ai: false, indexing: false, rowSelection: false },
+    capabilities: { phase: 2, recording: true, ai: false, indexing: false, rowSelection: false },
   }));
   app.put<{ Body: { baseUrl: string; retentionDays: number } }>(
     '/api/settings',
@@ -429,12 +433,13 @@ export function createPlatform(options: { dataDir: string; platformRoot?: string
   }
   app.addHook('preClose', async () => {
     for (const stream of streams) stream.end();
+    await recorder.shutdown();
     await manager.shutdown();
   });
   app.addHook('onClose', async () => {
     store.close();
   });
-  return { app, store, workspace, manager, launchToken };
+  return { app, store, workspace, manager, recorder, launchToken };
 }
 
 function readTextArtifact(root: string, path: string) {

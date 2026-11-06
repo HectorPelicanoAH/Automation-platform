@@ -1,6 +1,6 @@
 # Development roadmap and approval workflow
 
-Status authority: [phase-status.md](phase-status.md). Phase 1 is completed; Phases 2–6 remain `PROPOSED`. Plans are detailed enough to approve independently; later scope may be refined before its approval, with changes made visible.
+Status authority: [phase-status.md](phase-status.md). Phase 1 is completed; Phase 2 is approved and in VALIDATION; Phases 3–6 remain `PROPOSED`. Plans are detailed enough to approve independently; later scope may be refined before its approval, with changes made visible.
 
 ## Phase lifecycle
 

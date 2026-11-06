@@ -1115,3 +1115,115 @@ code {
     flex-wrap: wrap;
   }
 }
+
+.record-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.8fr) minmax(320px, 1.2fr);
+  gap: 24px;
+  align-items: start;
+}
+.record-settings label,
+.record-panel fieldset label {
+  display: grid;
+  gap: 7px;
+  margin: 14px 0;
+}
+.record-panel textarea {
+  min-height: 70px;
+  width: 100%;
+}
+.record-panel .checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.record-panel .checkbox-row input {
+  width: auto;
+}
+.record-summary {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.recording-banner {
+  position: fixed;
+  bottom: 18px;
+  right: 24px;
+  z-index: 30;
+  background: #173b31;
+  color: #fff;
+  padding: 14px 20px;
+  box-shadow: 0 4px 24px #0004;
+  border-radius: 12px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+.capture-warning {
+  background: #fff3d8;
+  color: #694b0c;
+  padding: 12px;
+  border-radius: 8px;
+}
+.timeline {
+  max-height: 640px;
+  overflow: auto;
+  display: grid;
+  gap: 8px;
+}
+.timeline-event {
+  text-align: left;
+  display: grid;
+  gap: 5px;
+  border: 1px solid #d8e3dc;
+  border-radius: 8px;
+  padding: 12px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.timeline-event:hover {
+  border-color: #278465;
+}
+.timeline-event small {
+  opacity: 0.65;
+}
+.capture-image {
+  width: 100%;
+  border: 1px solid #d1dcd4;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+.event-detail {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.event-detail pre,
+.record-panel details pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  max-height: 300px;
+  overflow: auto;
+}
+.transcript-segment {
+  border: 1px solid #d7e0da;
+  padding: 16px;
+  margin: 14px 0;
+  border-radius: 8px;
+}
+.record-panel audio {
+  display: block;
+  width: 100%;
+  margin: 16px 0;
+}
+@media (max-width: 1000px) {
+  .record-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.record-panel > .panel,
+.record-layout > .panel {
+  padding: 24px;
+}
