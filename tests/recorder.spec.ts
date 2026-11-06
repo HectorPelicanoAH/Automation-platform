@@ -236,3 +236,45 @@ test('Recorder can cancel during Chromium startup without leaving a worker', asy
     await p.app.close();
   }
 });
+
+test('Oversized native screenshots are omitted with an explicit capture gap', async () => {
+  const app = Fastify();
+  app.get('/', async (_, reply) =>
+    reply
+      .type('text/html')
+      .send(
+        `<canvas width="1200" height="820"></canvas><script>const c=document.querySelector('canvas');const ctx=c.getContext('2d');const image=ctx.createImageData(c.width,c.height);for(let i=0;i<image.data.length;i++)image.data[i]=i%4===3?255:Math.random()*256;ctx.putImageData(image,0,0);</script>`,
+      ),
+  );
+  const url = await app.listen({ host: '127.0.0.1', port: 0 });
+  const events: Omit<EvidenceEvent, 'sequence' | 'receivedMs'>[] = [];
+  let images = 0;
+  const capture = new BrowserCapture(
+    {
+      url,
+      allowedOrigins: [url],
+      screenshots: true,
+      maskSelectors: [],
+      sensitiveQueryKeys: [],
+      retentionDays: 14,
+      audioRetentionDays: 7,
+      audioConsent: false,
+    },
+    monotonicMs(),
+    (event, image) => {
+      events.push(event);
+      if (image) images++;
+    },
+  );
+  try {
+    const page = await capture.start(false);
+    await page.locator('canvas').click({ position: { x: 2, y: 2 } });
+    await expect
+      .poll(() => events.some((e) => e.kind === 'gap' && e.detail.includes('Screenshot exceeds')))
+      .toBe(true);
+    expect(images).toBe(0);
+  } finally {
+    await capture.stop();
+    await app.close();
+  }
+});

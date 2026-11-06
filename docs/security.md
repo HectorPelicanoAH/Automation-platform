@@ -79,3 +79,7 @@ Provider task logs, stdout and native reports pass redaction before normal displ
 ## Validation ownership
 
 P1: loopback/session/Origin, path gateway, imports, safe argument generation, target conflict handling and artifact isolation. P2: redaction fixtures, permission denial, sensitive input/capture gaps and bounded storage. P3: untrusted instructions cannot change tool scope or bypass diff approval; stale-base approval rejection and cancellation. P6: approval-only skill activation, rollback and retention/health diagnostics. Required cases are in [evaluations](evaluations/README.md); implementation tests are introduced in the owning phase.
+
+## Implemented Phase 2 capture controls
+
+See [ADR 0010](decisions/0010-recorder-evidence-and-privacy.md) and [capture evaluation](evaluations/phase-2-results.md). Fresh Chromium/context, HTTP(S) origin approval with control-origin alias denial, no raw network headers/bodies, query/form suppression, bounded target DOM/ARIA, opt-in masked screenshots, consented local audio and independent retention are operational. The unload beacon backup is intercepted/fulfilled locally and deduplicated; it never grants platform API credentials or filesystem access. Raw audio and arbitrary visible text are not universally redacted. Browser/hostile-page instrumentation is not an OS sandbox. The physical microphone check remains manual; no engine uploads audio for automatic transcription.

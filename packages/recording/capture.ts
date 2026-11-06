@@ -352,6 +352,11 @@ export class BrowserCapture {
               mask,
               timeout: 3000,
             });
+            if (screenshot.length > RECORDING_LIMITS.artifactBytes) {
+              this.event('gap', 'Screenshot exceeds artifact budget; image omitted', page, frame);
+              this.emit(event);
+              return;
+            }
             event.evidenceAtMs = this.time();
             this.emit(event, screenshot);
             return;

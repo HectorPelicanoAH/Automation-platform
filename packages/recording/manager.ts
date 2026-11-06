@@ -232,6 +232,8 @@ export class RecordingManager {
           event.evidenceAtMs || event.timeMs,
         );
         event.screenshot = image.name;
+      } else if (message.screenshot) {
+        this.gap(r, 'Screenshot exceeds transport budget; image omitted');
       }
       this.repository.append(r, { ...event, receivedMs: this.clock(id).timeMs });
     }

@@ -92,3 +92,7 @@ Use foreign keys, uniqueness constraints and explicit schema versions. Never hol
 SQLite and the target filesystem do not share a transaction. File changes use a durable intent record, base-hash verification, temporary file plus same-directory atomic rename, and crash reconciliation. Multi-file changes need a journal and rollback material; never promise cross-file atomicity. Target writer leases prevent two platform writes, but external editor changes still require hash checks. Full source/target consistency under hostile concurrent filesystem mutation requires stronger OS isolation than an MVP path gateway.
 
 Backups use SQLite's supported backup mechanism and a consistent manifest of immutable artifacts. Retention removes payloads under policy and marks missing/tombstoned references explicitly. No garbage collection may traverse user source roots or remove native target files.
+
+## Phase 2 persisted projection
+
+Schema version 2 adds `recordings` and ordered `recording_events` beside existing Phase 1 tables. Recordings retain policy, lifecycle/completeness, artifact hashes/expiry, sequenced audio acknowledgments and immutable manual transcript revisions. Events retain source/offset/uncertainty, session/receipt times, page/frame identity and bounded evidence. This projection supports actual capture only; scenario-evidence business links and AI/provider task tables remain unimplemented until their approved phases. See [ADR 0010](decisions/0010-recorder-evidence-and-privacy.md).
