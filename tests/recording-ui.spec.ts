@@ -171,36 +171,76 @@ test('Five real minutes: synthetic microphone markers align with genuine browser
   await context.addInitScript(() => {
     Object.defineProperty(navigator.mediaDevices, 'getUserMedia', {
       value: async () => {
-        // A null output sink makes this synthetic source independent of a VM's physical output clock.
-        const options = { sampleRate: 48000, sinkId: { type: 'none' as const } };
-        const audio = new AudioContext(options);
-        await audio.resume();
-        const rate = audio.sampleRate;
-        const buffer = audio.createBuffer(1, 312 * rate, rate);
-        const data = buffer.getChannelData(0);
-        for (const marker of [7, 307])
-          for (let i = 0; i < rate * 0.2; i++)
-            data[marker * rate + i] = 0.4 * Math.sin((2 * Math.PI * 880 * i) / rate);
-        const source = audio.createBufferSource();
-        source.buffer = buffer;
-        const destination = audio.createMediaStreamDestination();
-        source.connect(destination);
-        source.connect(audio.destination);
-        const sourceTime = audio.currentTime;
-        const wallTime = performance.now();
+        // Pinned-Chromium test fixture only: timestamped frames avoid a virtual output-device clock.
+        const Generator = (
+          globalThis as unknown as {
+            MediaStreamTrackGenerator: new (options: {
+              kind: string;
+            }) => MediaStreamTrack & { writable: WritableStream<AudioData> };
+          }
+        ).MediaStreamTrackGenerator;
+        if (!Generator) throw new Error('Synthetic frame source unavailable in pinned Chromium');
+        const track = new Generator({ kind: 'audio' });
+        const writer = track.writable.getWriter();
+        const rate = 48000;
+        const begin = performance.now();
+        let sample = 0;
+        let maxProducerLagMs = 0;
+        let producerError = '';
         Object.defineProperty(navigator.mediaDevices, 'qaSyntheticProbe', {
           configurable: true,
           value: () => ({
-            state: audio.state,
-            sampleRate: audio.sampleRate,
-            sourceSeconds: audio.currentTime - sourceTime,
-            wallSeconds: (performance.now() - wallTime) / 1000,
-            track: destination.stream.getAudioTracks()[0].getSettings(),
+            state: track.readyState,
+            sampleRate: rate,
+            sourceSeconds: sample / rate,
+            wallSeconds: (performance.now() - begin) / 1000,
+            maxProducerLagMs,
+            producerError,
+            track: track.getSettings(),
           }),
         });
-        source.start();
-        destination.stream.getAudioTracks()[0].addEventListener('ended', () => void audio.close());
-        return destination.stream;
+        void (async () => {
+          try {
+            while (track.readyState === 'live') {
+              const target = Math.floor(((performance.now() - begin) * rate) / 1000);
+              while (sample + 480 <= target && track.readyState === 'live') {
+                const data = new Float32Array(480);
+                for (let i = 0; i < data.length; i++) {
+                  const t = (sample + i) / rate;
+                  if ((t >= 7 && t < 7.2) || (t >= 307 && t < 307.2))
+                    data[i] = 0.4 * Math.sin(2 * Math.PI * 880 * t);
+                }
+                maxProducerLagMs = Math.max(
+                  maxProducerLagMs,
+                  performance.now() - begin - ((sample + 480) / rate) * 1000,
+                );
+                const frame = new AudioData({
+                  format: 'f32-planar',
+                  sampleRate: rate,
+                  numberOfChannels: 1,
+                  numberOfFrames: 480,
+                  timestamp: (sample / rate) * 1e6,
+                  data,
+                });
+                try {
+                  await writer.write(frame);
+                } finally {
+                  frame.close();
+                }
+                sample += 480;
+              }
+              await new Promise((r) => setTimeout(r, 20));
+            }
+          } catch (error) {
+            if (track.readyState === 'live') {
+              producerError = String(error);
+              track.stop();
+            }
+          } finally {
+            await writer.close().catch(() => {});
+          }
+        })();
+        return new MediaStream([track]);
       },
     });
   });
@@ -278,11 +318,24 @@ test('Five real minutes: synthetic microphone markers align with genuine browser
     const record = p.recorder.repository.get(id);
     expect(record.audio.length).toBeGreaterThan(100);
     const decodedAudio = await decodeRecordedAudio(page, id, record.audio);
+    const finalSourceProbe = await page.evaluate(() => {
+      const media = navigator.mediaDevices as MediaDevices & {
+        qaSyntheticProbe: () => { maxProducerLagMs: number; producerError: string };
+      };
+      return media.qaSyntheticProbe();
+    });
     const onsets = decodedAudio.onsets;
     writeFileSync(
       'test-results/recording-clock-diagnostic.json',
       JSON.stringify(
-        { decodedAudio, elapsedMs: record.durationMs, audioStart, chunks: record.audio, markers },
+        {
+          decodedAudio,
+          finalSourceProbe,
+          elapsedMs: record.durationMs,
+          audioStart,
+          chunks: record.audio,
+          markers,
+        },
         null,
         2,
       ),
@@ -294,6 +347,11 @@ test('Five real minutes: synthetic microphone markers align with genuine browser
     expect(
       Math.abs(decodedAudio.durationSeconds * 1000 - (record.audio.at(-1)!.endMs - audioStart)),
       'Continuous PCM must preserve the real five-minute span',
+    ).toBeLessThan(500);
+    expect(finalSourceProbe.producerError).toBe('');
+    expect(
+      finalSourceProbe.maxProducerLagMs,
+      'Synthetic source must be delivered in real time',
     ).toBeLessThan(500);
     expect(onsets).toHaveLength(2);
     expect(markers).toHaveLength(2);
@@ -307,12 +365,14 @@ test('Five real minutes: synthetic microphone markers align with genuine browser
     expect(markers[1].timeMs - markers[0].timeMs).toBeGreaterThanOrEqual(299_500);
     const evidence = {
       source:
-        'Web Audio synthetic MediaStream at getUserMedia boundary; actual MediaRecorder, transport and storage; physical microphone not tested',
+        'Timestamped synthetic PCM MediaStream at getUserMedia boundary; actual MediaRecorder, transport and storage; physical microphone not tested',
       os: process.platform,
       architecture: process.arch,
       node: process.version,
-      syntheticOutputSink: 'none',
+      syntheticSource: 'Chromium MediaStreamTrackGenerator, 48000 Hz f32-planar, 10 ms frames',
       ciCommit: process.env.GITHUB_SHA || null,
+      finalSourceProbe,
+      decodedDurationSeconds: decodedAudio.durationSeconds,
       elapsedMs: record.durationMs,
       chunks: record.audio.length,
       comparisons,
