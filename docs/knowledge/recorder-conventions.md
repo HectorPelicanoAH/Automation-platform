@@ -1,6 +1,6 @@
 # Recorder conventions
 
-Source: Phase 2 implementation and synthetic acceptance fixtures; confidence limited to tested event types and environments. See ADR 0010 and the Phase 2 report. Source revision must be recorded in that report after validation; no AI skill is activated by this document.
+Source: Phase 2 implementation and synthetic acceptance fixtures; confidence limited to tested event types and environments. See ADR 0010 and the Phase 2 report. Validated implementation revision: `8ba997d56eabbe105f700f35c71caee6ffb3b12f`; no AI skill is activated by this document.
 
 - Browser capture is observation, never a business assertion or implicit permission. Do not promote a click or a network response to an expected outcome.
 - Check both locator count and actual target match. A unique candidate can still refer to the wrong element. Missing/detached detail stays a gap; do not generate selectors from it without new evidence.

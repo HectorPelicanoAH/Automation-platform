@@ -1,6 +1,6 @@
 # Phase 2 implementation plan
 
-Status: VALIDATION. Explicit human instruction `APPROVE PHASE 2`, received 2026-11-06. Scope follows the approved roadmap. Phase 3 remains unapproved.
+Status: COMPLETED. See [completion report](phase-2-report.md) and [CI evidence](evaluations/phase-2-ci-evidence.json). Explicit human instruction `APPROVE PHASE 2`, received 2026-11-06. Scope follows the approved roadmap. Phase 3 remains unapproved.
 
 Objective: record actual browser demonstrations with persisted, time-linked interaction evidence and optional narration, inspect them after restart, and retain honest privacy/capture gaps.
 

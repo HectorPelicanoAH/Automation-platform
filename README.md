@@ -2,7 +2,7 @@
 
 A local functional testing workbench: connect read-only application sources, manage a separate automation target, edit business Gherkin, execute real Playwright-BDD and Karate tests, and inspect outcomes and native evidence without AI.
 
-**Phase 1 is complete. Phase 2 recorder is in validation. Phase 3 is not approved.** Recording and manual timestamped narration are implemented; automatic transcription, AI generation, repair and autonomous skill evolution are not implemented. See [phase status](docs/phase-status.md) for the current acceptance evidence.
+**Phases 1–2 are complete. Phase 3 is not approved.** Recording and manual timestamped narration are implemented; automatic transcription, AI generation, repair and autonomous skill evolution are not implemented. See [phase status](docs/phase-status.md) for the current acceptance evidence.
 
 ## Run locally
 
