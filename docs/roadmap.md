@@ -1,6 +1,6 @@
 # Development roadmap and approval workflow
 
-Status authority: [phase-status.md](phase-status.md). Phases 1–2 are completed; Phase 3 is approved and in validation; Phase 4 is in validation under the explicit owner sequencing exception; Phases 5–6 remain `PROPOSED`. Plans are detailed enough to approve independently; later scope may be refined before its approval, with changes made visible.
+Status authority: [phase-status.md](phase-status.md). Phases 1–2 are completed; Phases 3–5 remain in `VALIDATION` with required CI pending. Phase 6 is `APPROVED`; its [plan](phase-6-plan.md) is recorded, but implementation awaits its entry sequencing exception or completion of prior CI. Plans are detailed enough to approve independently; material scope changes remain subject to explicit approval.
 
 ## Phase lifecycle
 
