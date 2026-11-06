@@ -656,7 +656,14 @@ export class GenerationManager {
               (f) => f.path === r.path && f.capabilities.some((c) => c.name === r.symbol),
             )
           )
-            throw new AppError(422, 'Reuse plan names an unknown capability');
+            throw new AppError(
+              422,
+              'Reuse plan names an unknown capability: ' +
+                r.path +
+                ' · ' +
+                r.symbol +
+                '; use exact indexed names',
+            );
         if (
           targetIndex.files.some((f) =>
             f.capabilities.some((c) => ['page', 'component'].includes(c.kind)),

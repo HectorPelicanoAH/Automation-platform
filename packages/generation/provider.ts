@@ -15,6 +15,7 @@ import { privateDirectory } from './private-directory.ts';
 import { AppError } from '../domain/model.ts';
 
 export const CODEX_VERSION = '0.162.0-alpha.2';
+export const PROPOSAL_PERMISSIONS = 'qa-proposals';
 export type JsonObject = Record<string, unknown>;
 export interface AgentEvent {
   kind: string;
@@ -68,7 +69,7 @@ export function prepareCodexHome(directory: string) {
   try {
     writeFileSync(
       temporary,
-      `cli_auth_credentials_store = "file"\nweb_search = "disabled"\nproject_doc_max_bytes = 0\n[features]\napps = false\nplugins = false\nhooks = false\nmulti_agent = false\nunified_exec = false\nshell_tool = false\nbrowser_use = false\nbrowser_use_external = false\ncomputer_use = false\nimage_generation = false\nview_image = false\nworkspace_dependencies = false\nmemories = false\n[ shell_environment_policy ]\ninherit = "none"\n`,
+      `cli_auth_credentials_store = "file"\nweb_search = "disabled"\nproject_doc_max_bytes = 0\ndefault_permissions = "${PROPOSAL_PERMISSIONS}"\n[permissions.${PROPOSAL_PERMISSIONS}.filesystem]\n":root" = "deny"\n[permissions.${PROPOSAL_PERMISSIONS}.network]\nenabled = false\n[features]\napps = false\nplugins = false\nhooks = false\nmulti_agent = false\nunified_exec = false\nshell_tool = false\nbrowser_use = false\nbrowser_use_external = false\ncomputer_use = false\nimage_generation = false\nview_image = false\nworkspace_dependencies = false\nmemories = false\n[ shell_environment_policy ]\ninherit = "none"\n`,
       { mode: 0o600, flag: 'wx' },
     );
     renameSync(temporary, config);
@@ -197,6 +198,17 @@ export class CodexConnection {
       }),
     );
     this.send({ method: 'initialized', params: {} });
+    const profiles = asObject(
+      await this.request('permissionProfile/list', { cwd: this.cwd, limit: 100 }),
+    );
+    if (
+      !Array.isArray(profiles.data) ||
+      !profiles.data.some((entry) => {
+        const profile = asObject(entry);
+        return profile.id === PROPOSAL_PERMISSIONS && profile.allowed === true;
+      })
+    )
+      throw new Error('Required restricted proposal permission profile is unavailable');
     return initialized;
   }
   async catalog() {
@@ -343,7 +355,7 @@ export class CodexConnection {
           cwd: this.cwd,
           model: request.model,
           approvalPolicy: 'never',
-          sandbox: 'read-only',
+          permissions: PROPOSAL_PERMISSIONS,
           ephemeral: true,
           allowProviderModelFallback: false,
           environments: [],
@@ -373,14 +385,7 @@ export class CodexConnection {
           environments: [],
           runtimeWorkspaceRoots: [],
           outputSchema: request.schema,
-          sandboxPolicy: {
-            type: 'readOnly',
-            access: {
-              type: 'restricted',
-              includePlatformDefaults: false,
-              readableRoots: [this.cwd],
-            },
-          },
+          permissions: PROPOSAL_PERMISSIONS,
         }),
       );
       turnId = String(asObject(turn.turn).id);

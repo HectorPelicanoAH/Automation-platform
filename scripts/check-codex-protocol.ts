@@ -6,6 +6,7 @@ import { join, resolve } from 'node:path';
 import {
   CodexConnection,
   CODEX_VERSION,
+  PROPOSAL_PERMISSIONS,
   asObject,
   prepareCodexHome,
 } from '../packages/generation/provider.ts';
@@ -39,8 +40,11 @@ try {
   );
   const schemas: Record<string, string> = {};
   for (const [name, fields] of [
-    ['ThreadStartParams', ['environments', 'dynamicTools', 'baseInstructions', 'ephemeral']],
-    ['TurnStartParams', ['outputSchema', 'environments', 'sandboxPolicy']],
+    [
+      'ThreadStartParams',
+      ['environments', 'dynamicTools', 'baseInstructions', 'ephemeral', 'permissions'],
+    ],
+    ['TurnStartParams', ['outputSchema', 'environments', 'permissions']],
     ['DynamicToolCallParams', ['tool', 'arguments', 'threadId', 'turnId']],
   ] as const) {
     const bytes = readFileSync(
@@ -62,7 +66,7 @@ try {
       cwd,
       model: selected.model,
       approvalPolicy: 'never',
-      sandbox: 'read-only',
+      permissions: PROPOSAL_PERMISSIONS,
       ephemeral: true,
       allowProviderModelFallback: false,
       environments: [],

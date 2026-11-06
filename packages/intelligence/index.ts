@@ -41,7 +41,7 @@ export interface RepositoryIndex {
   policyHash: string;
   limits: string[];
 }
-const EXTRACTOR = 'typescript-syntax-v1';
+const EXTRACTOR = 'typescript-syntax-v2';
 export type IndexSummary = Omit<RepositoryIndex, 'files'> & {
   fileCount: number;
   warningCount: number;
@@ -136,6 +136,20 @@ export function extractCapabilities(
         : ts.ScriptKind.TS,
   );
   const capabilities: Capability[] = [];
+  const testBindings = new Set<string>();
+  for (const statement of file.statements) {
+    if (
+      !ts.isImportDeclaration(statement) ||
+      !ts.isStringLiteralLike(statement.moduleSpecifier) ||
+      !['@playwright/test', 'playwright-bdd'].includes(statement.moduleSpecifier.text)
+    )
+      continue;
+    const bindings = statement.importClause?.namedBindings;
+    if (bindings && ts.isNamedImports(bindings))
+      for (const binding of bindings.elements)
+        if ((binding.propertyName?.text || binding.name.text) === 'test')
+          testBindings.add(binding.name.text);
+  }
   const add = (node: ts.Node, kind: string, name: string | undefined) => {
     if (name && capabilities.length < 100)
       capabilities.push({
@@ -146,6 +160,17 @@ export function extractCapabilities(
       });
   };
   const walk = (node: ts.Node) => {
+    if (
+      ts.isVariableDeclaration(node) &&
+      ts.isIdentifier(node.name) &&
+      node.initializer &&
+      ts.isCallExpression(node.initializer) &&
+      ts.isPropertyAccessExpression(node.initializer.expression) &&
+      node.initializer.expression.name.text === 'extend' &&
+      ts.isIdentifier(node.initializer.expression.expression) &&
+      testBindings.has(node.initializer.expression.expression.text)
+    )
+      add(node, 'fixture', node.name.text);
     if (ts.isClassDeclaration(node)) {
       add(
         node,
@@ -185,7 +210,6 @@ export function extractCapabilities(
       if (/^(Given|When|Then)$/.test(name)) add(node, 'step', literal(node.arguments[0]));
       if (/getBy(Role|Label|TestId)$/.test(name))
         add(node, 'locator', `${name}(${literal(node.arguments[0]) || 'dynamic'})`);
-      if (/\btest\.extend$/.test(name)) add(node, 'fixture', path);
     }
     if (
       ts.isJsxAttribute(node) &&

@@ -37,6 +37,13 @@ test('Opt-in capability index caches syntax, tracks edits/deletions and excludes
     assert.equal((await p.generation.index.scan(ref)).parsed, 0);
     assert.equal((await p.generation.index.scan(ref)).reused, 1);
     assert.equal(p.generation.index.lookup(ref, 'free shipping').length, 1);
+    const targetIndex = await p.generation.index.scan({ kind: 'target', id: p.target.id });
+    assert.ok(
+      targetIndex.files
+        .find((f) => f.path === 'ui/fixtures.ts')
+        ?.capabilities.some((c) => c.kind === 'fixture' && c.name === 'test'),
+      'Playwright test imported as base must retain the exported fixture identity',
+    );
     writeFileSync(
       join(p.source.path, 'Promotions.tsx'),
       'export class PromotionsComponent { render() { return "changed"; } }',

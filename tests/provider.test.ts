@@ -68,10 +68,13 @@ test('App-server protocol fixture streams scoped tools/results/usage with isolat
   assert.deepEqual(thread.environments, []);
   assert.deepEqual(thread.runtimeWorkspaceRoots, []);
   assert.equal(thread.approvalPolicy, 'never');
-  assert.equal(thread.sandbox, 'read-only');
+  assert.equal(thread.permissions, 'qa-proposals');
+  assert.equal(thread.sandbox, undefined);
   const turn = rpc.find((m) => m.method === 'turn/start').params;
   assert.deepEqual(turn.environments, []);
-  assert.deepEqual(turn.sandboxPolicy.access.readableRoots, [p.cwd]);
+  assert.equal(turn.permissions, 'qa-proposals');
+  assert.equal(turn.sandboxPolicy, undefined);
+  assert.match(readFileSync(join(p.home, 'config.toml'), 'utf8'), /":root" = "deny"/);
   assert.match(readFileSync(join(p.home, 'config.toml'), 'utf8'), /hooks = false/);
   assert.throws(() => process.kill(-notes.pid, 0));
 });
@@ -80,6 +83,19 @@ test('Streaming JSON preserves UTF-8 characters split across transport chunks', 
   const p = fixture();
   const result = await p.connection.run(request('UTF8'));
   assert.deepEqual(result.output, { answer: 'Envío gratis 50€' });
+});
+
+test('A denied permission profile stops before creating a thread or requesting inference', async () => {
+  const p = fixture();
+  writeFileSync(
+    p.binary,
+    readFileSync(p.binary, 'utf8').replace('allowed: true', 'allowed: false'),
+  );
+  await assert.rejects(() => p.connection.run(request()), /permission profile is unavailable/);
+  const rpc = readFileSync(join(p.cwd, 'fixture-rpc.jsonl'), 'utf8');
+  assert.doesNotMatch(rpc, /thread\/start|turn\/start/);
+  const notes = JSON.parse(readFileSync(join(p.cwd, 'fixture-process.json'), 'utf8'));
+  assert.throws(() => process.kill(-notes.pid, 0));
 });
 
 test('Unregistered provider tools fail closed and never reach the application handler', async () => {

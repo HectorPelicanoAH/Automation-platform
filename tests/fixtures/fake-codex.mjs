@@ -70,6 +70,8 @@ createInterface({ input: process.stdin }).on('line', (line) => {
   }
   if (m.method === 'initialize')
     send({ id: m.id, result: { userAgent: 'explicit-protocol-fixture' } });
+  if (m.method === 'permissionProfile/list')
+    send({ id: m.id, result: { data: [{ id: 'qa-proposals', allowed: true }], nextCursor: null } });
   if (m.method === 'account/read') send({ id: m.id, result: { account: null } });
   if (m.method === 'model/list')
     send({
