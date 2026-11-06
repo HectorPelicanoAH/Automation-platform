@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "source": "Synthetic classification unit inputs; not native runner evidence",
+  "cases": [
+    {
+      "text": "expect(locator).toHaveCount(1): getByTestId('obsolete-amount') resolved to 0 elements",
+      "expected": "LOCATOR_DEFECT"
+    },
+    {
+      "text": "expect(locator).toHaveText: Expected: 50\u20ac Received: 99\u20ac",
+      "expected": "PRODUCT_REGRESSION"
+    },
+    {
+      "text": "page.goto: net::ERR_CONNECTION_REFUSED",
+      "expected": "ENVIRONMENT"
+    },
+    {
+      "text": "Invalid setup context: fixture not found",
+      "expected": "DATA"
+    },
+    {
+      "text": "Runner interrupted without failure details",
+      "expected": "UNKNOWN"
+    },
+    {
+      "text": "called feature failed: helpers/missing-context.feature - expected status: 200, actual: 404",
+      "expected": "DATA"
+    }
+  ]
+}

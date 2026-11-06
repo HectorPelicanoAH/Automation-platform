@@ -1,3 +1,4 @@
+import { MaintenancePanel } from './MaintenancePanel.tsx';
 import { CoveragePanel } from './CoveragePanel.tsx';
 import React, { useCallback, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -246,7 +247,7 @@ function App() {
           ))}
         </nav>
         <div className="sidebar-note">
-          <span className="phase-label">PHASE 04</span>
+          <span className="phase-label">PHASE 05</span>
           <p>
             A local foundation.
             <br />
@@ -811,6 +812,9 @@ function App() {
                       </Empty>
                     )}
                   </section>
+                  {run && !run.proposalId && ['FAILED', 'INTERRUPTED'].includes(run.status) && (
+                    <MaintenancePanel key={run.id} run={run} />
+                  )}
                   {run && (
                     <section className="panel run-detail">
                       <div className="panel-heading">
@@ -919,7 +923,7 @@ function App() {
           )}
           <footer className="page-footer">
             <span>
-              QA LOCAL <i>/</i> PHASE 04 FOUNDATION
+              QA LOCAL <i>/</i> PHASE 05 FOUNDATION
             </span>
             <span>
               {state

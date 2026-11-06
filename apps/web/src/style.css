@@ -1236,23 +1236,27 @@ code {
   padding: 0 0 18px;
   margin-bottom: 18px;
 }
-.generation-workbench label {
+.generation-workbench label,
+.maintenance-workbench label {
   margin: 12px 0;
 }
 .generation-workbench .form-grid label {
   margin: 0;
 }
-.generation-workbench .button {
+.generation-workbench .button,
+.maintenance-workbench .button {
   margin: 4px 6px 4px 0;
   white-space: normal;
 }
 .generation-workbench .button-row .button {
   margin: 0;
 }
-.generation-workbench details {
+.generation-workbench details,
+.maintenance-workbench details {
   margin: 12px 0;
 }
-.generation-workbench summary {
+.generation-workbench summary,
+.maintenance-workbench summary {
   cursor: pointer;
   padding: 8px 0;
 }
@@ -1275,7 +1279,8 @@ code {
   font-family: ui-monospace, monospace;
   width: 100%;
 }
-.generation-workbench pre {
+.generation-workbench pre,
+.maintenance-workbench pre {
   overflow: auto;
   max-height: 450px;
   white-space: pre-wrap;
@@ -1289,7 +1294,8 @@ code {
   overflow: auto;
   font-size: 13px;
 }
-.generation-workbench code {
+.generation-workbench code,
+.maintenance-workbench code {
   overflow-wrap: anywhere;
 }
 .status.approved,
@@ -1310,4 +1316,8 @@ code {
 .status.apply_failed {
   background: #fff0eb;
   color: #9a4438;
+}
+
+.maintenance-workbench {
+  padding: 24px;
 }

@@ -2,7 +2,7 @@
 
 A local functional testing workbench: connect read-only application sources, manage a separate automation target, edit business Gherkin, execute real Playwright-BDD and Karate tests, and inspect outcomes and native evidence without AI.
 
-**Phases 1–2 are complete; Phases 3–4 remain in validation.** Reviewed UI/API generation, independent native runners, separate coverage and reusable local preparation have real local execution evidence. Phase 4's API generation uses a supported inline OpenAPI/public-GET subset; a real Codex-generated response has native negative/positive validation after explicitly recorded corrected-host replay. Current three-system CI remains outstanding after GitHub rejected the last Phase 3 final jobs for billing. Automatic transcription, repair and autonomous skill evolution are not implemented. See [phase status](docs/phase-status.md) for the explicit sequencing exception, acceptance evidence and remaining gates.
+**Phases 1–2 are complete; Phases 3–5 remain in validation.** Reviewed UI/API generation, independent native runners, separate coverage and reusable local preparation have real local execution evidence. Phase 4's API generation uses a supported inline OpenAPI/public-GET subset; a real Codex-generated response has native negative/positive validation after explicitly recorded corrected-host replay. Current three-system CI remains outstanding after GitHub rejected the last Phase 3 final jobs for billing. Phase 5 adds reviewed failure diagnosis and narrowly scoped literal-locator repair with native validation and reversal. Automatic transcription, general automatic repairs and autonomous skill evolution remain outside the implemented subset. See [phase status](docs/phase-status.md) for the explicit sequencing exception, acceptance evidence and remaining gates.
 
 ## Run locally
 
@@ -77,8 +77,10 @@ The full acceptance workflow passed on Ubuntu 24.04 x86_64, macOS 15 Apple Silic
 
 Workers supervise processes; they are **not host security sandboxes**. Run only reviewed, trusted automation in explicitly authorized environments. Native reports may contain sensitive application evidence and are downloaded rather than executed in the privileged web origin. Runtime artifacts default to 14-day retention, configurable in Workspace and applied at startup. Credentials are not stored in source configuration or version control.
 
-[MIT licensed](LICENSE), selected by the owner. See [third-party notices](THIRD_PARTY_NOTICES.md). Only the exact human authorization for the next phase permits starting it; Phase 3 is already approved; Phase 4 requires `APPROVE PHASE 4` after Phase 3 completion.
+[MIT licensed](LICENSE), selected by the owner. See [third-party notices](THIRD_PARTY_NOTICES.md). Only the exact human authorization for the next phase permits starting it; Phase 5 is explicitly approved under a sequencing exception retaining the Phase 3–4 CI obligations. Phase 6 requires `APPROVE PHASE 6`.
 
 Reviewed generation setup, context limits and approval controls: [generation guide](docs/generation.md).
 
 Phase 4 is approved and in validation under an explicit sequencing exception: Phase 3 CI remains outstanding. [API generation guide](docs/api-generation.md) and [current Phase 4 validation](docs/phase-4-report.md) distinguish real native execution from provider fixtures, actual model output and remaining CI checks.
+
+Phase 5 maintenance: [operating guide](docs/maintenance.md), [approved plan](docs/phase-5-plan.md) and [validation report](docs/phase-5-report.md). Diagnosis remains useful without AI; all application and reversal actions require separate exact-diff review.

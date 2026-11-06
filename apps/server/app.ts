@@ -1,3 +1,5 @@
+import { MaintenanceManager } from '../../packages/maintenance/manager.ts';
+import { maintenanceRoutes } from '../../packages/maintenance/routes.ts';
 import { coverage } from '../../packages/workspace/coverage.ts';
 import { RecordingManager } from '../../packages/recording/manager.ts';
 import { recordingRoutes } from '../../packages/recording/routes.ts';
@@ -44,7 +46,7 @@ export function createPlatform(options: {
   const store = new Store(options.dataDir);
   const workspace = new Workspace(store, platformRoot);
   const manager: ExecutionManager = new ExecutionManager(store, workspace, (id) =>
-    generation.validationTarget(id),
+    id.startsWith('repair-') ? maintenance.validationTarget(id) : generation.validationTarget(id),
   );
   const recorder = new RecordingManager(store);
   const generation: GenerationManager = new GenerationManager(
@@ -54,6 +56,7 @@ export function createPlatform(options: {
     manager,
     options.generationProviderFactory,
   );
+  const maintenance = new MaintenanceManager(store, workspace, generation.index, manager);
   const app = Fastify({
     bodyLimit: 1_050_000,
     logger: false,
@@ -157,6 +160,7 @@ export function createPlatform(options: {
   );
   recordingRoutes(app, recorder);
   generationRoutes(app, generation);
+  maintenanceRoutes(app, maintenance);
   app.get('/api/state', async (request) => ({
     csrf: sessionFor(request.headers.cookie)!.csrf,
     sources: store.list('sources'),
@@ -464,7 +468,7 @@ export function createPlatform(options: {
   app.addHook('onClose', async () => {
     store.close();
   });
-  return { app, store, workspace, manager, recorder, generation, launchToken };
+  return { app, store, workspace, manager, recorder, generation, maintenance, launchToken };
 }
 
 function readTextArtifact(root: string, path: string) {

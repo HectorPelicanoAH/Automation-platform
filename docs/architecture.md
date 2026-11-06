@@ -164,3 +164,7 @@ No microservices, external queue, vector service, graph database, multi-user acc
 ## Phase 4 API extension
 
 The approved API generation extension reuses the current index, generation manager, reviewed staging/application and native Karate adapter. Separate UI/API coverage and explicit hybrid preparation plans preserve observable boundaries. See [ADR 0012](decisions/0012-api-contracts-and-coverage.md), [supported operation guide](api-generation.md) and [current validation report](phase-4-report.md). The owner authorized sequencing with Phase 3 CI still pending; that debt is not waived.
+
+## Phase 5 maintenance extension
+
+The maintenance module consumes original native failures, current scoped implementation, versioned relationship snapshots and bounded read-only Git metadata. Deterministic symptoms remain hypotheses until explicitly reviewed. A distinct repair lifecycle reuses the overlay, runner and journal primitives without inventing recording evidence. The supported repair changes only literal locator arguments in an existing Page/component. Staged canonical hashes, executable fingerprints, target/source contents and Git revisions guard validation/application independently. Exact diff approval and separate reversal review remain mandatory. See [ADR 0013](decisions/0013-evidence-based-maintenance.md) and [operating guide](maintenance.md). No provider call or autonomous skill evolution is introduced.

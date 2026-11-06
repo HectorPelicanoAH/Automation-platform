@@ -165,7 +165,11 @@ export function makeDiff(files: FileChange[]) {
     )
     .join('\n');
 }
-export function buildStage(target: Target, proposal: ChangeProposal, root: string) {
+export function buildStage(
+  target: Target,
+  proposal: Pick<ChangeProposal, 'id' | 'hash' | 'files' | 'framework' | 'diff'>,
+  root: string,
+) {
   if (existsSync(root)) throw new AppError(409, 'Stage already exists');
   privateDirectory(root);
   let bytes = 0,
@@ -192,7 +196,11 @@ export function buildStage(target: Target, proposal: ChangeProposal, root: strin
   // Explicit execution trust covers existing dependencies. This link is not exposed to agent tools.
   symlinkSync(realpathSync(dependencies), join(root, 'ui/node_modules'), 'dir');
 }
-export function applyFiles(root: string, proposal: ChangeProposal, journalPath: string) {
+export function applyFiles(
+  root: string,
+  proposal: Pick<ChangeProposal, 'id' | 'hash' | 'files' | 'framework' | 'diff'>,
+  journalPath: string,
+) {
   const journal: {
     proposalId: string;
     diffHash: string;
