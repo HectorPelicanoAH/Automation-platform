@@ -91,3 +91,47 @@ test('Ordinary logs redact standard sensitive fields and bearer values', () => {
   for (const secret of ['token123', 'private', 'unsafe', 'secret456', 'querySecret', 'jsonSecret'])
     assert.ok(!result.includes(secret));
 });
+
+test('Nested Karate calls retain child failure evidence without double-counting time', () => {
+  const result = karateResults(
+    [
+      {
+        uri: 'features/promotions.feature',
+        elements: [
+          {
+            id: 'nested',
+            name: 'Composed API',
+            tags: [{ name: '@scenario:free-shipping' }],
+            steps: [
+              {
+                keyword: '* ',
+                name: "def setup = call read('helper.feature')",
+                result: { status: 'failed', duration: 5000000 },
+              },
+              {
+                keyword: '> When ',
+                name: 'method post',
+                result: { status: 'passed', duration: 3000000 },
+              },
+              {
+                keyword: '> Then ',
+                name: 'status 201',
+                result: {
+                  status: 'failed',
+                  duration: 1000000,
+                  error_message: 'expected 201 but 500',
+                },
+              },
+              { keyword: 'Then ', name: 'status 200', result: { status: 'skipped', duration: 0 } },
+            ],
+          },
+        ],
+      },
+    ],
+    run,
+  )[0];
+  assert.equal(result.durationMs, 5);
+  assert.equal(result.status, 'FAILED');
+  assert.equal(result.steps.length, 4);
+  assert.match(result.error!, /expected 201 but 500/);
+});

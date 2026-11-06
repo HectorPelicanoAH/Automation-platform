@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from './api.ts';
 import { Empty, Status, short } from './ui.tsx';
-import type { Source, Target } from '../../../packages/domain/model.ts';
+import type { Framework, Source, Target } from '../../../packages/domain/model.ts';
 import type {
   AiSettings,
   GenerationTask,
   ContractProposal,
   ChangeProposal,
 } from '../../../packages/generation/model.ts';
+import type { ApiOperation } from '../../../packages/intelligence/api.ts';
 import type { IndexSummary, RootRef } from '../../../packages/intelligence/index.ts';
 import type { Recording, EvidenceEvent } from '../../../packages/recording/model.ts';
 interface GenerationState {
@@ -22,6 +23,13 @@ interface GenerationState {
     ChangeProposal,
     'id' | 'targetId' | 'contractId' | 'status' | 'validationRunId' | 'error'
   >[];
+}
+interface EndpointChoice {
+  ref: RootRef;
+  path: string;
+  hash: string;
+  symbol: string;
+  operation: ApiOperation;
 }
 interface ConnectionInfo {
   account: { account: unknown };
@@ -64,6 +72,10 @@ export function GenerationPanel({
   const [implementationModel, setImplementationModel] = useState('');
   const [analysisEffort, setAnalysisEffort] = useState('medium');
   const [implementationEffort, setImplementationEffort] = useState('medium');
+  const [framework, setFramework] = useState<Framework>('playwright');
+  const [endpoints, setEndpoints] = useState<EndpointChoice[]>([]);
+  const [endpointKey, setEndpointKey] = useState('');
+  const [hybrid, setHybrid] = useState<unknown>();
   const [sourceIds, setSourceIds] = useState<string[]>([]);
   const [indexes, setIndexes] = useState<IndexSummary[]>([]);
   const [query, setQuery] = useState('');
@@ -88,6 +100,23 @@ export function GenerationPanel({
   const initialized = useRef(false);
   const selection = useRef({ targetId, contractId, changeId, dirty });
   selection.current = { targetId, contractId, changeId, dirty };
+  useEffect(() => {
+    let cancelled = false;
+    setEndpoints([]);
+    setHybrid(undefined);
+    setEndpointKey('');
+    if (contractId)
+      void api<EndpointChoice[]>('/generation/contracts/' + contractId + '/endpoints')
+        .then((v) => {
+          if (!cancelled) setEndpoints(v);
+        })
+        .catch((e) => {
+          if (!cancelled) setError(String(e.message));
+        });
+    return () => {
+      cancelled = true;
+    };
+  }, [contractId, targetId]);
   const setContract = (next: ContractProposal | undefined) => {
     if (
       next &&
@@ -825,10 +854,65 @@ export function GenerationPanel({
                   </button>
                 </div>
                 <button
+                  className="button secondary"
+                  disabled={busy || dirty || contract.status !== 'APPROVED'}
+                  onClick={() =>
+                    void act(async () => {
+                      const result = await api(
+                        '/generation/contracts/' + contract.id + '/hybrid-plan',
+                      );
+                      if (
+                        selection.current.contractId === contract.id &&
+                        selection.current.targetId === contract.targetId
+                      )
+                        setHybrid(result);
+                    })
+                  }
+                >
+                  Inspect hybrid preparation plan
+                </button>
+                {hybrid !== undefined && <pre>{JSON.stringify(hybrid, null, 2)}</pre>}
+                <label>
+                  Execution target
+                  <select
+                    value={framework}
+                    onChange={(e) => setFramework(e.target.value as Framework)}
+                  >
+                    <option value="playwright">Playwright · visible UI</option>
+                    <option value="karate">Karate · API business state</option>
+                  </select>
+                </label>
+                {framework === 'karate' && (
+                  <>
+                    <p className="coverage-note">
+                      API assertions do not validate visible rendering. Select an indexed endpoint;
+                      unknown authentication or response contracts block generation.
+                    </p>
+                    <label>
+                      Discovered API endpoint
+                      <select value={endpointKey} onChange={(e) => setEndpointKey(e.target.value)}>
+                        <option value="">Choose an endpoint</option>
+                        {endpoints.map((e, i) => (
+                          <option key={i} value={String(i)}>
+                            {e.symbol} · {e.path} · auth {e.operation.authentication}
+                          </option>
+                        ))}
+                      </select>
+                    </label>
+                    {endpointKey !== '' &&
+                      endpoints[Number(endpointKey)]?.operation.questions.map((q) => (
+                        <p key={q} role="note">
+                          {q}
+                        </p>
+                      ))}
+                  </>
+                )}
+                <button
                   className="button"
                   disabled={
                     busy ||
                     dirty ||
+                    (framework === 'karate' && endpointKey === '') ||
                     contract.status !== 'APPROVED' ||
                     !state?.settings.enabled ||
                     state.tasks.some((t) => running(t.status))
@@ -837,14 +921,27 @@ export function GenerationPanel({
                     void act(async () => {
                       const next = await api<GenerationTask>(
                         '/generation/contracts/' + contract.id + '/implement',
-                        { expectedHash: contract.hash },
+                        {
+                          expectedHash: contract.hash,
+                          framework,
+                          ...(framework === 'karate'
+                            ? {
+                                endpoint: {
+                                  ref: endpoints[Number(endpointKey)].ref,
+                                  path: endpoints[Number(endpointKey)].path,
+                                  symbol: endpoints[Number(endpointKey)].symbol,
+                                  hash: endpoints[Number(endpointKey)].hash,
+                                },
+                              }
+                            : {}),
+                        },
                       );
                       setTaskId(next.id);
                       setTask(next);
                     })
                   }
                 >
-                  Plan and generate Playwright changes
+                  Plan and generate {framework === 'karate' ? 'Karate' : 'Playwright'} changes
                 </button>
               </>
             )}
@@ -871,6 +968,11 @@ export function GenerationPanel({
                   <Status value={change.status} /> Diff {change.hash.slice(0, 12)}
                 </p>
                 <p>{change.plan.summary}</p>
+                <p className="coverage-note">
+                  {change.framework === 'karate'
+                    ? 'API coverage: HTTP contract and business state. Visible UI remains independently validated by Playwright.'
+                    : 'UI coverage: rendered browser content.'}
+                </p>
                 <p className="muted">
                   Contract revision {change.contractHash.slice(0, 12)} ·{' '}
                   <button
@@ -970,7 +1072,8 @@ export function GenerationPanel({
                         })
                       }
                     >
-                      Run staged Playwright validation
+                      Run staged {change.framework === 'karate' ? 'Karate' : 'Playwright'}{' '}
+                      validation
                     </button>
                   </>
                 )}

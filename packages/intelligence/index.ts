@@ -1,3 +1,9 @@
+import {
+  openApiCapabilities,
+  fastifyRoutes,
+  karateCapabilities,
+  type ApiOperation,
+} from './api.ts';
 import ts from 'typescript';
 import { execFileSync } from 'node:child_process';
 import { readFileSync, readdirSync, realpathSync, lstatSync } from 'node:fs';
@@ -18,6 +24,7 @@ export interface Capability {
   name: string;
   line: number;
   confidence: 'syntax';
+  operation?: ApiOperation;
 }
 export interface IndexedFile {
   path: string;
@@ -41,7 +48,7 @@ export interface RepositoryIndex {
   policyHash: string;
   limits: string[];
 }
-const EXTRACTOR = 'typescript-syntax-v2';
+const EXTRACTOR = 'repository-syntax-v3-api';
 export type IndexSummary = Omit<RepositoryIndex, 'files'> & {
   fileCount: number;
   warningCount: number;
@@ -221,6 +228,7 @@ export function extractCapabilities(
     ts.forEachChild(node, walk);
   };
   walk(file);
+  capabilities.push(...fastifyRoutes(file));
   const diagnostics =
     (file as ts.SourceFile & { parseDiagnostics?: readonly ts.Diagnostic[] }).parseDiagnostics ||
     [];
@@ -327,7 +335,7 @@ export class CapabilityIndex {
         if (
           (exclude.length && matches(path, exclude)) ||
           (include.length && !matches(path, include)) ||
-          !/\.(tsx?|jsx?|feature)$/.test(path) ||
+          !(/\.(tsx?|jsx?|feature)$/.test(path) || /(?:openapi|swagger)[^/]*\.json$/i.test(path)) ||
           /(^|\/)(AGENTS\.md|SKILL\.md|.*config\.[cm]?[jt]s)$/.test(path)
         ) {
           skipped++;
@@ -353,9 +361,13 @@ export class CapabilityIndex {
           files.push(cached);
           reused++;
         } else {
-          const extracted = path.endsWith('.feature')
-            ? featureCapabilities(content.text, path)
-            : extractCapabilities(content.text, path);
+          const extracted = path.endsWith('.json')
+            ? openApiCapabilities(content.text)
+            : path.endsWith('.feature')
+              ? path.startsWith('api/')
+                ? karateCapabilities(content.text)
+                : featureCapabilities(content.text, path)
+              : extractCapabilities(content.text, path);
           files.push({ path, hash: content.hash, ...extracted });
           parsed++;
         }
@@ -378,7 +390,7 @@ export class CapabilityIndex {
         truncated,
         policyHash,
         limits: [
-          'TypeScript/JavaScript syntax only; dynamic routes/labels and business rules are not inferred.',
+          'TypeScript/JavaScript static syntax, OpenAPI 3.0/3.1 inline JSON and Karate feature syntax; dynamic routes/auth and referenced schemas require confirmation.',
           '500 files / 8 MB / 200 KB per parsed file; 10,000 visited entries / 12 directory levels. Secrets, instructions, symlinks and generated trees excluded.',
           'Working-tree file hashes are authoritative; Git HEAD is provenance, not a clean-tree claim.',
         ],

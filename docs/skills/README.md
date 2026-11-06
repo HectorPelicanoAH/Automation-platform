@@ -48,3 +48,5 @@ These are candidates, not a requirement to create twelve skills. Merge overlappi
 7. Support explicit rollback to the prior hash and invalidate stale pending proposals. Rollback itself changes active instructions and is a deliberate user action.
 
 Changing a skill during an evaluation invalidates its result. Never overwrite a known-good active bundle silently. Learn from one-off failures in temporary or repository knowledge before proposing a permanent procedural change.
+
+Phase 4 adds [implement-karate v1](candidates/v1/implement-karate/SKILL.md) as a format-validated, behaviorally unevaluated candidate. It is outside runtime discovery paths and is not approved for activation. See [evidence](../evaluations/phase-4-local-evidence.json).

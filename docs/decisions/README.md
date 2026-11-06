@@ -20,3 +20,5 @@ Each ADR records context, decision, alternatives, consequences and a validation/
 - [ADR 0010 — Recorder evidence and privacy](0010-recorder-evidence-and-privacy.md): Phase 2 implementation, real capture boundaries, manual transcription and synthetic audio evaluation limits.
 
 - [ADR 0011 — Reviewed AI generation](0011-reviewed-ai-generation.md): Phase 3 scoped tools, index provenance, staged validation and exact application approval.
+
+- [0012 — API contracts and separate coverage](0012-api-contracts-and-coverage.md)

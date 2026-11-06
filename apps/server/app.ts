@@ -1,3 +1,4 @@
+import { coverage } from '../../packages/workspace/coverage.ts';
 import { RecordingManager } from '../../packages/recording/manager.ts';
 import { recordingRoutes } from '../../packages/recording/routes.ts';
 import { GenerationManager } from '../../packages/generation/manager.ts';
@@ -278,6 +279,9 @@ export function createPlatform(options: {
       store.put('targets', target);
       return target;
     },
+  );
+  app.get<{ Params: { id: string } }>('/api/targets/:id/coverage', async (r) =>
+    coverage(workspace, workspace.target(r.params.id), store.list('runs')),
   );
   app.get<{ Params: { id: string } }>('/api/targets/:id/features', async (request) =>
     workspace.features(workspace.target(request.params.id)),

@@ -1,3 +1,4 @@
+import type { Framework } from '../domain/model.ts';
 import type { RootRef } from '../intelligence/index.ts';
 import type { AgentEvent } from './provider.ts';
 export interface AiSettings {
@@ -64,6 +65,8 @@ export interface FileChange {
   after: string;
 }
 export interface ChangeProposal {
+  framework?: Framework;
+  apiEndpoint?: { ref: RootRef; path: string; symbol: string; hash: string };
   id: string;
   taskId: string;
   contractId: string;

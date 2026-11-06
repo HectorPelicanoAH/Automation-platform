@@ -2,7 +2,7 @@
 
 A local functional testing workbench: connect read-only application sources, manage a separate automation target, edit business Gherkin, execute real Playwright-BDD and Karate tests, and inspect outcomes and native evidence without AI.
 
-**Phases 1–2 are complete. Phase 3 remains in validation.** Recording, manual timestamped narration and reviewed Codex-to-Playwright generation have real local execution evidence. Final three-system CI is blocked by GitHub account billing before any job starts. API code generation, automatic transcription, repair and autonomous skill evolution are not implemented. See [phase status](docs/phase-status.md) for acceptance evidence and the remaining gate.
+**Phases 1–2 are complete; Phases 3–4 remain in validation.** Reviewed UI/API generation, independent native runners, separate coverage and reusable local preparation have real local execution evidence. Phase 4's API generation uses a supported inline OpenAPI/public-GET subset; its authenticated live-model acceptance is pending. Current three-system CI remains outstanding after GitHub rejected the last Phase 3 final jobs for billing. Automatic transcription, repair and autonomous skill evolution are not implemented. See [phase status](docs/phase-status.md) for the explicit sequencing exception, acceptance evidence and remaining gates.
 
 ## Run locally
 
@@ -80,3 +80,5 @@ Workers supervise processes; they are **not host security sandboxes**. Run only 
 [MIT licensed](LICENSE), selected by the owner. See [third-party notices](THIRD_PARTY_NOTICES.md). Only the exact human authorization for the next phase permits starting it; Phase 3 is already approved; Phase 4 requires `APPROVE PHASE 4` after Phase 3 completion.
 
 Reviewed generation setup, context limits and approval controls: [generation guide](docs/generation.md).
+
+Phase 4 is approved and in validation under an explicit sequencing exception: Phase 3 CI remains outstanding. [API generation guide](docs/api-generation.md) and [current Phase 4 validation](docs/phase-4-report.md) distinguish real native execution from provider fixtures and pending live-model checks.

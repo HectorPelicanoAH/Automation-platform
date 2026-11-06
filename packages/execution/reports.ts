@@ -50,6 +50,7 @@ interface CucumberFeature {
     name: string;
     tags?: { name: string }[];
     steps?: {
+      keyword?: string;
       name: string;
       result?: { status?: string; duration?: number; error_message?: string };
     }[];
@@ -133,7 +134,10 @@ export function karateResults(document: unknown, run: Pick<Run, 'snapshot'>): Te
           : steps.length && steps.every((s) => s.status === 'PASSED')
             ? 'PASSED'
             : 'UNKNOWN',
-        durationMs: steps.reduce((sum, s) => sum + s.durationMs, 0),
+        // Karate flattens nested feature calls with a '> ' keyword; their parent call already includes that time.
+        durationMs: (scenario.steps || [])
+          .filter((s) => !s.keyword?.trimStart().startsWith('>'))
+          .reduce((sum, s) => sum + (s.result?.duration || 0) / 1_000_000, 0),
         steps,
         error: steps.find((s) => s.error)?.error,
       });

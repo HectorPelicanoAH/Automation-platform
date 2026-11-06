@@ -1,5 +1,7 @@
 # Phase 3 report
 
+Historical report snapshot: Phase 4 was subsequently approved with an explicit owner sequencing exception. Current authorization is in [phase status](phase-status.md); Phase 3 itself remains VALIDATION.
+
 PHASE: 3 — AI-assisted UI generation
 
 STATUS: VALIDATION. Functionality has local, real-model and native-runner evidence. The required final three-system CI is blocked by GitHub billing; this phase is not COMPLETED. Phase 4 remains unapproved.

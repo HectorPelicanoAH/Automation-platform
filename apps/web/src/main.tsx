@@ -1,3 +1,4 @@
+import { CoveragePanel } from './CoveragePanel.tsx';
 import React, { useCallback, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import type { Feature, Run, Framework, Selection } from '../../../packages/domain/model.ts';
@@ -245,7 +246,7 @@ function App() {
           ))}
         </nav>
         <div className="sidebar-note">
-          <span className="phase-label">PHASE 03</span>
+          <span className="phase-label">PHASE 04</span>
           <p>
             A local foundation.
             <br />
@@ -306,7 +307,7 @@ function App() {
                       : view === 'Repository'
                         ? 'Read the target files behind your functional coverage.'
                         : view === 'Generate'
-                          ? 'Inspect evidence, review requirements and validate staged UI automation.'
+                          ? 'Inspect evidence, review requirements and validate staged UI/API automation.'
                           : view === 'Record'
                             ? 'Capture interactions and narration, preserve evidence and inspect gaps.'
                             : 'Independent UI and API coverage, with native reports and honest outcomes.'}
@@ -486,6 +487,7 @@ function App() {
                   notice={setNotice}
                 />
               )}
+              {view === 'Scenarios' && <CoveragePanel targetId={targetId} />}
               {view === 'Scenarios' && (
                 <section className="panel">
                   <div className="panel-heading">
@@ -917,7 +919,7 @@ function App() {
           )}
           <footer className="page-footer">
             <span>
-              QA LOCAL <i>/</i> PHASE 03 FOUNDATION
+              QA LOCAL <i>/</i> PHASE 04 FOUNDATION
             </span>
             <span>
               {state

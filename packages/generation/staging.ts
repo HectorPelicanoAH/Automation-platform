@@ -22,14 +22,14 @@ import { privateDirectory } from './private-directory.ts';
 export function allowedChangePath(path: string) {
   if (
     path.length > 180 ||
-    !/^(contracts\/features\/[A-Za-z0-9_/-]+\.feature|ui\/(pages|components|steps|builders)\/[A-Za-z0-9_/-]+\.tsx?|ui\/fixtures\.ts)$/.test(
+    !/^(contracts\/features\/[A-Za-z0-9_/-]+\.feature|ui\/(pages|components|steps|builders)\/[A-Za-z0-9_/-]+\.tsx?|ui\/fixtures\.ts|api\/src\/test\/resources\/(features|helpers)\/[A-Za-z0-9_/-]+\.feature|contracts\/manifest\.json)$/.test(
       path,
     ) ||
     path.split('/').some((p) => !p || p === '..' || p === '.' || p.startsWith('.'))
   )
     throw new AppError(
       403,
-      'Generated changes are restricted to reviewed Gherkin and UI automation source',
+      'Generated changes are restricted to reviewed Gherkin and UI/API automation source',
     );
 }
 export function destination(root: string, path: string, createParents = false, created?: string[]) {
@@ -91,6 +91,10 @@ export function validateGeneratedFile(path: string, text: string) {
     throw new AppError(413, 'Generated file exceeds text budget');
   if (/-----BEGIN .*PRIVATE KEY|\bsk-[A-Za-z0-9_-]{20,}/.test(text))
     throw new AppError(422, 'Potential credential in generated output');
+  if (path === 'contracts/manifest.json') {
+    JSON.parse(text);
+    return;
+  }
   if (path.endsWith('.feature')) {
     parseFeature(text, path);
     return;
@@ -167,20 +171,21 @@ export function buildStage(target: Target, proposal: ChangeProposal, root: strin
   let bytes = 0,
     files = 0;
   for (const path of fileTree(target.path)) {
-    if (!/^(ui\/.*\.(tsx?|json)|contracts\/.*\.(feature|json))$/.test(path)) continue;
-    const text = readText(target.path, path).text;
-    bytes += Buffer.byteLength(text);
+    if (!/^(ui\/.*\.(tsx?|json)|contracts\/.*\.(feature|json)|api\/.*)$/.test(path)) continue;
+    const text = readFileSync(join(target.path, path));
+    bytes += text.byteLength;
     files++;
     if (bytes > 4_000_000 || files > 500)
       throw new AppError(413, 'Validation overlay exceeds budget');
     const output = join(root, path);
     mkdirSync(dirname(output), { recursive: true, mode: 0o700 });
-    writeFileSync(output, text, { mode: 0o600 });
+    writeFileSync(output, text, { mode: path === 'api/gradlew' ? 0o700 : 0o600 });
   }
   for (const file of proposal.files) {
     const output = destination(root, file.path, true);
     writeFileSync(output, file.after, { mode: 0o600 });
   }
+  if (proposal.framework === 'karate') return;
   const dependencies = join(target.path, 'ui/node_modules');
   if (!existsSync(dependencies) || lstatSync(dependencies).isSymbolicLink())
     throw new AppError(409, 'Install the trusted target UI dependencies before validation');
@@ -263,7 +268,19 @@ export function applyFiles(root: string, proposal: ChangeProposal, journalPath: 
 }
 
 export function preserveExistingCapabilities(before: string | null, after: string, path: string) {
-  if (before === null || path.endsWith('.feature')) return;
+  if (before === null) return;
+  if (path.endsWith('.feature')) {
+    if (path.startsWith('api/')) {
+      const assertions = before
+        .split('\n')
+        .map((s) => s.trim())
+        .filter((s) => /^(Given|When|Then|And|But|\*)\s+(match|status|assert)\s/.test(s));
+      const current = new Set(after.split('\n').map((s) => s.trim()));
+      if (assertions.some((s) => !current.has(s)))
+        throw new AppError(422, 'Existing API assertions must be preserved during generation');
+    }
+    return;
+  }
   const signatures = (text: string) => {
     const file = ts.createSourceFile(
       path,

@@ -160,3 +160,7 @@ Every implemented action needs loading, actionable error, empty and cancellation
 ## 10. Scope discipline and scalability triggers
 
 No microservices, external queue, vector service, graph database, multi-user access, cloud runner, universal source parser or autonomous repair in MVP. Revisit SQLite only after measured single-writer/query limits; revisit build tooling after measured incremental build delays; revisit remote workers only for an approved remote-use case and security model. Cost and retrieval budgets are defined in [evaluations](evaluations/README.md). These decisions avoid infrastructure without hiding future migration points.
+
+## Phase 4 API extension
+
+The approved API generation extension reuses the current index, generation manager, reviewed staging/application and native Karate adapter. Separate UI/API coverage and explicit hybrid preparation plans preserve observable boundaries. See [ADR 0012](decisions/0012-api-contracts-and-coverage.md), [supported operation guide](api-generation.md) and [current validation report](phase-4-report.md). The owner authorized sequencing with Phase 3 CI still pending; that debt is not waived.

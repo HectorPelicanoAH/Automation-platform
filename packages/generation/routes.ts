@@ -130,10 +130,32 @@ export function generationRoutes(app: FastifyInstance, manager: GenerationManage
     (id, b) => manager.review(id, b),
   );
   post('/api/generation/contracts/:id/reject', obj({}), (id) => manager.rejectContract(id));
-  post<{ expectedHash: string }>(
+  app.get<{ Params: { id: string } }>('/api/generation/contracts/:id/hybrid-plan', async (r) =>
+    manager.hybridPlan(r.params.id),
+  );
+  app.get<{ Params: { id: string } }>('/api/generation/contracts/:id/endpoints', async (r) =>
+    manager.endpoints(r.params.id),
+  );
+  post<{
+    expectedHash: string;
+    framework?: 'playwright' | 'karate';
+    endpoint?: { ref: RootRef; path: string; symbol: string; hash: string };
+  }>(
     '/api/generation/contracts/:id/implement',
-    obj({ expectedHash: digest }),
-    (id, b) => manager.implement(id, b.expectedHash),
+    obj(
+      {
+        expectedHash: digest,
+        framework: { enum: ['playwright', 'karate'] },
+        endpoint: obj({
+          ref: obj({ kind: { enum: ['source'] }, id: str }),
+          path: str,
+          symbol: str,
+          hash: digest,
+        }),
+      },
+      ['expectedHash'],
+    ),
+    (id, b) => manager.implement(id, b.expectedHash, b),
   );
   post('/api/generation/tasks/:id/cancel', obj({}), (id) => manager.cancel(id));
   post<{ expectedHash: string }>(

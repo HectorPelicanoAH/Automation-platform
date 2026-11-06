@@ -41,3 +41,5 @@ Phase 1 deterministic coverage is recorded in [phase-1-results.md](phase-1-resul
 Phase 2 deterministic capture/privacy and five-minute synthetic audio evidence is recorded in [phase-2-results.md](phase-2-results.md). Device and OS microphone consent remain explicitly unverified hardware checks.
 
 Phase 3 host-boundary, provider-protocol fixture and real native UI evidence is recorded in [phase-3-results.md](phase-3-results.md). Authenticated synthetic model trials and inactive skill comparisons are recorded there; final three-system CI remains blocked by account billing.
+
+Phase 4: [versioned synthetic cases](fixtures/phase-4-v1.json), [actual local native evidence](phase-4-local-evidence.json) and [validation report](../phase-4-report.md). Provider fixtures are labeled; real API inference and final three-system CI remain pending.

@@ -1,8 +1,15 @@
+import { hybridPlan } from './hybrid.ts';
+import {
+  boundApiFeaturePath,
+  bindKarate,
+  requireSupportedOperation,
+  validateKarate,
+} from './karate.ts';
 import { execFileSync } from 'node:child_process';
 import { realpathSync, readFileSync, existsSync, lstatSync, rmSync } from 'node:fs';
 import { join, isAbsolute } from 'node:path';
 import { randomUUID, createHash } from 'node:crypto';
-import { AppError, type Target } from '../domain/model.ts';
+import { AppError, type Framework, type Target } from '../domain/model.ts';
 import { hash, parseFeature } from '../domain/gherkin.ts';
 import { Store } from '../storage/store.ts';
 import { Workspace } from '../workspace/workspace.ts';
@@ -26,6 +33,7 @@ import {
   tools,
   analysisInstruction,
   implementationInstruction,
+  karateInstruction,
 } from './prompts.ts';
 import { privateDirectory } from './private-directory.ts';
 import type {
@@ -62,6 +70,13 @@ const clean = (value: string) =>
     .match(/[\s\S]{1,8000}/g)
     ?.map((s) => safeText(s))
     .join('') || '';
+const scrub = <T>(value: T): T => {
+  if (typeof value === 'string') return clean(value) as T;
+  if (Array.isArray(value)) return value.map(scrub) as T;
+  if (value && typeof value === 'object')
+    return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, scrub(v)])) as T;
+  return value;
+};
 const contractDigest = (
   gherkin: string,
   answers: { id: string; text: string }[],
@@ -335,7 +350,7 @@ export class GenerationManager {
         return retrieved(
           hits.map((h) => ({
             ...h,
-            capabilities: h.capabilities.map((c) => ({ ...c, name: clean(c.name) })),
+            capabilities: scrub(h.capabilities),
           })),
         );
       }
@@ -358,7 +373,7 @@ export class GenerationManager {
       return retrieved({
         ...file,
         text: cleaned,
-        capabilities: file.capabilities.map((c) => ({ ...c, name: clean(c.name) })),
+        capabilities: scrub(file.capabilities),
         redacted: cleaned !== file.text,
       });
     };
@@ -591,7 +606,38 @@ export class GenerationManager {
     this.invalidateContractWork(id);
     return this.repository.put('contracts', contract);
   }
-  async implement(contractId: string, expectedHash: string) {
+  hybridPlan(contractId: string) {
+    const contract = this.repository.get('contracts', contractId);
+    this.assertFresh(contract);
+    const index = this.index.get({ kind: 'target', id: contract.targetId });
+    if (!index) throw new AppError(409, 'Index the target before planning');
+    return hybridPlan(index);
+  }
+  endpoints(contractId: string) {
+    const contract = this.repository.get('contracts', contractId);
+    return contract.sourceIds.flatMap((id) => {
+      const ref: RootRef = { kind: 'source', id };
+      return (this.index.get(ref)?.files || []).flatMap((file) =>
+        file.capabilities
+          .filter((c) => c.kind === 'endpoint' && c.operation)
+          .map((c) => ({
+            ref,
+            path: file.path,
+            hash: file.hash,
+            symbol: c.name,
+            operation: c.operation,
+          })),
+      );
+    });
+  }
+  async implement(
+    contractId: string,
+    expectedHash: string,
+    options: {
+      framework?: Framework;
+      endpoint?: { ref: RootRef; path: string; symbol: string; hash: string };
+    } = {},
+  ) {
     const contract = this.repository.get('contracts', contractId);
     if (
       contract.status !== 'APPROVED' ||
@@ -616,20 +662,60 @@ export class GenerationManager {
     ];
     for (const ref of refs)
       if (!this.index.get(ref)) throw new AppError(409, 'Required repository index is unavailable');
+    const framework = options.framework || 'playwright';
+    if (!['playwright', 'karate'].includes(framework))
+      throw new AppError(400, 'Unsupported framework');
+    const endpoint =
+      framework === 'karate'
+        ? this.endpoints(contractId).find(
+            (e) =>
+              e.ref.kind === options.endpoint?.ref.kind &&
+              e.ref.id === options.endpoint.ref.id &&
+              e.path === options.endpoint.path &&
+              e.symbol === options.endpoint.symbol &&
+              e.hash === options.endpoint.hash,
+          )
+        : undefined;
+    if (framework === 'karate') {
+      if (!endpoint?.operation)
+        throw new AppError(
+          422,
+          'Select a current discovered API endpoint from an authorized source.',
+        );
+      requireSupportedOperation(endpoint.operation);
+      const selected = this.index.read(endpoint.ref, endpoint.path);
+      if (clean(selected.text) !== selected.text)
+        throw new AppError(
+          422,
+          'Replace sensitive API contract values with safe references before generation',
+        );
+    }
+    const apiPath = boundApiFeaturePath(
+      currentText(target.path, 'contracts/manifest.json')!,
+      contract.featurePath,
+    );
+    allowedChangePath(apiPath);
+    if (!apiPath.startsWith('api/src/test/resources/features/'))
+      throw new AppError(422, 'Unsupported existing API binding path');
     const prompt = JSON.stringify({
-      task: implementationInstruction,
+      task: framework === 'karate' ? karateInstruction : implementationInstruction,
+      framework,
+      ...(endpoint ? { endpoint, apiFeaturePath: apiPath } : {}),
       repositories: refs,
       featurePath: contract.featurePath,
       gherkin: contract.gherkin,
       answers: contract.answers,
       evidence: this.evidence(contract.recordingId).data,
-      allowedPaths: [
-        'ui/pages/*.ts',
-        'ui/components/*.ts',
-        'ui/steps/*.ts',
-        'ui/builders/*.ts',
-        'ui/fixtures.ts',
-      ],
+      allowedPaths:
+        framework === 'karate'
+          ? [apiPath]
+          : [
+              'ui/pages/*.ts',
+              'ui/components/*.ts',
+              'ui/steps/*.ts',
+              'ui/builders/*.ts',
+              'ui/fixtures.ts',
+            ],
     });
     return this.start(
       'implementation',
@@ -665,6 +751,7 @@ export class GenerationManager {
                 '; use exact indexed names',
             );
         if (
+          framework === 'playwright' &&
           targetIndex.files.some((f) =>
             f.capabilities.some((c) => ['page', 'component'].includes(c.kind)),
           ) &&
@@ -677,18 +764,70 @@ export class GenerationManager {
         });
         if (new Set(proposed.map((f) => f.path)).size !== proposed.length)
           throw new AppError(422, 'Duplicate output paths');
+        if (
+          proposed.some(
+            (f) =>
+              f.path === 'contracts/manifest.json' ||
+              (framework === 'playwright' ? f.path.startsWith('api/') : f.path.startsWith('ui/')),
+          )
+        )
+          throw new AppError(403, 'Proposal exceeds the selected framework scope');
         if (proposed.some((f) => f.path.startsWith('contracts/') && f.content !== contract.gherkin))
           throw new AppError(422, 'Generated contract differs from reviewed Gherkin');
         if (!proposed.some((f) => f.path === contract.featurePath))
           proposed.push({ path: contract.featurePath, content: contract.gherkin });
+        if (framework === 'karate' && endpoint?.operation) {
+          if (
+            !task.contextFiles.some(
+              (f) => f.ref.id === endpoint.ref.id && f.path === endpoint.path && f.bytes > 0,
+            )
+          )
+            throw new AppError(
+              422,
+              'Read the selected endpoint contract before proposing API implementation',
+            );
+          const api = proposed.find((f) => f.path === apiPath);
+          if (!api) throw new AppError(422, 'Proposal must include the selected API feature');
+          validateKarate(api.content, contract.gherkin, apiPath, endpoint.operation);
+          if (proposed.some((f) => f.path !== apiPath && f.path !== contract.featurePath))
+            throw new AppError(
+              422,
+              'New API helpers require separate manual review; reuse existing indexed helpers',
+            );
+          const calls = [...api.content.matchAll(/call read\(['"]classpath:([^'"]+)['"]\)/g)];
+          for (const call of calls) {
+            const path = 'api/src/test/resources/' + call[1];
+            if (
+              !reuse.some((r) => r.path === path) ||
+              !task.contextFiles.some(
+                (f) => f.ref.kind === 'target' && f.path === path && f.bytes > 0,
+              )
+            )
+              throw new AppError(422, 'API helpers must be read and included in the reuse plan');
+          }
+          proposed.push({
+            path: 'contracts/manifest.json',
+            content: bindKarate(
+              currentText(target.path, 'contracts/manifest.json')!,
+              contract.gherkin,
+              contract.featurePath,
+              apiPath,
+              endpoint,
+            ),
+          });
+        }
         const files: FileChange[] = [];
         for (const f of proposed) {
           validateGeneratedFile(f.path, f.content);
-          if (f.path.startsWith('contracts/') && f.path !== contract.featurePath)
+          if (
+            f.path.startsWith('contracts/') &&
+            f.path !== contract.featurePath &&
+            !(framework === 'karate' && f.path === 'contracts/manifest.json')
+          )
             throw new AppError(403, 'Only the approved feature may change');
           const before = currentText(target.path, f.path);
           preserveExistingCapabilities(before, f.content, f.path);
-          if (before !== null && clean(before) !== before)
+          if (before !== null && f.path !== 'contracts/manifest.json' && clean(before) !== before)
             throw new AppError(
               422,
               'Redacted files require manual editing; no lossy automatic replacement',
@@ -727,9 +866,27 @@ export class GenerationManager {
         if (files.reduce((n, f) => n + Buffer.byteLength(f.after), 0) > 64000)
           throw new AppError(413, 'Generated change budget exceeded');
         const planned = list(p.files, 8).map((v) => text(v, 180));
-        if (files.some((f) => f.path !== contract.featurePath && !planned.includes(f.path)))
+        if (
+          files.some(
+            (f) =>
+              f.path !== contract.featurePath &&
+              f.path !== 'contracts/manifest.json' &&
+              !planned.includes(f.path),
+          )
+        )
           throw new AppError(422, 'File change is absent from implementation plan');
         const change: ChangeProposal = {
+          framework,
+          ...(endpoint
+            ? {
+                apiEndpoint: {
+                  ref: endpoint.ref,
+                  path: endpoint.path,
+                  symbol: endpoint.symbol,
+                  hash: endpoint.hash,
+                },
+              }
+            : {}),
           id: randomUUID(),
           taskId: task.id,
           contractId: contract.id,
@@ -740,7 +897,7 @@ export class GenerationManager {
           plan: {
             summary: text(p.summary, 4000),
             reuse,
-            files: [...new Set([...planned, contract.featurePath])],
+            files: [...new Set([...planned, ...files.map((f) => f.path), contract.featurePath])],
           },
           files,
           diff: makeDiff(files),
@@ -758,6 +915,8 @@ export class GenerationManager {
   private changeHash(change: ChangeProposal) {
     return hash(
       JSON.stringify({
+        ...(change.framework ? { framework: change.framework } : {}),
+        ...(change.apiEndpoint ? { apiEndpoint: change.apiEndpoint } : {}),
         contractId: change.contractId,
         targetId: change.targetId,
         contractHash: change.contractHash,
@@ -836,7 +995,7 @@ export class GenerationManager {
     const run = this.runner.create(
       {
         targetId: change.targetId,
-        framework: 'playwright',
+        framework: change.framework || 'playwright',
         selection: { kind: 'feature', value: contract.featurePath },
         baseUrl: input.baseUrl,
         idempotencyKey: randomUUID(),
@@ -878,6 +1037,7 @@ export class GenerationManager {
     if (
       !run ||
       run.status !== 'PASSED' ||
+      run.framework !== (change.framework || 'playwright') ||
       run.proposalId !== change.id ||
       run.executableHash !== change.validationFingerprint ||
       run.tests.length !== expected ||

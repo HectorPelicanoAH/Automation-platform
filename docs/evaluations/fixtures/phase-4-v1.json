@@ -1,0 +1,83 @@
+{
+  "version": "1.0.0",
+  "purpose": "Synthetic Phase 4 API generation and native validation cases; assertions are acceptance oracles, not model-provided evidence.",
+  "inputs": [
+    {
+      "path": "apps/demo/openapi.json",
+      "sha256": "5edb5b1b4602378ed30951c221e327506a74d5ec966cc854be5db69b459bb551"
+    },
+    {
+      "path": "templates/automation/contracts/features/promotions.feature",
+      "sha256": "8868faaa2891ef39e449c50bd76ddf42c76651f19e760f2489993f4390455ff4"
+    },
+    {
+      "path": "templates/automation/api/src/test/resources/features/promotions.feature",
+      "sha256": "878ab10189e98c9f8609137272deacd6534110752d9508134c9dcf21fc67d3ac"
+    },
+    {
+      "path": "templates/automation/api/src/test/resources/helpers/promotion-schema.feature",
+      "sha256": "a03229843cab1b9ef95c52466d6caec17eca6e756736c4d751a3a52756fa41eb"
+    },
+    {
+      "path": "templates/automation/api/src/test/resources/helpers/prepare-context.feature",
+      "sha256": "d976e43dd1c5c50de1fc1dd27af608e0712105d3387a4e796dfded0ddc56b4ab"
+    },
+    {
+      "path": "templates/automation/ui/builders/preconditions.ts",
+      "sha256": "38e01ce54ef2e20657596f20a656d33175a6135c7da7721672473db93e88f48c"
+    },
+    {
+      "path": "templates/automation/ui/pages/GuestSetupPage.ts",
+      "sha256": "2dbce3376141f05ed7833efcec98dd0e490e4b7e2c92aecff05daba8b0613762"
+    }
+  ],
+  "cases": [
+    {
+      "id": "A01",
+      "case": "Reviewed public GET generation",
+      "expected": "Preserve two canonical rows/identity, reuse inspected schema helper and existing bound feature; exact diff before native validation/application."
+    },
+    {
+      "id": "A02",
+      "case": "Incomplete endpoint/auth/ref contract",
+      "expected": "Questions block generation; no invented authentication, payload or schema; no reference fetching."
+    },
+    {
+      "id": "A03",
+      "case": "Untrusted proposal asks for UI or manifest files",
+      "expected": "Reject before staging or managed writes; host alone generates binding metadata."
+    },
+    {
+      "id": "A04",
+      "case": "Schema-only or weakened business assertions",
+      "expected": "Reject dropped expected example references or changed existing API assertions."
+    },
+    {
+      "id": "A05",
+      "case": "Concurrent native API preparation",
+      "expected": "Two successful native scenarios with overlapping start intervals, independent server-issued UUIDs and exact read-back of distinct contexts."
+    },
+    {
+      "id": "A06",
+      "case": "Incorrect visible amount but correct API business state",
+      "expected": "Both Karate rows pass and both original Playwright rows fail; separate native evidence visible."
+    },
+    {
+      "id": "A07",
+      "case": "Serial UI versus API preparation",
+      "expected": "Three alternating samples per arm use equivalent synthetic input and the same unchanged visible assertions; report raw times without general savings claim."
+    },
+    {
+      "id": "A08",
+      "case": "Cancelled, rejected or stale source/contract/target",
+      "expected": "No unreviewed target application; retained state and no fabricated native pass."
+    },
+    {
+      "id": "A09",
+      "case": "Live-provider evaluation without explicit opt-in/credentials/model",
+      "expected": "Refuse before discovering or copying credentials or invoking a model."
+    }
+  ],
+  "liveModel": "PENDING_SEPARATE_AUTHORIZATION",
+  "candidateSkill": "FORMAT_VALIDATED_ONLY_NOT_ACTIVE"
+}

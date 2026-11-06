@@ -1,6 +1,6 @@
 # Phase 3 implementation plan
 
-Status: VALIDATION. Approved by the exact human instruction `APPROVE PHASE 3` on 2026-11-06. Phases 4–6 remain PROPOSED. Required remaining evidence is listed in the [report](phase-3-report.md).
+Status: VALIDATION. Approved by the exact human instruction `APPROVE PHASE 3` on 2026-11-06. Phase 4 is subsequently approved with its entry gate pending; Phases 5–6 remain PROPOSED. Required remaining evidence is listed in the [report](phase-3-report.md).
 
 Objective: turn actual recording evidence into a reviewed functional contract and reusable, independently executable Playwright automation.
 
