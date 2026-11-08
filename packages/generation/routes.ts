@@ -18,6 +18,18 @@ export function generationRoutes(app: FastifyInstance, manager: GenerationManage
       async (request) => handler(request.params.id, request.body as T),
     );
   }
+  app.get<{ Params: { id: string } }>('/api/generation/runs/:id/discussion', async (r) =>
+    manager.discussion(r.params.id),
+  );
+  post<{ message: string; includeHealth: boolean; language: 'en' | 'es' }>(
+    '/api/generation/runs/:id/discussion',
+    obj({
+      message: { type: 'string', minLength: 1, maxLength: 4000 },
+      includeHealth: { type: 'boolean' },
+      language: { enum: ['en', 'es'] },
+    }),
+    (id, body) => manager.discussFailure(id, body),
+  );
   app.get('/api/generation/state', async () => ({
     settings: manager.repository.settings(),
     codexHome: manager.home,

@@ -106,6 +106,58 @@ test('Local session, CSRF, path, argument and source-write boundaries', async ()
       ).statusCode,
       403,
     );
+    assert.equal(
+      (
+        await app.inject({
+          url: '/api/settings',
+          method: 'PUT',
+          headers,
+          payload: { baseUrl: 'http://localhost', retentionDays: 14, language: 'es' },
+        })
+      ).json().language,
+      'es',
+    );
+    assert.equal(
+      (
+        await app.inject({
+          url: '/api/settings',
+          method: 'PUT',
+          headers,
+          payload: { baseUrl: 'http://localhost', retentionDays: 14, language: 'fr' },
+        })
+      ).statusCode,
+      400,
+    );
+    assert.equal(
+      (
+        await app.inject({
+          url: '/api/settings',
+          method: 'PUT',
+          headers,
+          payload: { baseUrl: 'http://localhost', retentionDays: 15 },
+        })
+      ).json().language,
+      'es',
+    );
+    assert.equal(
+      (await app.inject({ url: '/api/generation/runs/unknown/discussion' })).statusCode,
+      401,
+    );
+    assert.equal(
+      (await app.inject({ url: '/api/generation/runs/unknown/discussion', headers })).statusCode,
+      404,
+    );
+    assert.equal(
+      (
+        await app.inject({
+          url: '/api/generation/runs/unknown/discussion',
+          method: 'POST',
+          headers: { ...headers, 'x-qa-csrf': '' },
+          payload: { message: 'Test', language: 'es', includeHealth: false },
+        })
+      ).statusCode,
+      403,
+    );
     const sourcePath = join(root, 'source');
     mkdirSync(sourcePath);
     writeFileSync(join(sourcePath, 'evidence.txt'), 'unchanged');

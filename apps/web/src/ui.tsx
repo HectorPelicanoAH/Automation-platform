@@ -1,8 +1,10 @@
+import { useLocale } from './locale.tsx';
 import type React from 'react';
 export const short = (value: string) => value.slice(0, 8);
-export const Status = ({ value }: { value: string }) => (
-  <span className={`status ${value.toLowerCase()}`}>{value.replaceAll('_', ' ')}</span>
-);
+export const Status = ({ value }: { value: string }) => {
+  const { t } = useLocale();
+  return <span className={`status ${value.toLowerCase()}`}>{t(value.replaceAll('_', ' '))}</span>;
+};
 export function Empty({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="empty">

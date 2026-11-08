@@ -1,7 +1,14 @@
 import { Store } from '../storage/store.ts';
 import { AppError } from '../domain/model.ts';
-import type { AiSettings, GenerationTask, ContractProposal, ChangeProposal } from './model.ts';
+import type {
+  AiSettings,
+  GenerationTask,
+  ContractProposal,
+  ChangeProposal,
+  FailureDiscussion,
+} from './model.ts';
 interface Objects {
+  discussions: FailureDiscussion;
   tasks: GenerationTask;
   contracts: ContractProposal;
   changes: ChangeProposal;

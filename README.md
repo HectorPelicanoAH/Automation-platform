@@ -86,3 +86,5 @@ Phase 4 is approved and in validation under an explicit sequencing exception: Ph
 Phase 5 maintenance: [operating guide](docs/maintenance.md), [approved plan](docs/phase-5-plan.md) and [validation report](docs/phase-5-report.md). Diagnosis remains useful without AI; all application and reversal actions require separate exact-diff review.
 
 Knowledge & Skills and Autohealth: [guide](docs/evolution.md), [approved plan](docs/phase-6-plan.md) and [phase report](docs/phase-6-report.md). These workflows run locally without inference; no unvalidated bundle is silently installed.
+
+Interface language is configurable in **Workspace → Execution environment & retention → Default interface language**. Select English or Castellano and save the preferences; the choice persists locally. Test contracts, code and native evidence keep their original language. Failed runs and private validation failures also offer a conversation with the configured AI analysis model to compare solution options; sending a question starts inference, while applying changes and rerunning tests remain separate explicit actions. See [the generation guide](docs/generation.md#discussing-a-failed-run).

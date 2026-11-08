@@ -1341,3 +1341,41 @@ code {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+
+.conversation-turn {
+  border-bottom: 1px solid #d9e2dc;
+  padding-block: 1rem;
+}
+.conversation-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.failure-conversation {
+  padding: 1.25rem;
+  margin-block: 1rem;
+}
+.failure-conversation form,
+.failure-conversation form > label:not(.checkbox-label) {
+  display: grid;
+  gap: 0.75rem;
+}
+.failure-conversation .checkbox-label {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+}
+.failure-conversation .checkbox-label input {
+  width: auto;
+  flex: 0 0 auto;
+  margin-top: 0.2rem;
+}
+.conversation-history {
+  max-height: 32rem;
+  overflow: auto;
+  margin-block: 1rem;
+}
+.failure-conversation .button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}

@@ -18,13 +18,13 @@ export interface ContextFile {
 }
 export interface GenerationTask {
   id: string;
-  kind: 'analysis' | 'implementation';
+  kind: 'analysis' | 'implementation' | 'diagnosis';
   executionClass?: 'CODEX' | 'CUSTOM';
   knowledgeRefs?: { id: string; hash: string }[];
   searches?: { queryHash: string; scopeHash: string }[];
   status: 'RUNNING' | 'SUCCEEDED' | 'FAILED' | 'CANCEL_REQUESTED' | 'CANCELLED' | 'INTERRUPTED';
   targetId: string;
-  recordingId: string;
+  recordingId?: string;
   contractId?: string;
   changeId?: string;
   createdAt: string;
@@ -89,4 +89,15 @@ export interface ChangeProposal {
   appliedAt?: string;
   error?: string;
   approval?: { hash: string; at: string; reviewer: 'local-user' };
+}
+
+export interface FailureReply {
+  summary: string;
+  options: { title: string; evidence: string; steps: string[]; risk: string }[];
+  missingEvidence: string[];
+}
+export interface FailureDiscussion {
+  id: string;
+  targetId: string;
+  turns: { taskId: string; question: string; createdAt: string; reply?: FailureReply }[];
 }

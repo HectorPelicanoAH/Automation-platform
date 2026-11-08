@@ -1,3 +1,4 @@
+import { useLocale } from './locale.tsx';
 import React, { useEffect, useState } from 'react';
 import { api } from './api.ts';
 import type { Run } from '../../../packages/domain/model.ts';
@@ -5,6 +6,7 @@ import type { Classification, Diagnosis, Repair } from '../../../packages/mainte
 import { Status } from './ui.tsx';
 
 export function MaintenancePanel({ run }: { run: Run }) {
+  const { t } = useLocale();
   const [diagnosis, setDiagnosis] = useState<Diagnosis>();
   const [repair, setRepair] = useState<Repair>();
   const [error, setError] = useState('');
@@ -80,11 +82,12 @@ export function MaintenancePanel({ run }: { run: Run }) {
   };
   const source = diagnosis?.files.find((f) => f.path === path);
   return (
-    <section className="panel maintenance-workbench" aria-label="Failure maintenance">
-      <h2>Failure diagnosis &amp; repair</h2>
+    <section className="panel maintenance-workbench" aria-label={t('Failure maintenance')}>
+      <h2>{t('Failure diagnosis & repair')}</h2>
       <p>
-        Inspect evidence, confirm intent and validate a minimal locator repair. Product regressions
-        keep their original assertions.
+        {t(
+          'Inspect evidence, confirm intent and validate a minimal locator repair. Product regressions keep their original assertions.',
+        )}
       </p>
       {error && (
         <div role="alert" className="alert error">
@@ -109,27 +112,30 @@ export function MaintenancePanel({ run }: { run: Run }) {
           })
         }
       >
-        {busy ? 'Working…' : 'Inspect failed run'}
+        {busy ? t('Working…') : t('Inspect failed run')}
       </button>
       {!diagnosis && (
         <p className="muted">
-          No diagnosis loaded. Inspection reads local evidence and implementation; it does not probe
-          the application.
+          {t(
+            'No diagnosis loaded. Inspection reads local evidence and implementation; it does not probe the application.',
+          )}
         </p>
       )}
       {diagnosis && (
         <>
           <p>
-            Evidence SHA-256 <code>{diagnosis.evidenceHash}</code>
+            {t('Evidence SHA-256 ')}
+            <code>{diagnosis.evidenceHash}</code>
           </p>
           {!diagnosis.executableCurrent && (
             <p role="alert">
-              The executable changed since this run. A new failed run is required before proposing a
-              repair.
+              {t(
+                'The executable changed since this run. A new failed run is required before proposing a repair.',
+              )}
             </p>
           )}
           <details>
-            <summary>Failure evidence and uncertainty</summary>
+            <summary>{t('Failure evidence and uncertainty')}</summary>
             {diagnosis.evidence.map((e, i) => (
               <div key={i}>
                 <b>{e.source}</b>
@@ -139,7 +145,8 @@ export function MaintenancePanel({ run }: { run: Run }) {
             <ul>
               {diagnosis.hypotheses.map((h, i) => (
                 <li key={i}>
-                  {h.classification} · symptom: {h.reason}
+                  {h.classification} {t('· symptom: ')}
+                  {h.reason}
                 </li>
               ))}
             </ul>
@@ -150,7 +157,7 @@ export function MaintenancePanel({ run }: { run: Run }) {
             </ul>
           </details>
           <details>
-            <summary>Dependencies and recent Git changes</summary>
+            <summary>{t('Dependencies and recent Git changes')}</summary>
             <pre>
               {JSON.stringify(
                 {
@@ -164,7 +171,7 @@ export function MaintenancePanel({ run }: { run: Run }) {
             </pre>
           </details>
           <label>
-            Reviewed classification
+            {t('Reviewed classification')}
             <select
               value={classification}
               onChange={(e) => setClassification(e.target.value as Classification)}
@@ -183,11 +190,11 @@ export function MaintenancePanel({ run }: { run: Run }) {
             </select>
           </label>
           <label>
-            Diagnostic rationale
+            {t('Diagnostic rationale')}
             <textarea value={rationale} onChange={(e) => setRationale(e.target.value)} />
           </label>
           <label>
-            Observed evidence and business intent
+            {t('Observed evidence and business intent')}
             <textarea value={observed} onChange={(e) => setObserved(e.target.value)} />
           </label>
           <button
@@ -206,20 +213,23 @@ export function MaintenancePanel({ run }: { run: Run }) {
               })
             }
           >
-            Record diagnostic review
+            {t('Record diagnostic review')}
           </button>
           {diagnosis.review && (
             <p>
-              Recorded conclusion: <b>{diagnosis.conclusion}</b>.{' '}
+              {t('Recorded conclusion: ')}
+              <b>{diagnosis.conclusion}</b>.{' '}
               {diagnosis.conclusion === 'PRODUCT_REGRESSION'
-                ? 'Report the product defect; assertions remain unchanged.'
-                : 'Review is an explicit human observation, not an automatically proven root cause.'}
+                ? t('Report the product defect; assertions remain unchanged.')
+                : t(
+                    'Review is an explicit human observation, not an automatically proven root cause.',
+                  )}
             </p>
           )}
           {diagnosis.review && diagnosis.conclusion === 'LOCATOR_DEFECT' && (
             <>
               <label>
-                Existing Page or component
+                {t('Existing Page or component')}
                 <select value={path} onChange={(e) => setPath(e.target.value)}>
                   {diagnosis.files
                     .filter((f) => /^ui\/(pages|components)\//.test(f.path))
@@ -230,13 +240,13 @@ export function MaintenancePanel({ run }: { run: Run }) {
               </label>
               {source && (
                 <details>
-                  <summary>Inspect current implementation</summary>
+                  <summary>{t('Inspect current implementation')}</summary>
                   <pre>{source.text}</pre>
                   <code>{source.hash}</code>
                 </details>
               )}
               <label>
-                Failed canonical feature
+                {t('Failed canonical feature')}
                 <select value={featurePath} onChange={(e) => setFeaturePath(e.target.value)}>
                   {run.snapshot.map((f) => (
                     <option key={f.path}>{f.path}</option>
@@ -244,11 +254,11 @@ export function MaintenancePanel({ run }: { run: Run }) {
                 </select>
               </label>
               <label>
-                Old locator literal
+                {t('Old locator literal')}
                 <input value={oldValue} onChange={(e) => setOldValue(e.target.value)} />
               </label>
               <label>
-                Observed replacement literal
+                {t('Observed replacement literal')}
                 <input value={newValue} onChange={(e) => setNewValue(e.target.value)} />
               </label>
               <button
@@ -277,7 +287,7 @@ export function MaintenancePanel({ run }: { run: Run }) {
                   })
                 }
               >
-                Propose literal locator repair
+                {t('Propose literal locator repair')}
               </button>
             </>
           )}
@@ -286,14 +296,16 @@ export function MaintenancePanel({ run }: { run: Run }) {
       {repair && (
         <>
           <h3>
-            Reviewed repair <Status value={repair.status} />
+            {t('Reviewed repair ')}
+            <Status value={repair.status} />
           </h3>
           <p>{repair.plan.summary}</p>
           <code>Diff SHA-256 {repair.hash}</code>
-          <pre aria-label="Repair diff">{repair.diff}</pre>
+          <pre aria-label={t('Repair diff')}>{repair.diff}</pre>
           <p>
-            Validation scope: all example rows in {repair.featurePath}. Review other shared Page
-            dependents before application.
+            {t('Validation scope: all example rows in ')}
+            {repair.featurePath}
+            {t('. Review other shared Page dependents before application.')}
           </p>
           {repair.error && <p role="alert">{repair.error}</p>}
           {repair.status === 'STAGED' && (
@@ -312,16 +324,17 @@ export function MaintenancePanel({ run }: { run: Run }) {
                   })
                 }
               >
-                Prepare repair validation
+                {t('Prepare repair validation')}
               </button>
               {fingerprint && (
                 <>
                   <p>
-                    Staged executable: <code>{fingerprint}</code>. Execution uses host privileges
-                    and trusted dependencies.
+                    {t('Staged executable: ')}
+                    <code>{fingerprint}</code>
+                    {t('. Execution uses host privileges and trusted dependencies.')}
                   </p>
                   <label>
-                    Repair validation URL
+                    {t('Repair validation URL')}
                     <input
                       value={baseUrl}
                       onChange={(e) => {
@@ -336,7 +349,7 @@ export function MaintenancePanel({ run }: { run: Run }) {
                       checked={trust}
                       onChange={(e) => setTrust(e.target.checked)}
                     />
-                    I trust this staged repair and selected environment for execution
+                    {t('I trust this staged repair and selected environment for execution')}
                   </label>
                   <button
                     className="button"
@@ -355,7 +368,7 @@ export function MaintenancePanel({ run }: { run: Run }) {
                       })
                     }
                   >
-                    Run native repair validation
+                    {t('Run native repair validation')}
                   </button>
                 </>
               )}
@@ -363,8 +376,9 @@ export function MaintenancePanel({ run }: { run: Run }) {
           )}
           {repair.validationRunId && (
             <p>
-              Native validation run: <code>{repair.validationRunId}</code>. Results and artifacts
-              are available in Runs.
+              {t('Native validation run: ')}
+              <code>{repair.validationRunId}</code>
+              {t('. Results and artifacts are available in Runs.')}
             </p>
           )}
           {repair.status === 'VALIDATED' && (
@@ -375,14 +389,14 @@ export function MaintenancePanel({ run }: { run: Run }) {
                   checked={approve}
                   onChange={(e) => setApprove(e.target.checked)}
                 />
-                I approve applying this exact repair diff
+                {t('I approve applying this exact repair diff')}
               </label>
               <button
                 className="button"
                 disabled={busy || !approve}
                 onClick={() => void work(() => action('apply'))}
               >
-                Apply reviewed repair
+                {t('Apply reviewed repair')}
               </button>
             </>
           )}
@@ -392,7 +406,7 @@ export function MaintenancePanel({ run }: { run: Run }) {
               disabled={busy}
               onClick={() => void work(() => action('cancel'))}
             >
-              {repair.status === 'VALIDATING' ? 'Cancel repair validation' : 'Reject repair'}
+              {repair.status === 'VALIDATING' ? t('Cancel repair validation') : t('Reject repair')}
             </button>
           )}
           {repair.status === 'APPLIED' && repair.rollback?.status !== 'APPLIED' && (
@@ -402,18 +416,18 @@ export function MaintenancePanel({ run }: { run: Run }) {
                 disabled={busy}
                 onClick={() => void work(() => action('prepareRollback'))}
               >
-                Inspect reversal diff
+                {t('Inspect reversal diff')}
               </button>
               {repair.rollback && (
                 <>
-                  <pre aria-label="Reversal diff">{repair.rollback.diff}</pre>
+                  <pre aria-label={t('Reversal diff')}>{repair.rollback.diff}</pre>
                   <label className="checkbox">
                     <input
                       type="checkbox"
                       checked={reverse}
                       onChange={(e) => setReverse(e.target.checked)}
                     />
-                    I approve this exact reversal; the original failure may return
+                    {t('I approve this exact reversal; the original failure may return')}
                   </label>
                   <button
                     className="button danger"
@@ -422,7 +436,7 @@ export function MaintenancePanel({ run }: { run: Run }) {
                       void work(() => action('rollback', { expectedHash: repair.rollback!.hash }))
                     }
                   >
-                    Apply reviewed reversal
+                    {t('Apply reviewed reversal')}
                   </button>
                 </>
               )}
@@ -430,8 +444,9 @@ export function MaintenancePanel({ run }: { run: Run }) {
           )}
           {repair.rollback?.status === 'APPLIED' && (
             <p>
-              Reversal applied and journalled. Original failing implementation restored; no
-              successful execution is implied.
+              {t(
+                'Reversal applied and journalled. Original failing implementation restored; no successful execution is implied.',
+              )}
             </p>
           )}
         </>

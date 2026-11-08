@@ -1,3 +1,4 @@
+import { useLocale } from './locale.tsx';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from './api.ts';
 import { ValidationRunPanel } from './ValidationRunPanel.tsx';
@@ -63,6 +64,7 @@ export function GenerationPanel({
   recordingsRevision?: number;
   onRun: (id: string) => void;
 }) {
+  const { t } = useLocale();
   const [state, setState] = useState<GenerationState>();
   const [records, setRecords] = useState<Recording[]>([]);
   const [error, setError] = useState('');
@@ -154,7 +156,11 @@ export function GenerationPanel({
       initialized.current = true;
     }
   }, []);
-  const [preparation, setPreparation] = useState<{ id: string; message: string }>();
+  const [preparation, setPreparation] = useState<{
+    id: string;
+    message: string;
+    values?: Record<string, string>;
+  }>();
   const act = async (work: () => Promise<void>) => {
     setBusy(true);
     setError('');
@@ -345,22 +351,23 @@ export function GenerationPanel({
       )}
       {notice && (
         <div role="status" className="alert success">
-          {notice}
+          {t(notice)}
         </div>
       )}
       <section className="panel">
         <details open={!state?.settings.enabled}>
           <summary>
-            <b>AI configuration</b> · {state?.settings.enabled ? 'enabled' : 'disabled'}
+            <b>{t('AI configuration')}</b> ·{' '}
+            {state?.settings.enabled ? t('enabled') : t('disabled')}
           </summary>
           <p className="muted">
-            Codex runs with isolated configuration and application-owned tools. Only selected,
-            bounded evidence/context is sent to the configured provider. It may consume your account
-            quota. Manual scenarios and runs remain available.
+            {t(
+              'Codex runs with isolated configuration and application-owned tools. Only selected, bounded evidence/context is sent to the configured provider. It may consume your account quota. Manual scenarios and runs remain available.',
+            )}
           </p>
           <div className="form-grid">
             <label>
-              Codex executable
+              {t('Codex executable')}
               <input
                 value={binary}
                 onChange={(e) => {
@@ -377,7 +384,7 @@ export function GenerationPanel({
                 checked={trustCli}
                 onChange={(e) => setTrustCli(e.target.checked)}
               />
-              I trust this Codex executable
+              {t('I trust this Codex executable')}
             </label>
           </div>
           <div className="button-row">
@@ -394,7 +401,7 @@ export function GenerationPanel({
                 })
               }
             >
-              Verify Codex CLI
+              {t('Verify Codex CLI')}
             </button>
             <button
               className="button secondary"
@@ -412,12 +419,12 @@ export function GenerationPanel({
                 })
               }
             >
-              Check authentication and models
+              {t('Check authentication and models')}
             </button>
           </div>
           {state?.codexHome && (
             <p className="muted">
-              Authenticate separately in the isolated home, outside model context:{' '}
+              {t('Authenticate separately in the isolated home, outside model context:')}{' '}
               <code>
                 {'CODEX_HOME=' +
                   quote(state.codexHome) +
@@ -430,15 +437,17 @@ export function GenerationPanel({
           {info && (
             <p role="status">
               {info.account.account
-                ? 'Authenticated account detected. Inference entitlement is verified only by a successful turn.'
-                : 'Not authenticated. Complete the isolated CLI login before generating.'}
+                ? t(
+                    'Authenticated account detected. Inference entitlement is verified only by a successful turn.',
+                  )
+                : t('Not authenticated. Complete the isolated CLI login before generating.')}
             </p>
           )}
           <div className="form-grid">
             {(['Analysis', 'Implementation'] as const).map((kind) => (
               <React.Fragment key={kind}>
                 <label>
-                  {kind} model
+                  {kind} {t('model')}
                   <input
                     list="codex-models"
                     value={kind === 'Analysis' ? analysisModel : implementationModel}
@@ -450,7 +459,7 @@ export function GenerationPanel({
                   />
                 </label>
                 <label>
-                  {kind} reasoning
+                  {kind} {t('reasoning')}
                   <select
                     value={kind === 'Analysis' ? analysisEffort : implementationEffort}
                     onChange={(e) =>
@@ -495,7 +504,7 @@ export function GenerationPanel({
                 })
               }
             >
-              Enable configured AI
+              {t('Enable configured AI')}
             </button>
             <button
               className="button secondary"
@@ -514,29 +523,30 @@ export function GenerationPanel({
                 })
               }
             >
-              Disable AI
+              {t('Disable AI')}
             </button>
           </div>
         </details>
       </section>
       {!selectedTarget ? (
-        <Empty title="Choose an automation target">
-          Connect or select a separate automation repository in Workspace.
+        <Empty title={t('Choose an automation target')}>
+          {t('Connect or select a separate automation repository in Workspace.')}
         </Empty>
       ) : (
         <>
           <section className="panel">
             <div className="panel-heading">
               <div>
-                <p className="eyebrow">REPOSITORY CONTEXT</p>
-                <h2>Discover before generating</h2>
+                <p className="eyebrow">{t('REPOSITORY CONTEXT')}</p>
+                <h2>{t('Discover before generating')}</h2>
               </div>
             </div>
             <p className="muted">
-              Target: {selectedTarget.name}. Application source repositories are optional. With none
-              selected, generation uses the recording and automation target. Source indexing
-              requires opt-in in Workspace. Syntax facts are incomplete for dynamic behavior; no
-              repository scripts are executed.
+              {t('Target: ')}
+              {selectedTarget.name}
+              {t(
+                '. Application source repositories are optional. With none selected, generation uses the recording and automation target. Source indexing requires opt-in in Workspace. Syntax facts are incomplete for dynamic behavior; no repository scripts are executed.',
+              )}
             </p>
             <div className="source-choices">
               {sources.map((source) => (
@@ -554,7 +564,7 @@ export function GenerationPanel({
                     }
                   />
                   {source.name}
-                  {!source.indexEnabled ? ' · indexing disabled' : ''}
+                  {!source.indexEnabled ? t(' · indexing disabled') : ''}
                 </label>
               ))}
             </div>
@@ -570,21 +580,23 @@ export function GenerationPanel({
                 })
               }
             >
-              Index selected repositories
+              {t('Index selected repositories')}
             </button>
             {indexes.map((index) => (
               <p key={index.ref.kind + index.ref.id} className="muted">
-                {index.ref.kind} {short(index.ref.id)} · {index.parsed} parsed / {index.reused}{' '}
-                reused / {index.skipped} skipped ·{' '}
-                {index.truncated ? 'TRUNCATED' : 'bounded scan complete'} · {index.warningCount}{' '}
-                extraction warnings · HEAD {index.revision?.slice(0, 12) || 'non-Git'} / working
-                tree {index.treeHash.slice(0, 12)}
+                {index.ref.kind} {short(index.ref.id)} · {index.parsed} {t('parsed / ')}
+                {index.reused} {t('reused / ')}
+                {index.skipped} {t('skipped ·')}{' '}
+                {index.truncated ? t('TRUNCATED') : t('bounded scan complete')} ·{' '}
+                {index.warningCount} {t('extraction warnings · HEAD ')}
+                {index.revision?.slice(0, 12) || t('non-Git')} {t('/ working tree ')}
+                {index.treeHash.slice(0, 12)}
                 {index.preferredRef ? ' · requested ' + index.preferredRef : ''}
               </p>
             ))}
             <div className="form-grid">
               <label>
-                Capability search
+                {t('Capability search')}
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
@@ -606,23 +618,24 @@ export function GenerationPanel({
                   })
                 }
               >
-                Search target capabilities
+                {t('Search target capabilities')}
               </button>
             </div>
             {lookup && (
               <div className="capability-results">
                 {lookup.matches.length === 0 ? (
-                  <p>No matching indexed capability.</p>
+                  <p>{t('No matching indexed capability.')}</p>
                 ) : (
                   lookup.matches.map((hit) => (
                     <details key={hit.path}>
                       <summary>
-                        {hit.path} · {hit.stale ? 'STALE' : 'current hash checked'}
+                        {hit.path} · {hit.stale ? t('STALE') : t('current hash checked')}
                       </summary>
                       <ul>
                         {hit.capabilities.map((c, i) => (
                           <li key={i}>
-                            {c.kind}: {c.name} · line {c.line}
+                            {c.kind}: {c.name} {t('· line ')}
+                            {c.line}
                           </li>
                         ))}
                       </ul>
@@ -633,29 +646,30 @@ export function GenerationPanel({
             )}
           </section>
           <section className="panel">
-            <p className="eyebrow">1 · RECORDING TO CONTRACT</p>
-            <h2>Propose business scenarios</h2>
+            <p className="eyebrow">{t('1 · RECORDING TO CONTRACT')}</p>
+            <h2>{t('Propose business scenarios')}</h2>
             <p className="muted">
-              Observed interactions, narrated requirements and inferred questions remain distinct.
-              No target files change during analysis.
+              {t(
+                'Observed interactions, narrated requirements and inferred questions remain distinct. No target files change during analysis.',
+              )}
             </p>
             <div className="form-grid">
               <label>
-                Source recording
+                {t('Source recording')}
                 <select value={recordingId} onChange={(e) => setRecordingId(e.target.value)}>
-                  <option value="">Choose a stopped recording</option>
+                  <option value="">{t('Choose a stopped recording')}</option>
                   {records
                     .filter((r) => !['STARTING', 'RECORDING', 'STOPPING'].includes(r.status))
                     .map((r) => (
                       <option key={r.id} value={r.id}>
                         {r.name} · {r.status}
-                        {r.incomplete ? ' · incomplete' : ''}
+                        {r.incomplete ? t(' · incomplete') : ''}
                       </option>
                     ))}
                 </select>
               </label>
               <label>
-                Feature destination
+                {t('Feature destination')}
                 <input value={featurePath} onChange={(e) => setFeaturePath(e.target.value)} />
               </label>
             </div>
@@ -680,13 +694,13 @@ export function GenerationPanel({
                 })
               }
             >
-              Analyze recording
+              {t('Analyze recording')}
             </button>
           </section>
           <section className="panel">
-            <h2>Agent tasks</h2>
+            <h2>{t('Agent tasks')}</h2>
             <label>
-              Task history
+              {t('Task history')}
               <select
                 value={taskId}
                 onChange={(e) => {
@@ -694,7 +708,7 @@ export function GenerationPanel({
                   setTask(undefined);
                 }}
               >
-                <option value="">Choose a task</option>
+                <option value="">{t('Choose a task')}</option>
                 {state?.tasks
                   .filter((t) => t.targetId === targetId)
                   .map((t) => (
@@ -707,8 +721,8 @@ export function GenerationPanel({
             {task && task.id === taskId && task.targetId === targetId && (
               <>
                 <p>
-                  <Status value={task.status} /> {task.model} · {task.toolCalls} tool calls ·{' '}
-                  {task.retrievalBytes} context bytes
+                  <Status value={task.status} /> {task.model} · {task.toolCalls} {t('tool calls ·')}{' '}
+                  {task.retrievalBytes} {t('context bytes')}
                 </p>
                 {task.error && <p role="alert">{task.error}</p>}
                 {running(task.status) && (
@@ -721,7 +735,7 @@ export function GenerationPanel({
                       })
                     }
                   >
-                    Cancel AI task
+                    {t('Cancel AI task')}
                   </button>
                 )}
                 <div className="agent-progress" aria-live="polite">
@@ -732,7 +746,7 @@ export function GenerationPanel({
                   ))}
                 </div>
                 <details>
-                  <summary>Retrieved file provenance and usage</summary>
+                  <summary>{t('Retrieved file provenance and usage')}</summary>
                   <pre>
                     {JSON.stringify(
                       {
@@ -758,12 +772,12 @@ export function GenerationPanel({
             )}
           </section>
           <section className="panel">
-            <p className="eyebrow">2 · HUMAN REQUIREMENT REVIEW</p>
-            <h2>Review the functional contract</h2>
+            <p className="eyebrow">{t('2 · HUMAN REQUIREMENT REVIEW')}</p>
+            <h2>{t('Review the functional contract')}</h2>
             <label>
-              Contract proposal
+              {t('Contract proposal')}
               <select value={contractId} onChange={(e) => setContractId(e.target.value)}>
-                <option value="">Choose a proposal</option>
+                <option value="">{t('Choose a proposal')}</option>
                 {state?.contracts
                   .filter((c) => c.targetId === targetId)
                   .map((c) => (
@@ -778,11 +792,11 @@ export function GenerationPanel({
                 <p>
                   <Status value={contract.status} />{' '}
                   {dirty
-                    ? 'Unsaved edits · implementation disabled'
+                    ? t('Unsaved edits · implementation disabled')
                     : 'Revision ' + contract.hash.slice(0, 12)}
                 </p>
                 <details>
-                  <summary>Claims and recording evidence</summary>
+                  <summary>{t('Claims and recording evidence')}</summary>
                   {contract.claims.map((claim, i) => (
                     <div key={i}>
                       <p>
@@ -794,7 +808,8 @@ export function GenerationPanel({
                           key={ref}
                           onClick={() => void act(() => inspectEvidence(ref))}
                         >
-                          Inspect {ref}
+                          {t('Inspect ')}
+                          {ref}
                         </button>
                       ))}
                     </div>
@@ -802,7 +817,7 @@ export function GenerationPanel({
                   {evidence !== undefined && <pre>{JSON.stringify(evidence, null, 2)}</pre>}
                 </details>
                 <label>
-                  Proposed Gherkin
+                  {t('Proposed Gherkin')}
                   <textarea
                     className="code-editor"
                     rows={16}
@@ -834,7 +849,7 @@ export function GenerationPanel({
                     disabled={busy || contract.status === 'REJECTED'}
                     onClick={() => void act(() => review(false))}
                   >
-                    Save contract draft
+                    {t('Save contract draft')}
                   </button>
                   <button
                     className="button"
@@ -845,7 +860,7 @@ export function GenerationPanel({
                     }
                     onClick={() => void act(() => review(true))}
                   >
-                    Approve this Gherkin revision
+                    {t('Approve this Gherkin revision')}
                   </button>
                   <button
                     className="button secondary"
@@ -861,7 +876,7 @@ export function GenerationPanel({
                       })
                     }
                   >
-                    Reject contract
+                    {t('Reject contract')}
                   </button>
                 </div>
                 <button
@@ -880,42 +895,44 @@ export function GenerationPanel({
                     })
                   }
                 >
-                  Inspect hybrid preparation plan
+                  {t('Inspect hybrid preparation plan')}
                 </button>
                 {hybrid !== undefined && <pre>{JSON.stringify(hybrid, null, 2)}</pre>}
                 <label>
-                  Execution target
+                  {t('Execution target')}
                   <select
                     value={framework}
                     onChange={(e) => setFramework(e.target.value as Framework | 'both')}
                   >
-                    <option value="playwright">Playwright · visible UI</option>
-                    <option value="karate">Karate · API business state</option>
-                    <option value="both">Karate + UI · independent API and browser tests</option>
+                    <option value="playwright">{t('Playwright · visible UI')}</option>
+                    <option value="karate">{t('Karate · API business state')}</option>
+                    <option value="both">
+                      {t('Karate + UI · independent API and browser tests')}
+                    </option>
                   </select>
                 </label>
                 {framework === 'both' && (
                   <p className="coverage-note" role="note">
-                    Generate each implementation separately with the buttons below. Each has its own
-                    diff, native validation and approval. API assertions do not validate UI
-                    rendering. Applying a diff changes the target base: analyze and review the
-                    updated base before generating the other implementation; older pending proposals
-                    are not applied automatically.
+                    {t(
+                      'Generate each implementation separately with the buttons below. Each has its own diff, native validation and approval. API assertions do not validate UI rendering. Applying a diff changes the target base: analyze and review the updated base before generating the other implementation; older pending proposals are not applied automatically.',
+                    )}
                   </p>
                 )}
                 {framework !== 'playwright' && (
                   <>
                     <p className="coverage-note">
-                      API assertions do not validate visible rendering. Select an indexed endpoint;
-                      unknown authentication or response contracts block generation.
+                      {t(
+                        'API assertions do not validate visible rendering. Select an indexed endpoint; unknown authentication or response contracts block generation.',
+                      )}
                     </p>
                     <label>
-                      Discovered API endpoint
+                      {t('Discovered API endpoint')}
                       <select value={endpointKey} onChange={(e) => setEndpointKey(e.target.value)}>
-                        <option value="">Choose an endpoint</option>
+                        <option value="">{t('Choose an endpoint')}</option>
                         {endpoints.map((e, i) => (
                           <option key={i} value={String(i)}>
-                            {e.symbol} · {e.path} · auth {e.operation.authentication}
+                            {e.symbol} · {e.path} {t('· auth ')}
+                            {e.operation.authentication}
                           </option>
                         ))}
                       </select>
@@ -964,20 +981,20 @@ export function GenerationPanel({
                       })
                     }
                   >
-                    Plan and generate {targetFramework === 'karate' ? 'Karate' : 'Playwright'}{' '}
-                    changes
+                    {t('Plan and generate ')}
+                    {targetFramework === 'karate' ? t('Karate') : t('Playwright')} {t('changes')}
                   </button>
                 ))}
               </>
             )}
           </section>
           <section className="panel">
-            <p className="eyebrow">3 · REVIEW, VALIDATE, APPLY</p>
-            <h2>Inspect proposed implementation</h2>
+            <p className="eyebrow">{t('3 · REVIEW, VALIDATE, APPLY')}</p>
+            <h2>{t('Inspect proposed implementation')}</h2>
             <label>
-              Change proposal
+              {t('Change proposal')}
               <select value={changeId} onChange={(e) => setChangeId(e.target.value)}>
-                <option value="">Choose a diff</option>
+                <option value="">{t('Choose a diff')}</option>
                 {state?.changes
                   .filter((c) => c.targetId === targetId)
                   .map((c) => (
@@ -990,41 +1007,58 @@ export function GenerationPanel({
             {change && change.id === changeId && change.targetId === targetId && (
               <>
                 <p>
-                  <Status value={change.status} /> Diff {change.hash.slice(0, 12)}
+                  <Status value={change.status} /> {t('Diff ')}
+                  {change.hash.slice(0, 12)}
                 </p>
-                <p role="status" aria-label="Test save status">
+                <p role="status" aria-label={t('Test save status')}>
                   {change.status === 'APPLIED'
-                    ? `Test files saved in ${selectedTarget.path}. No Git commit or push was performed.`
+                    ? t('Test files saved in {value0}. No Git commit or push was performed.', {
+                        value0: selectedTarget.path,
+                      })
                     : change.status === 'APPLY_FAILED'
-                      ? 'Applying the proposal failed. Target files may have changed partially; inspect the error and journal before retrying.'
+                      ? t(
+                          'Applying the proposal failed. Target files may have changed partially; inspect the error and journal before retrying.',
+                        )
                       : change.status === 'VALIDATED'
-                        ? 'Validation passed. To save the test files in your target, approve the exact diff below and select Apply approved diff.'
+                        ? t(
+                            'Validation passed. To save the test files in your target, approve the exact diff below and select Apply approved diff.',
+                          )
                         : change.status === 'VALIDATING'
-                          ? 'Proposal saved in platform history. Validation is running; target files have not been changed.'
+                          ? t(
+                              'Proposal saved in platform history. Validation is running; target files have not been changed.',
+                            )
                           : change.status === 'STAGED'
-                            ? 'Proposal saved in platform history; target files have not been changed. Prepare private validation, run it, then approve and apply the diff to save the test files.'
-                            : 'Proposal retained in platform history. Review its status and validation before applying files to the target.'}
+                            ? t(
+                                'Proposal saved in platform history; target files have not been changed. Prepare private validation, run it, then approve and apply the diff to save the test files.',
+                              )
+                            : t(
+                                'Proposal retained in platform history. Review its status and validation before applying files to the target.',
+                              )}
                 </p>
                 <p>{change.plan.summary}</p>
                 <p className="coverage-note">
                   {change.framework === 'karate'
-                    ? 'API coverage: HTTP contract and business state. Visible UI remains independently validated by Playwright.'
-                    : 'UI coverage: rendered browser content.'}
+                    ? t(
+                        'API coverage: HTTP contract and business state. Visible UI remains independently validated by Playwright.',
+                      )
+                    : t('UI coverage: rendered browser content.')}
                 </p>
                 <p className="muted">
-                  Contract revision {change.contractHash.slice(0, 12)} ·{' '}
+                  {t('Contract revision ')}
+                  {change.contractHash.slice(0, 12)} ·{' '}
                   <button
                     className="button secondary"
                     onClick={() => setContractId(change.contractId)}
                   >
-                    View associated contract
+                    {t('View associated contract')}
                   </button>
                   {dirty && ' Save or discard contract edits before applying a diff.'}
                 </p>
                 <ul>
                   {change.plan.reuse.map((r, i) => (
                     <li key={i}>
-                      Reuse {r.path} · {r.symbol}
+                      {t('Reuse ')}
+                      {r.path} · {r.symbol}
                     </li>
                   ))}
                 </ul>
@@ -1057,14 +1091,16 @@ export function GenerationPanel({
                         } catch (e) {
                           setPreparation({
                             id: change.id,
-                            message: `Preparation failed: ${e instanceof Error ? e.message : 'Unknown error'}. Resolve the reported prerequisite, then prepare again. No test was started.`,
+                            message:
+                              'Preparation failed: {error}. Resolve the reported prerequisite, then prepare again. No test was started.',
+                            values: { error: e instanceof Error ? e.message : 'Unknown error' },
                           });
                           throw e;
                         }
                       })
                     }
                   >
-                    Prepare private validation
+                    {t('Prepare private validation')}
                   </button>
                   <button
                     className="button secondary"
@@ -1080,23 +1116,23 @@ export function GenerationPanel({
                       })
                     }
                   >
-                    Reject proposed diff
+                    {t('Reject proposed diff')}
                   </button>
                 </div>
                 {preparation?.id === change.id && (
-                  <p role="status" aria-label="Validation preparation">
-                    {preparation.message}
+                  <p role="status" aria-label={t('Validation preparation')}>
+                    {t(preparation.message, preparation.values)}
                   </p>
                 )}
                 {change.validationFingerprint && change.status === 'STAGED' && (
                   <>
                     <p className="muted">
-                      Validation executes reviewed generated code and existing target dependencies
-                      with your OS permissions. It is not a security sandbox. Execution trust is
-                      separate from applying the diff.
+                      {t(
+                        'Validation executes reviewed generated code and existing target dependencies with your OS permissions. It is not a security sandbox. Execution trust is separate from applying the diff.',
+                      )}
                     </p>
                     <label>
-                      Validation application URL
+                      {t('Validation application URL')}
                       <input
                         value={validationUrl}
                         onChange={(e) => {
@@ -1111,7 +1147,7 @@ export function GenerationPanel({
                         checked={trustStage}
                         onChange={(e) => setTrustStage(e.target.checked)}
                       />
-                      I trust this staged code and dependencies for execution
+                      {t('I trust this staged code and dependencies for execution')}
                     </label>
                     <button
                       className="button"
@@ -1132,8 +1168,9 @@ export function GenerationPanel({
                         })
                       }
                     >
-                      Run staged {change.framework === 'karate' ? 'Karate' : 'Playwright'}{' '}
-                      validation
+                      {t('Run staged ')}
+                      {change.framework === 'karate' ? t('Karate') : t('Playwright')}{' '}
+                      {t('validation')}
                     </button>
                   </>
                 )}
@@ -1150,8 +1187,9 @@ export function GenerationPanel({
                 {change.status === 'VALIDATED' && (
                   <>
                     <p>
-                      Native validation passed. The managed target still awaits your exact diff
-                      approval.
+                      {t(
+                        'Native validation passed. The managed target still awaits your exact diff approval.',
+                      )}
                     </p>
                     <label className="checkbox-label">
                       <input
@@ -1159,7 +1197,8 @@ export function GenerationPanel({
                         checked={approveDiff}
                         onChange={(e) => setApproveDiff(e.target.checked)}
                       />
-                      I approve applying this exact diff to {selectedTarget.name}
+                      {t('I approve applying this exact diff to ')}
+                      {selectedTarget.name}
                     </label>
                     <button
                       className="button"
@@ -1186,14 +1225,15 @@ export function GenerationPanel({
                         })
                       }
                     >
-                      Apply approved diff
+                      {t('Apply approved diff')}
                     </button>
                   </>
                 )}
                 {change.status === 'APPLIED' && (
                   <p role="status">
-                    Approved changes applied; journal retained. Review the target and run it
-                    independently.
+                    {t(
+                      'Approved changes applied; journal retained. Review the target and run it independently.',
+                    )}
                   </p>
                 )}
               </>

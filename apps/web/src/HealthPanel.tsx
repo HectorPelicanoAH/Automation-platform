@@ -1,3 +1,4 @@
+import { useLocale } from './locale.tsx';
 import React, { useEffect, useState } from 'react';
 import { api } from './api.ts';
 import { Empty, Status, short } from './ui.tsx';
@@ -8,6 +9,7 @@ interface HealthState {
   scheduling: string;
 }
 export function HealthPanel({ targetId }: { targetId: string }) {
+  const { t } = useLocale();
   const [state, setState] = useState<HealthState>();
   const [run, setRun] = useState<HealthRun>();
   const [error, setError] = useState('');
@@ -81,10 +83,11 @@ export function HealthPanel({ targetId }: { targetId: string }) {
         </div>
       )}
       <section className="panel">
-        <h2>Autohealth — read-only diagnostics</h2>
+        <h2>{t('Autohealth — read-only diagnostics')}</h2>
         <p>
-          Platform, automation and knowledge checks. Findings include evidence and recommended
-          actions; no fixes, installs or instruction changes run automatically.
+          {t(
+            'Platform, automation and knowledge checks. Findings include evidence and recommended actions; no fixes, installs or instruction changes run automatically.',
+          )}
         </p>
         <button
           className="button"
@@ -101,22 +104,24 @@ export function HealthPanel({ targetId }: { targetId: string }) {
             })
           }
         >
-          Run read-only health checks
+          {t('Run read-only health checks')}
         </button>
         <button className="button secondary" disabled={busy} onClick={() => void work(load)}>
-          Refresh health history
+          {t('Refresh health history')}
         </button>
         {!targetId && (
           <p>
-            Platform-only scope. Select an automation target to inspect its repositories and
-            recorded knowledge.
+            {t(
+              'Platform-only scope. Select an automation target to inspect its repositories and recorded knowledge.',
+            )}
           </p>
         )}
         <details>
-          <summary>Local schedule and thresholds</summary>
+          <summary>{t('Local schedule and thresholds')}</summary>
           <p>
-            Checks run only while this platform process is available. Missed runs are counted
-            without a catch-up burst. Schedules never wake the OS or authorize fixes.
+            {t(
+              'Checks run only while this platform process is available. Missed runs are counted without a catch-up burst. Schedules never wake the OS or authorize fixes.',
+            )}
           </p>
           <label className="checkbox">
             <input
@@ -124,10 +129,10 @@ export function HealthPanel({ targetId }: { targetId: string }) {
               checked={enabled}
               onChange={(e) => setEnabled(e.target.checked)}
             />
-            Enable local scheduled read-only checks
+            {t('Enable local scheduled read-only checks')}
           </label>
           <label>
-            Health interval in minutes
+            {t('Health interval in minutes')}
             <input
               type="number"
               min={1}
@@ -137,7 +142,7 @@ export function HealthPanel({ targetId }: { targetId: string }) {
             />
           </label>
           <label>
-            Slow setup threshold in milliseconds
+            {t('Slow setup threshold in milliseconds')}
             <input
               type="number"
               min={100}
@@ -161,15 +166,18 @@ export function HealthPanel({ targetId }: { targetId: string }) {
               })
             }
           >
-            Save local health schedule
+            {t('Save local health schedule')}
           </button>
-          {schedule && <pre aria-label="Health schedule">{JSON.stringify(schedule, null, 2)}</pre>}
+          {schedule && (
+            <pre aria-label={t('Health schedule')}>{JSON.stringify(schedule, null, 2)}</pre>
+          )}
         </details>
         <details>
-          <summary>Explicit AI connectivity check</summary>
+          <summary>{t('Explicit AI connectivity check')}</summary>
           <p>
-            Uses the configured trusted Codex connection only. No inference or credential copy.
-            Connectivity is not probed by automatic health schedules.
+            {t(
+              'Uses the configured trusted Codex connection only. No inference or credential copy. Connectivity is not probed by automatic health schedules.',
+            )}
           </p>
           <button
             className="button secondary"
@@ -178,18 +186,18 @@ export function HealthPanel({ targetId }: { targetId: string }) {
               void work(async () => setConnection(await api('/health/provider-connection', {})))
             }
           >
-            Check configured provider connection
+            {t('Check configured provider connection')}
           </button>
           {!!connection && <pre>{JSON.stringify(connection, null, 2)}</pre>}
         </details>
       </section>
       <section className="panel">
-        <h2>Findings and evidence</h2>
+        <h2>{t('Findings and evidence')}</h2>
         {!state ? (
-          <p>Loading health history…</p>
+          <p>{t('Loading health history…')}</p>
         ) : !run ? (
-          <Empty title="No completed health inspection">
-            Run checks on demand or explicitly enable a local schedule.
+          <Empty title={t('No completed health inspection')}>
+            {t('Run checks on demand or explicitly enable a local schedule.')}
           </Empty>
         ) : (
           <>
@@ -206,12 +214,13 @@ export function HealthPanel({ targetId }: { targetId: string }) {
                   void work(async () => setRun(await api(`/health/runs/${run.id}/cancel`, {})))
                 }
               >
-                Cancel health check
+                {t('Cancel health check')}
               </button>
             )}
             <p>
-              A completed inspection may contain findings or unavailable checks. It is not a passing
-              test execution.
+              {t(
+                'A completed inspection may contain findings or unavailable checks. It is not a passing test execution.',
+              )}
             </p>
             <ul>
               {run.checks.map((c, i) => (
@@ -222,8 +231,9 @@ export function HealthPanel({ targetId }: { targetId: string }) {
             </ul>
             {!run.findings.length && (
               <p>
-                No findings recorded in the completed supported checks. Incomplete/cancelled checks
-                are not certified healthy.
+                {t(
+                  'No findings recorded in the completed supported checks. Incomplete/cancelled checks are not certified healthy.',
+                )}
               </p>
             )}
             {run.findings.map((f) => (
@@ -233,7 +243,10 @@ export function HealthPanel({ targetId }: { targetId: string }) {
                   <b>{f.code}</b> · {f.confidence} · {f.root}
                 </summary>
                 <pre>{f.evidence.join('\n')}</pre>
-                <p>Recommended action: {f.action}</p>
+                <p>
+                  {t('Recommended action: ')}
+                  {f.action}
+                </p>
                 <code>{f.fingerprint}</code>
               </details>
             ))}
@@ -241,16 +254,16 @@ export function HealthPanel({ targetId }: { targetId: string }) {
         )}
       </section>
       <section className="panel">
-        <h2>Health execution history</h2>
+        <h2>{t('Health execution history')}</h2>
         {state && (
           <div className="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>Inspection</th>
-                  <th>Origin</th>
-                  <th>Status</th>
-                  <th>Findings</th>
+                  <th>{t('Inspection')}</th>
+                  <th>{t('Origin')}</th>
+                  <th>{t('Status')}</th>
+                  <th>{t('Findings')}</th>
                   <th />
                 </tr>
               </thead>
@@ -269,7 +282,7 @@ export function HealthPanel({ targetId }: { targetId: string }) {
                       <td>{r.findings.length}</td>
                       <td>
                         <button className="text-button" onClick={() => setRun(r)}>
-                          Inspect health run
+                          {t('Inspect health run')}
                         </button>
                       </td>
                     </tr>
@@ -283,6 +296,7 @@ export function HealthPanel({ targetId }: { targetId: string }) {
   );
 }
 export function HealthSummary({ targetId, onOpen }: { targetId: string; onOpen: () => void }) {
+  const { t } = useLocale();
   const [run, setRun] = useState<HealthRun>();
   const [error, setError] = useState('');
   useEffect(() => {
@@ -297,7 +311,7 @@ export function HealthSummary({ targetId, onOpen }: { targetId: string; onOpen: 
   }, [targetId]);
   return (
     <section className="panel health-overview">
-      <h2>Health overview</h2>
+      <h2>{t('Health overview')}</h2>
       <p>
         {error ||
           (run
@@ -305,7 +319,7 @@ export function HealthSummary({ targetId, onOpen }: { targetId: string; onOpen: 
             : 'No health inspection recorded for this scope.')}
       </p>
       <button className="text-button" onClick={onOpen}>
-        Inspect Autohealth findings
+        {t('Inspect Autohealth findings')}
       </button>
     </section>
   );

@@ -1,3 +1,4 @@
+import { useLocale } from './locale.tsx';
 import { useEffect, useRef, useState } from 'react';
 import { api } from './api.ts';
 import { MicrophoneCapture } from './microphone.ts';
@@ -24,6 +25,7 @@ export function RecordPanel({
   defaultUrl: string;
   onRecordingsChanged?: () => void;
 }) {
+  const { t } = useLocale();
   const [list, setList] = useState<Recording[]>([]);
   const [record, setRecord] = useState<Recording>();
   const [events, setEvents] = useState<EvidenceEvent[]>([]);
@@ -291,20 +293,23 @@ export function RecordPanel({
     <>
       {!visible && recording && (
         <div className="recording-banner" role="status">
-          ● Recording: {recording.name} · microphone {recording.microphone}
+          {t('● Recording: ')}
+          {recording.name} {t('· microphone ')}
+          {recording.microphone}
           <button className="button secondary" disabled={busy} onClick={() => void stop(false)}>
-            Stop recording
+            {t('Stop recording')}
           </button>
         </div>
       )}
       <section hidden={!visible} className="record-panel">
         <div className="section-heading">
           <div>
-            <span className="eyebrow">OBSERVED EVIDENCE</span>
-            <h2>Record a demonstration</h2>
+            <span className="eyebrow">{t('OBSERVED EVIDENCE')}</span>
+            <h2>{t('Record a demonstration')}</h2>
             <p>
-              Interact with the separate Chromium window. Actions are observations, not verified
-              requirements.
+              {t(
+                'Interact with the separate Chromium window. Actions are observations, not verified requirements.',
+              )}
             </p>
           </div>
         </div>
@@ -315,9 +320,9 @@ export function RecordPanel({
         )}
         <div className="record-layout">
           <section className="panel record-settings">
-            <h3>Capture policy</h3>
+            <h3>{t('Capture policy')}</h3>
             <label>
-              Recording name
+              {t('Recording name')}
               <input
                 disabled={Boolean(recording)}
                 value={name}
@@ -326,7 +331,7 @@ export function RecordPanel({
               />
             </label>
             <label>
-              Application URL
+              {t('Application URL')}
               <input
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
@@ -334,13 +339,12 @@ export function RecordPanel({
               />
             </label>
             <p className="muted">
-              Page resources (images, styles, scripts, APIs, embedded frames and WebSockets) may
-              load from other domains. Only approved origins are observed and stored. Approve an
-              additional origin to navigate there or capture its interactions. Service workers
-              remain disabled; browser and website restrictions still apply.
+              {t(
+                'Page resources (images, styles, scripts, APIs, embedded frames and WebSockets) may load from other domains. Only approved origins are observed and stored. Approve an additional origin to navigate there or capture its interactions. Service workers remain disabled; browser and website restrictions still apply.',
+              )}
             </p>
             <label>
-              Additional navigation / capture origins (optional, one per line)
+              {t('Additional navigation / capture origins (optional, one per line)')}
               <textarea
                 disabled={Boolean(recording)}
                 value={origins}
@@ -348,7 +352,7 @@ export function RecordPanel({
               />
             </label>
             <label>
-              Private CSS regions (one per line)
+              {t('Private CSS regions (one per line)')}
               <textarea
                 disabled={Boolean(recording)}
                 value={masks}
@@ -362,7 +366,7 @@ export function RecordPanel({
                 checked={screenshots}
                 onChange={(e) => setScreenshots(e.target.checked)}
               />
-              Capture masked screenshots
+              {t('Capture masked screenshots')}
             </label>
             <label className="checkbox-row">
               <input
@@ -371,15 +375,15 @@ export function RecordPanel({
                 checked={consent}
                 onChange={(e) => setConsent(e.target.checked)}
               />
-              Allow microphone capture for this session
+              {t('Allow microphone capture for this session')}
             </label>
             <p className="muted">
-              Audio can contain secrets and is retained locally without automatic redaction. No
-              provider upload. Screenshots mask forms, private regions and frames; arbitrary visible
-              secrets require your masking policy.
+              {t(
+                'Audio can contain secrets and is retained locally without automatic redaction. No provider upload. Screenshots mask forms, private regions and frames; arbitrary visible secrets require your masking policy.',
+              )}
             </p>
             <label>
-              Screenshot retention (days)
+              {t('Screenshot retention (days)')}
               <input
                 type="number"
                 min="1"
@@ -390,7 +394,7 @@ export function RecordPanel({
               />
             </label>
             <label>
-              Audio retention (days)
+              {t('Audio retention (days)')}
               <input
                 type="number"
                 min="1"
@@ -405,15 +409,16 @@ export function RecordPanel({
               disabled={busy || Boolean(recording)}
               onClick={() => void start()}
             >
-              Start recording
+              {t('Start recording')}
             </button>
             <p className="muted">
-              Network: method/status/type only; all query values omitted. Form values and keystrokes
-              omitted. Video/raw traces disabled.
+              {t(
+                'Network: method/status/type only; all query values omitted. Form values and keystrokes omitted. Video/raw traces disabled.',
+              )}
             </p>
           </section>
           <section className="panel">
-            <h3>Sessions</h3>
+            <h3>{t('Sessions')}</h3>
             <button
               className="button secondary"
               disabled={busy}
@@ -424,21 +429,21 @@ export function RecordPanel({
                 })
               }
             >
-              Refresh sessions
+              {t('Refresh sessions')}
             </button>
             {!list.length ? (
-              <Empty title="No recordings yet">
-                Start a local demonstration to collect real evidence.
+              <Empty title={t('No recordings yet')}>
+                {t('Start a local demonstration to collect real evidence.')}
               </Empty>
             ) : (
               <label>
-                Recording session
+                {t('Recording session')}
                 <select
                   disabled={Boolean(recording)}
                   value={selected}
                   onChange={(e) => choose(e.target.value)}
                 >
-                  <option value="">Select a recording</option>
+                  <option value="">{t('Select a recording')}</option>
                   {list.map((r) => (
                     <option key={r.id} value={r.id}>
                       {r.name} · {r.status}
@@ -453,27 +458,27 @@ export function RecordPanel({
                   <h3>{record.name}</h3>
                   <Status value={record.status} />
                   <span>
-                    {(record.durationMs / 1000).toFixed(1)} s · {record.events} events ·{' '}
-                    {record.gaps} gaps
+                    {(record.durationMs / 1000).toFixed(1)} {t('s · ')}
+                    {record.events} {t('events ·')} {record.gaps} {t('gaps')}
                   </span>
                 </div>
                 {record.incomplete && (
                   <p role="status" className="capture-warning">
-                    Incomplete evidence: inspect capture gaps before using this recording.
+                    {t('Incomplete evidence: inspect capture gaps before using this recording.')}
                   </p>
                 )}
                 {record.error && <p role="alert">{record.error}</p>}
                 {active(record) && (
                   <div className="actions">
                     <button className="button" disabled={busy} onClick={() => void stop(false)}>
-                      Stop recording
+                      {t('Stop recording')}
                     </button>
                     <button
                       className="button secondary"
                       disabled={busy}
                       onClick={() => void stop(true)}
                     >
-                      Cancel recording
+                      {t('Cancel recording')}
                     </button>
                     <button
                       className="button secondary"
@@ -484,12 +489,12 @@ export function RecordPanel({
                         })
                       }
                     >
-                      Navigate controlled browser
+                      {t('Navigate controlled browser')}
                     </button>
                   </div>
                 )}
                 <details>
-                  <summary>Approved origins</summary>
+                  <summary>{t('Approved origins')}</summary>
                   <ul>
                     {record.policy.allowedOrigins.map((o) => (
                       <li key={o}>{o}</li>
@@ -509,16 +514,17 @@ export function RecordPanel({
                         })
                       }
                     >
-                      Approve origin from Application URL
+                      {t('Approve origin from Application URL')}
                     </button>
                   )}
                 </details>
-                <h3>Narration</h3>
+                <h3>{t('Narration')}</h3>
                 <p role="status">
                   {micStarting
-                    ? 'Waiting for microphone permission — Stop recording cancels capture.'
+                    ? t('Waiting for microphone permission — Stop recording cancels capture.')
                     : audioMessage}{' '}
-                  · State: {record.microphone}
+                  {t('· State: ')}
+                  {record.microphone}
                 </p>
                 {active(record) && (
                   <div className="actions">
@@ -533,25 +539,30 @@ export function RecordPanel({
                       }
                       onClick={() => void startMic()}
                     >
-                      Start microphone
+                      {t('Start microphone')}
                     </button>
                     <button
                       className="button secondary"
                       disabled={busy || record.microphone !== 'RECORDING'}
                       onClick={() => void stopMic()}
                     >
-                      Stop microphone
+                      {t('Stop microphone')}
                     </button>
                   </div>
                 )}
                 <p className="muted">
-                  Transcription: manual. No automatic engine configured. Manual text is narrated
-                  intent, not observed UI behavior. Timestamps are seconds from recording start.
+                  {t(
+                    'Transcription: manual. No automatic engine configured. Manual text is narrated intent, not observed UI behavior. Timestamps are seconds from recording start.',
+                  )}
                 </p>
-                <p>{record.audio.length} acknowledged audio chunk(s)</p>
+                <p>
+                  {record.audio.length} {t('acknowledged audio chunk(s)')}
+                </p>
                 {record.audio.length > 0 && record.microphone !== 'RECORDING' && (
                   <p className="muted">
-                    Start a new recording to capture more audio. Manual narration can continue here.
+                    {t(
+                      'Start a new recording to capture more audio. Manual narration can continue here.',
+                    )}
                   </p>
                 )}
                 {record.audio.length > 0 && (
@@ -570,15 +581,18 @@ export function RecordPanel({
                       })
                     }
                   >
-                    Load local audio
+                    {t('Load local audio')}
                   </button>
                 )}
-                {audio && <audio controls src={audio} aria-label="Recorded narration" />}
+                {audio && <audio controls src={audio} aria-label={t('Recorded narration')} />}
                 {segments.map((segment, index) => (
                   <fieldset key={index} className="transcript-segment">
-                    <legend>Manual segment {index + 1}</legend>
+                    <legend>
+                      {t('Manual segment ')}
+                      {index + 1}
+                    </legend>
                     <label>
-                      Start (seconds)
+                      {t('Start (seconds)')}
                       <input
                         type="number"
                         min="0"
@@ -590,7 +604,7 @@ export function RecordPanel({
                       />
                     </label>
                     <label>
-                      End (seconds)
+                      {t('End (seconds)')}
                       <input
                         type="number"
                         min="0"
@@ -602,7 +616,7 @@ export function RecordPanel({
                       />
                     </label>
                     <label>
-                      Narrated requirement
+                      {t('Narrated requirement')}
                       <textarea
                         value={segment.text}
                         onChange={(e) => changeSegment(index, { text: e.target.value })}
@@ -616,7 +630,8 @@ export function RecordPanel({
                         setSegments((old) => old.filter((_, i) => i !== index));
                       }}
                     >
-                      Remove segment {index + 1}
+                      {t('Remove segment ')}
+                      {index + 1}
                     </button>
                   </fieldset>
                 ))}
@@ -639,7 +654,7 @@ export function RecordPanel({
                       ]);
                     }}
                   >
-                    Add manual segment
+                    {t('Add manual segment')}
                   </button>
                   <button
                     className="button"
@@ -667,14 +682,20 @@ export function RecordPanel({
                       })
                     }
                   >
-                    Save transcript revision
+                    {t('Save transcript revision')}
                   </button>
                 </div>
                 <details>
-                  <summary>Transcript history ({record.transcript.length} revisions)</summary>
+                  <summary>
+                    {t('Transcript history (')}
+                    {record.transcript.length} {t('revisions)')}
+                  </summary>
                   {record.transcript.map((r) => (
                     <div key={r.revision}>
-                      <strong>Revision {r.revision}</strong>
+                      <strong>
+                        {t('Revision ')}
+                        {r.revision}
+                      </strong>
                       <pre>{JSON.stringify(r.segments, null, 2)}</pre>
                     </div>
                   ))}
@@ -685,13 +706,14 @@ export function RecordPanel({
         </div>
         {record && (
           <section className="panel">
-            <h3>Evidence timeline</h3>
+            <h3>{t('Evidence timeline')}</h3>
             <p className="muted">
-              Times include calibrated source clocks and uncertainty. Screenshot acquisition may
-              follow its interaction. Page content remains untrusted data.
+              {t(
+                'Times include calibrated source clocks and uncertainty. Screenshot acquisition may follow its interaction. Page content remains untrusted data.',
+              )}
             </p>
             <div className="record-layout">
-              <div className="timeline" aria-label="Recording events">
+              <div className="timeline" aria-label={t('Recording events')}>
                 {[...events]
                   .sort((a, b) => a.timeMs - b.timeMs || a.sequence - b.sequence)
                   .map((e) => (
@@ -704,7 +726,8 @@ export function RecordPanel({
                       }}
                     >
                       <span>
-                        {(e.timeMs / 1000).toFixed(2)} s · {e.kind}
+                        {(e.timeMs / 1000).toFixed(2)} {t('s · ')}
+                        {e.kind}
                       </span>
                       <b>{e.detail}</b>
                       <small>
@@ -714,22 +737,28 @@ export function RecordPanel({
                   ))}
                 {events.length < record.events && (
                   <button className="button secondary" onClick={() => void run(refresh)}>
-                    Load more events
+                    {t('Load more events')}
                   </button>
                 )}
               </div>
               <div className="event-detail">
                 {event ? (
                   <>
-                    <h3>Event {event.sequence} · OBSERVED</h3>
+                    <h3>
+                      {t('Event ')}
+                      {event.sequence} {t('· OBSERVED')}
+                    </h3>
                     <p>{event.url}</p>
                     <p>
-                      Page {event.pageId} · Frame {event.frameId}
+                      {t('Page ')}
+                      {event.pageId} {t('· Frame ')}
+                      {event.frameId}
                     </p>
                     <p>
-                      Source {event.sourceMs?.toFixed(2) ?? 'n/a'} ms · offset{' '}
-                      {event.offsetMs?.toFixed(2) ?? 'n/a'} ms · uncertainty ±
-                      {event.uncertaintyMs?.toFixed(2) ?? 'unknown'} ms
+                      {t('Source ')}
+                      {event.sourceMs?.toFixed(2) ?? t('n/a')} {t('ms · offset')}{' '}
+                      {event.offsetMs?.toFixed(2) ?? t('n/a')} {t('ms · uncertainty ±')}
+                      {event.uncertaintyMs?.toFixed(2) ?? t('unknown')} {t('ms')}
                     </p>
                     <pre>{evidence?.dom}</pre>
                     <pre>{evidence?.aria}</pre>
@@ -738,8 +767,10 @@ export function RecordPanel({
                         <code>
                           {l.kind} {l.value} {l.name}
                         </code>{' '}
-                        · {l.count} match(es) ·{' '}
-                        {l.matchesTarget ? 'matches observed target' : 'unvalidated/ambiguous'}
+                        · {l.count} {t('match(es) ·')}{' '}
+                        {l.matchesTarget
+                          ? t('matches observed target')
+                          : t('unvalidated/ambiguous')}
                       </p>
                     ))}
                     {evidence?.screenshot && (
@@ -758,7 +789,7 @@ export function RecordPanel({
                           })
                         }
                       >
-                        Inspect masked screenshot
+                        {t('Inspect masked screenshot')}
                       </button>
                     )}
                     {image && (
@@ -770,7 +801,7 @@ export function RecordPanel({
                     )}
                   </>
                 ) : (
-                  <p>Select an event to inspect its captured evidence.</p>
+                  <p>{t('Select an event to inspect its captured evidence.')}</p>
                 )}
               </div>
             </div>

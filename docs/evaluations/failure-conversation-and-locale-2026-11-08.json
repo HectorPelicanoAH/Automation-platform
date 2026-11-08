@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "date": "2026-11-08",
+  "scope": [
+    "Per-run diagnostic conversations for failed managed and private generation runs",
+    "Optional existing same-target Autohealth evidence",
+    "Persisted English/Spanish interface preference"
+  ],
+  "validation": [
+    {
+      "command": "node --import tsx --test tests/*.test.ts",
+      "status": "PASSED",
+      "passed": 80,
+      "note": "Full deterministic suite before adding the final private-proposal and SQLite-reopen cases."
+    },
+    {
+      "command": "node --import tsx --test tests/failure-advice.test.ts",
+      "status": "PASSED",
+      "passed": 5,
+      "note": "Final focused checks, including private proposals, cancellation/scope/health/history, catalog coverage and SQLite reopening. Overlaps the earlier suite; counts are not additive."
+    },
+    {
+      "command": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts",
+      "status": "FAILED",
+      "passed": 15,
+      "failed": 1,
+      "skipped": 0,
+      "automaticRetries": 0,
+      "failure": {
+        "test": "Maintenance web flow: native locator failure, product negative control, reviewed repair, independent execution and reversal",
+        "observation": "10-second timeout clicking the visible Runs navigation button at tests/maintenance-ui.spec.ts:60. No native test assertion was weakened. Cause remains unconfirmed."
+      }
+    },
+    {
+      "command": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts tests/maintenance-ui.spec.ts --grep \"Maintenance web flow:\" --trace on --output /tmp/qa-maintenance-recheck --reporter list",
+      "status": "PASSED",
+      "passed": 1,
+      "note": "Isolated diagnostic execution with unchanged assertions, force settings, timeout and retries. This does not erase the earlier suite failure."
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "status": "PASSED"
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js .",
+      "status": "PASSED"
+    },
+    {
+      "command": "node node_modules/prettier/bin/prettier.cjs --check .",
+      "status": "PASSED"
+    },
+    {
+      "command": "node node_modules/vite/bin/vite.js build --config apps/web/vite.config.ts",
+      "status": "PASSED"
+    },
+    {
+      "command": "git diff --check",
+      "status": "PASSED"
+    }
+  ],
+  "newBrowserFlow": {
+    "status": "PASSED",
+    "evidence": [
+      "English to Spanish and back",
+      "Saved preference after reload",
+      "Two-turn conversation with retained context",
+      "Terminal conversation requests remain idle",
+      "Owner run remains failed; no new execution or generated change",
+      "Synthetic provider only; native UI/API evidence comes from separate actual demo runner flows"
+    ]
+  },
+  "limits": [
+    "No live AI inference was performed",
+    "Owner Mango tests were not executed, changed or applied",
+    "No physical microphone validation is claimed by the synthetic audio clock check",
+    "Full-browser navigation timeout remains an open reproducibility finding despite isolated success",
+    "Cross-platform CI for phases 3–6 remains pending"
+  ]
+}

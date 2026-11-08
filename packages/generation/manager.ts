@@ -1,3 +1,11 @@
+import {
+  adviceInstruction,
+  adviceSchema,
+  failureEvidence,
+  latestHealth,
+  validateReply,
+} from './advice.ts';
+import type { FailureDiscussion } from './model.ts';
 import { hybridPlan } from './hybrid.ts';
 import {
   boundApiFeaturePath,
@@ -283,7 +291,7 @@ export class GenerationManager {
   private start(
     kind: GenerationTask['kind'],
     targetId: string,
-    recordingId: string,
+    recordingId: string | undefined,
     refs: RootRef[],
     prompt: string | ((signal: AbortSignal) => Promise<string>),
     schema: unknown,
@@ -309,7 +317,7 @@ export class GenerationManager {
       searches: [],
       knowledgeRefs: [],
       executionClass: this.executionClass,
-      model: kind === 'analysis' ? settings.analysisModel : settings.implementationModel,
+      model: kind === 'implementation' ? settings.implementationModel : settings.analysisModel,
       usage: null,
     };
     this.repository.put('tasks', task);
@@ -435,7 +443,8 @@ export class GenerationManager {
           onEvent,
           onTool,
           model: task.model,
-          effort: kind === 'analysis' ? settings.analysisEffort : settings.implementationEffort,
+          effort:
+            kind === 'implementation' ? settings.implementationEffort : settings.analysisEffort,
         });
         if (abort.signal.aborted) throw new Error('Task cancelled');
         task.usage = result.usage ?? task.usage;
@@ -466,6 +475,103 @@ export class GenerationManager {
     })();
     this.active = { id: task.id, abort, done };
     return task;
+  }
+  discussion(runId: string): FailureDiscussion {
+    const run = this.store.get('runs', runId);
+    if (!run) throw new AppError(404, 'Run not found');
+    try {
+      return this.repository.get('discussions', runId);
+    } catch (e) {
+      if (!(e instanceof AppError) || e.statusCode !== 404) throw e;
+    }
+    return { id: runId, targetId: run.targetId, turns: [] };
+  }
+  async discussFailure(
+    runId: string,
+    input: { message: string; includeHealth: boolean; language: 'en' | 'es' },
+  ) {
+    const run = this.store.get('runs', runId);
+    if (!run || !['FAILED', 'INTERRUPTED'].includes(run.status))
+      throw new AppError(422, 'Choose a completed failed run');
+    if (!input.message.trim() || input.message.length > 4000)
+      throw new AppError(400, 'Question must contain 1–4000 characters');
+    this.workspace.target(run.targetId);
+    const discussion = this.discussion(runId);
+    if (discussion.turns.length >= 20)
+      throw new AppError(
+        413,
+        'Conversation limit reached (20 turns). Inspect the evidence before starting further diagnosis.',
+      );
+    const ref: RootRef = { kind: 'target', id: run.targetId };
+    let proposal: unknown = null;
+    if (run.proposalId && !run.proposalId.startsWith('repair-')) {
+      const change = this.repository.get('changes', run.proposalId);
+      if (change.targetId !== run.targetId) throw new AppError(409, 'Proposal target mismatch');
+      proposal = {
+        id: change.id,
+        hash: change.hash,
+        matchesExecutedFingerprint: Boolean(
+          run.executableHash && change.validationFingerprint === run.executableHash,
+        ),
+        note: 'Current proposed files, not necessarily the historical executed version.',
+        files: change.files.slice(0, 4).map((f) => ({
+          path: f.path,
+          content: f.after.slice(0, 5000),
+          truncated: f.after.length > 5000,
+        })),
+      };
+    }
+    const evidence = failureEvidence(run, this.runner.log(run.id));
+    const history: FailureDiscussion['turns'] = [];
+    let historyBytes = 0;
+    for (const turn of discussion.turns
+      .filter((t) => t.reply)
+      .slice(-4)
+      .reverse()) {
+      const bytes = Buffer.byteLength(JSON.stringify(turn));
+      if (historyBytes + bytes > 24000) break;
+      history.unshift(turn);
+      historyBytes += bytes;
+    }
+    const task = this.start(
+      'diagnosis',
+      run.targetId,
+      undefined,
+      [ref],
+      async (signal) => {
+        await this.index.scan(ref, signal);
+        const prompt = JSON.stringify(
+          scrub({
+            task: adviceInstruction,
+            language: input.language,
+            repositories: [ref],
+            evidence,
+            proposal,
+            autohealth: input.includeHealth ? latestHealth(this.store, run.targetId) : null,
+            history,
+            historyIsBounded: true,
+            question: input.message,
+          }),
+        );
+        if (Buffer.byteLength(prompt) > 96000)
+          throw new AppError(413, 'Diagnostic context too large. Narrow the evidence.');
+        return prompt;
+      },
+      adviceSchema,
+      (result) => {
+        const current = this.repository.get('discussions', runId);
+        const turn = current.turns.find((t) => t.taskId === task.id)!;
+        turn.reply = scrub(validateReply(result));
+        this.repository.put('discussions', current);
+      },
+    );
+    discussion.turns.push({
+      taskId: task.id,
+      question: clean(input.message),
+      createdAt: task.createdAt,
+    });
+    this.repository.put('discussions', discussion);
+    return { task, discussion };
   }
   async analyze(input: {
     targetId: string;

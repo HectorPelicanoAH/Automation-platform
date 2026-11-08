@@ -135,7 +135,12 @@ test('Generation web flow: real recording, reviewed fixture proposal, native UI 
       await expect(activity.locator('.validation-log').last()).not.toHaveText(
         'Waiting for runner output…',
       );
-      if (expected === 'STAGED') await expect(activity).toContainText('FAILED ·');
+      if (expected === 'STAGED') {
+        await expect(activity).toContainText('FAILED ·');
+        await expect(
+          activity.getByRole('region', { name: 'AI failure conversation', exact: true }),
+        ).toBeVisible();
+      }
 
       expect(readFileSync(join(p.target.path, 'ui/steps/promotions.ts'), 'utf8')).toBe(original);
       if (expected === 'STAGED')

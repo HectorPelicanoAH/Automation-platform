@@ -1,3 +1,5 @@
+import { useLocale } from './locale.tsx';
+import { FailureConversation } from './FailureConversation.tsx';
 import React, { useEffect, useState } from 'react';
 import type { Run } from '../../../packages/domain/model.ts';
 import { api } from './api.ts';
@@ -21,6 +23,7 @@ export function ValidationRunPanel({
   visible: boolean;
   onInspect: (id: string) => void;
 }) {
+  const { t } = useLocale();
   const [run, setRun] = useState<Run>();
   const [log, setLog] = useState('');
   const [error, setError] = useState('');
@@ -69,25 +72,27 @@ export function ValidationRunPanel({
   }, [runId, proposalId, targetId, visible, revision]);
   const failed = run?.tests.filter((test) => test.status === 'FAILED') || [];
   return (
-    <section aria-label="Validation activity" className="validation-activity">
-      <h3>Validation activity</h3>
+    <section aria-label={t('Validation activity')} className="validation-activity">
+      <h3>{t('Validation activity')}</h3>
       <p role="status">
         {run ? (
           <>
-            <Status value={run.status} /> · {run.framework} · {run.tests.length} reported tests
+            <Status value={run.status} /> · {run.framework} · {run.tests.length}{' '}
+            {t('reported tests')}
           </>
         ) : (
-          'Loading validation details…'
+          t('Loading validation details…')
         )}
       </p>
       {error && (
         <>
           <p role="alert">
-            Cannot refresh validation details: {error} The runner may still be active; inspect Runs
-            before starting another execution.
+            {t('Cannot refresh validation details: ')}
+            {error}{' '}
+            {t('The runner may still be active; inspect Runs before starting another execution.')}
           </p>
           <button className="button secondary" onClick={() => setRevision((n) => n + 1)}>
-            Retry loading details
+            {t('Retry loading details')}
           </button>
         </>
       )}
@@ -106,21 +111,30 @@ export function ValidationRunPanel({
           {test.error && <pre className="validation-log">{plain(test.error)}</pre>}
         </div>
       ))}
-      <h4>Runner log (last 32 KB)</h4>
+      <h4>{t('Runner log (last 32 KB)')}</h4>
       <pre className="validation-log" tabIndex={0}>
         {log ||
-          (run && !active(run) ? 'Runner produced no log output.' : 'Waiting for runner output…')}
+          (run && !active(run)
+            ? t('Runner produced no log output.')
+            : t('Waiting for runner output…'))}
       </pre>
       {run && !active(run) && (
-        <p role="status" aria-label="Validation next steps">
+        <p role="status" aria-label={t('Validation next steps')}>
           {run.status === 'PASSED'
-            ? 'Native validation passed. Review and approve the exact diff to save the test files in the target.'
-            : 'Validation did not pass. Inspect the failed step, runner log and available screenshots or traces. For a missing locator, verify the page state, previous steps, accessible role and name. For an assertion failure, compare actual behavior with the approved requirement before deciding whether the product or test needs correction. Review or regenerate the proposal, then prepare and explicitly run validation again. Preparing alone does not repair the test; target files have not been applied by this validation.'}
+            ? t(
+                'Native validation passed. Review and approve the exact diff to save the test files in the target.',
+              )
+            : t(
+                'Validation did not pass. Inspect the failed step, runner log and available screenshots or traces. For a missing locator, verify the page state, previous steps, accessible role and name. For an assertion failure, compare actual behavior with the approved requirement before deciding whether the product or test needs correction. Review or regenerate the proposal, then prepare and explicitly run validation again. Preparing alone does not repair the test; target files have not been applied by this validation.',
+              )}
         </p>
+      )}
+      {run && ['FAILED', 'INTERRUPTED'].includes(run.status) && (
+        <FailureConversation key={run.id} runId={run.id} visible={visible} />
       )}
       <div className="button-row">
         <button className="button secondary" onClick={() => onInspect(runId)}>
-          Inspect validation run
+          {t('Inspect validation run')}
         </button>
         {run && active(run) && (
           <button
@@ -138,7 +152,7 @@ export function ValidationRunPanel({
               }
             }}
           >
-            Cancel validation
+            {t('Cancel validation')}
           </button>
         )}
       </div>

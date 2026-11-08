@@ -4,7 +4,7 @@ export interface State {
   sources: Source[];
   targets: Target[];
   runs: Run[];
-  settings: { baseUrl: string; retentionDays: number };
+  settings: { baseUrl: string; retentionDays: number; language: 'en' | 'es' };
   versions: { node: string; sqlite: string };
 }
 let csrf = '';

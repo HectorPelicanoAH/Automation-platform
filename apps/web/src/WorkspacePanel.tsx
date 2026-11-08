@@ -1,3 +1,4 @@
+import { useLocale } from './locale.tsx';
 import React, { useState } from 'react';
 import type { Source, Target } from '../../../packages/domain/model.ts';
 import { api, type State } from './api.ts';
@@ -15,6 +16,7 @@ export function WorkspacePanel({
   refresh: () => Promise<void>;
   notice: (text: string) => void;
 }) {
+  const { t } = useLocale();
   const [editing, setEditing] = useState<Source>();
   const [source, setSource] = useState({
     name: '',
@@ -63,13 +65,14 @@ export function WorkspacePanel({
       <section className="panel">
         <div className="panel-heading">
           <div>
-            <h2>Context sources</h2>
+            <h2>{t('Context sources')}</h2>
             <p className="muted">
-              Optional frontend, backend and shared code. You can record, generate UI tests and run
-              tests without application source repositories. Registration does not execute scripts.
+              {t(
+                'Optional frontend, backend and shared code. You can record, generate UI tests and run tests without application source repositories. Registration does not execute scripts.',
+              )}
             </p>
           </div>
-          <span className="read-only">READ ONLY</span>
+          <span className="read-only">{t('READ ONLY')}</span>
         </div>
         <div className="source-grid">
           {state.sources.map((s) => (
@@ -80,11 +83,11 @@ export function WorkspacePanel({
               </div>
               <h3>{s.name}</h3>
               <code>{s.path}</code>
-              <p>{s.detected.join(' · ') || 'No supported framework detected'}</p>
+              <p>{s.detected.join(' · ') || t('No supported framework detected')}</p>
               <small>
                 {s.git
                   ? `${s.git.branch} · ${short(s.git.commit)}`
-                  : 'Local directory · no Git metadata'}
+                  : t('Local directory · no Git metadata')}
               </small>
               <button
                 className="text-button"
@@ -93,31 +96,35 @@ export function WorkspacePanel({
                   setSource({ ...s, include: s.include.join(','), exclude: s.exclude.join(',') });
                 }}
               >
-                Edit settings ↗
+                {t('Edit settings ↗')}
               </button>
             </article>
           ))}
         </div>
         {!state.sources.length && (
           <p className="muted">
-            No context sources configured. You can continue without adding one.
+            {t('No context sources configured. You can continue without adding one.')}
           </p>
         )}
         <details open={editing ? true : undefined}>
-          <summary>{editing ? `Edit ${editing.name}` : 'Add a context source (optional)'}</summary>
+          <summary>
+            {editing
+              ? t('Edit {value0}', { value0: editing.name })
+              : t('Add a context source (optional)')}
+          </summary>
           <form className="form" onSubmit={saveSource}>
             <div className="form-grid">
               <label>
-                Display name
+                {t('Display name')}
                 <input
                   required
                   value={source.name}
                   onChange={(e) => setSource({ ...source, name: e.target.value })}
-                  placeholder="Storefront"
+                  placeholder={t('Storefront')}
                 />
               </label>
               <label>
-                Absolute local path
+                {t('Absolute local path')}
                 <input
                   required
                   disabled={Boolean(editing)}
@@ -127,36 +134,36 @@ export function WorkspacePanel({
                 />
               </label>
               <label>
-                Repository type
+                {t('Repository type')}
                 <select
-                  aria-label="Repository type"
+                  aria-label={t('Repository type')}
                   value={source.kind}
                   disabled={Boolean(editing)}
                   onChange={(e) => setSource({ ...source, kind: e.target.value })}
                 >
-                  <option value="frontend">Frontend</option>
-                  <option value="backend">Backend</option>
-                  <option value="shared">Shared library</option>
-                  <option value="other">Other</option>
+                  <option value="frontend">{t('Frontend')}</option>
+                  <option value="backend">{t('Backend')}</option>
+                  <option value="shared">{t('Shared library')}</option>
+                  <option value="other">{t('Other')}</option>
                 </select>
               </label>
               <label>
-                Preferred branch or revision
+                {t('Preferred branch or revision')}
                 <input
                   value={source.preferredRef}
                   onChange={(e) => setSource({ ...source, preferredRef: e.target.value })}
-                  placeholder="Optional; never checks out your tree"
+                  placeholder={t('Optional; never checks out your tree')}
                 />
               </label>
               <label>
-                Include patterns, comma-separated
+                {t('Include patterns, comma-separated')}
                 <input
                   value={source.include}
                   onChange={(e) => setSource({ ...source, include: e.target.value })}
                 />
               </label>
               <label>
-                Exclude patterns, comma-separated
+                {t('Exclude patterns, comma-separated')}
                 <input
                   value={source.exclude}
                   onChange={(e) => setSource({ ...source, exclude: e.target.value })}
@@ -169,7 +176,7 @@ export function WorkspacePanel({
                 checked={source.enabled}
                 onChange={(e) => setSource({ ...source, enabled: e.target.checked })}
               />
-              Source enabled
+              {t('Source enabled')}
             </label>
             <label className="checkbox">
               <input
@@ -177,10 +184,10 @@ export function WorkspacePanel({
                 checked={source.indexEnabled}
                 onChange={(e) => setSource({ ...source, indexEnabled: e.target.checked })}
               />
-              Allow context indexing in Generate
+              {t('Allow context indexing in Generate')}
             </label>
             <button className="button" disabled={busy}>
-              {editing ? 'Save source settings' : 'Register read-only source'}
+              {editing ? t('Save source settings') : t('Register read-only source')}
             </button>
           </form>
         </details>
@@ -188,20 +195,20 @@ export function WorkspacePanel({
       <section className="panel">
         <div className="panel-heading">
           <div>
-            <h2>Automation targets</h2>
+            <h2>{t('Automation targets')}</h2>
             <p className="muted">
-              Separate projects with independently executable Playwright and Karate runners.
+              {t('Separate projects with independently executable Playwright and Karate runners.')}
             </p>
           </div>
         </div>
-        {state.targets.map((t) => (
-          <div className="target-row" key={t.id}>
+        {state.targets.map((item) => (
+          <div className="target-row" key={item.id}>
             <span className="target-icon">⌘</span>
             <div>
-              <b>{t.name}</b>
-              <code>{t.path}</code>
+              <b>{item.name}</b>
+              <code>{item.path}</code>
             </div>
-            <span className="read-only">EXTERNAL TARGET</span>
+            <span className="read-only">{t('EXTERNAL TARGET')}</span>
           </div>
         ))}
         <form
@@ -219,16 +226,16 @@ export function WorkspacePanel({
         >
           <div className="form-grid">
             <label>
-              Target name
+              {t('Target name')}
               <input
                 required
                 value={target.name}
                 onChange={(e) => setTarget({ ...target, name: e.target.value })}
-                placeholder="Functional tests"
+                placeholder={t('Functional tests')}
               />
             </label>
             <label>
-              Absolute target directory
+              {t('Absolute target directory')}
               <input
                 required
                 value={target.path}
@@ -237,35 +244,39 @@ export function WorkspacePanel({
               />
             </label>
             <label>
-              Connection mode
+              {t('Connection mode')}
               <select
-                aria-label="Connection mode"
+                aria-label={t('Connection mode')}
                 value={target.mode}
                 onChange={(e) => setTarget({ ...target, mode: e.target.value })}
               >
                 <option value="initialize">
-                  Initialize starter in an empty external directory
+                  {t('Initialize starter in an empty external directory')}
                 </option>
-                <option value="import">Import compatible existing target (no modifications)</option>
+                <option value="import">
+                  {t('Import compatible existing target (no modifications)')}
+                </option>
               </select>
             </label>
           </div>
           <p className="muted">
-            Initialization copies the starter only into your chosen empty destination. No Git
-            repository is created. Import requires the documented manifest, ui/ and api/ layout.
+            {t(
+              'Initialization copies the starter only into your chosen empty destination. No Git repository is created. Import requires the documented manifest, ui/ and api/ layout.',
+            )}
           </p>
           <button className="button" disabled={busy}>
-            Connect automation target
+            {t('Connect automation target')}
           </button>
         </form>
       </section>
       <section className="panel">
         <div className="panel-heading">
           <div>
-            <h2>Execution environment & retention</h2>
+            <h2>{t('Execution environment & retention')}</h2>
             <p className="muted">
-              Use synthetic local data first. Credentials belong outside Git and are not stored
-              here.
+              {t(
+                'Use synthetic local data first. Credentials belong outside Git and are not stored here.',
+              )}
             </p>
           </div>
         </div>
@@ -282,7 +293,20 @@ export function WorkspacePanel({
         >
           <div className="form-grid">
             <label>
-              Application base URL
+              {t('Default interface language')}
+              <select
+                aria-label={t('Default interface language')}
+                value={settings.language}
+                onChange={(e) =>
+                  setSettings({ ...settings, language: e.target.value as 'en' | 'es' })
+                }
+              >
+                <option value="en">{t('English')}</option>
+                <option value="es">{t('Castellano')}</option>
+              </select>
+            </label>
+            <label>
+              {t('Application base URL')}
               <input
                 type="url"
                 required
@@ -291,7 +315,7 @@ export function WorkspacePanel({
               />
             </label>
             <label>
-              Artifact retention (days)
+              {t('Artifact retention (days)')}
               <input
                 type="number"
                 min={1}
@@ -305,7 +329,7 @@ export function WorkspacePanel({
             </label>
           </div>
           <button className="button secondary" disabled={busy}>
-            Save environment
+            {t('Save environment')}
           </button>
         </form>
       </section>

@@ -1,3 +1,4 @@
+import { useLocale } from './locale.tsx';
 import React, { useEffect, useState } from 'react';
 import { api } from './api.ts';
 import { Empty, Status, short } from './ui.tsx';
@@ -23,6 +24,7 @@ interface EvolutionState {
   metrics: ReturnType<typeof workflowMetrics>;
 }
 export function KnowledgePanel({ targetId }: { targetId: string }) {
+  const { t } = useLocale();
   const [state, setState] = useState<EvolutionState>();
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -138,18 +140,19 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
       )}
       <section className="panel">
         <div className="panel-heading">
-          <h2>Repository knowledge</h2>
+          <h2>{t('Repository knowledge')}</h2>
           <button className="button secondary" disabled={busy} onClick={() => void refresh()}>
-            Refresh knowledge
+            {t('Refresh knowledge')}
           </button>
         </div>
         <p>
-          Source-backed advisory facts. Candidate, inferred and stale observations do not become
-          instructions or requirements automatically.
+          {t(
+            'Source-backed advisory facts. Candidate, inferred and stale observations do not become instructions or requirements automatically.',
+          )}
         </p>
         {!targetId ? (
-          <Empty title="Select an automation target">
-            Knowledge stays scoped to registered repository evidence.
+          <Empty title={t('Select an automation target')}>
+            {t('Knowledge stays scoped to registered repository evidence.')}
           </Empty>
         ) : (
           <button
@@ -159,19 +162,21 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
               void work(async () => setJob(await api('/evolution/collect', { targetId })))
             }
           >
-            Collect current workflow knowledge
+            {t('Collect current workflow knowledge')}
           </button>
         )}
         {!state ? (
-          <p>Loading knowledge…</p>
+          <p>{t('Loading knowledge…')}</p>
         ) : !state.records.length ? (
           <p className="muted">
-            No discoveries yet. Completed target executions also queue bounded automatic collection.
+            {t(
+              'No discoveries yet. Completed target executions also queue bounded automatic collection.',
+            )}
           </p>
         ) : (
           <>
             <label>
-              Knowledge record
+              {t('Knowledge record')}
               <select value={recordId} onChange={(e) => setRecordId(e.target.value)}>
                 {state.records.map((k) => (
                   <option value={k.id} key={k.id}>
@@ -187,11 +192,11 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                 <p>{version.claim}</p>
                 <p>
                   {version.classification} · {version.confidence} · {version.provenance} ·{' '}
-                  {record.versions.length} version(s)
+                  {record.versions.length} {t('version(s)')}
                 </p>
                 <code>{version.hash}</code>
                 <details>
-                  <summary>Sources, revisions and workflow evidence</summary>
+                  <summary>{t('Sources, revisions and workflow evidence')}</summary>
                   <pre>{JSON.stringify(version, null, 2)}</pre>
                 </details>
                 <div className="button-row">
@@ -213,7 +218,7 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                       })
                     }
                   >
-                    Approve fact and publish concise documentation
+                    {t('Approve fact and publish concise documentation')}
                   </button>
                   <button
                     className="button secondary"
@@ -228,26 +233,28 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                       })
                     }
                   >
-                    Reject knowledge candidate
+                    {t('Reject knowledge candidate')}
                   </button>
                 </div>
                 {version.provenance === 'INFERRED' && (
                   <p>
-                    Inferred claims are not automatically promoted. Verify actual sources and
-                    propose an explicitly observed replacement before approval.
+                    {t(
+                      'Inferred claims are not automatically promoted. Verify actual sources and propose an explicitly observed replacement before approval.',
+                    )}
                   </p>
                 )}
                 {document?.document && (
                   <>
                     <h3>
-                      Private documentation <Status value={document.fresh ? 'CURRENT' : 'STALE'} />
+                      {t('Private documentation ')}
+                      <Status value={document.fresh ? 'CURRENT' : 'STALE'} />
                     </h3>
-                    <pre aria-label="Knowledge documentation">{document.document.text}</pre>
+                    <pre aria-label={t('Knowledge documentation')}>{document.document.text}</pre>
                     <code>{document.document.hash}</code>
                     {document.history.length > 1 && (
                       <>
                         <label>
-                          Prior documentation version
+                          {t('Prior documentation version')}
                           <select
                             value={restoreHash}
                             onChange={(e) => {
@@ -255,7 +262,7 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                               setRestoreApproval(false);
                             }}
                           >
-                            <option value="">Select a version</option>
+                            <option value="">{t('Select a version')}</option>
                             {document.history
                               .filter((d) => d.hash !== document.document!.hash)
                               .map((d) => (
@@ -274,7 +281,7 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                             checked={restoreApproval}
                             onChange={(e) => setRestoreApproval(e.target.checked)}
                           />
-                          I approve restoring this exact private documentation version
+                          {t('I approve restoring this exact private documentation version')}
                         </label>
                         <button
                           className="button secondary"
@@ -290,16 +297,16 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                             })
                           }
                         >
-                          Restore reviewed documentation
+                          {t('Restore reviewed documentation')}
                         </button>
                       </>
                     )}
                   </>
                 )}
                 <details>
-                  <summary>Propose a classified observation from this evidence</summary>
+                  <summary>{t('Propose a classified observation from this evidence')}</summary>
                   <label>
-                    Discovery classification
+                    {t('Discovery classification')}
                     <select
                       value={classification}
                       onChange={(e) => setClassification(e.target.value as KnowledgeClass)}
@@ -316,7 +323,7 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                     </select>
                   </label>
                   <label>
-                    Concise sourced claim
+                    {t('Concise sourced claim')}
                     <textarea
                       maxLength={1000}
                       value={claim}
@@ -324,13 +331,13 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                     />
                   </label>
                   <label>
-                    Observation provenance
+                    {t('Observation provenance')}
                     <select
                       value={provenance}
                       onChange={(e) => setProvenance(e.target.value as typeof provenance)}
                     >
-                      <option>INFERRED</option>
-                      <option>OBSERVED</option>
+                      <option>{t('INFERRED')}</option>
+                      <option>{t('OBSERVED')}</option>
                     </select>
                   </label>
                   <button
@@ -351,7 +358,7 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                       })
                     }
                   >
-                    Save observation candidate
+                    {t('Save observation candidate')}
                   </button>
                 </details>
               </>
@@ -360,10 +367,11 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
         )}
       </section>
       <section className="panel">
-        <h2>Knowledge &amp; Skills — versioned procedures</h2>
+        <h2>{t('Knowledge & Skills — versioned procedures')}</h2>
         <p>
-          Bundles remain inactive until the exact evaluated diff is explicitly approved.
-          External/global skills are never overwritten by this workflow.
+          {t(
+            'Bundles remain inactive until the exact evaluated diff is explicitly approved. External/global skills are never overwritten by this workflow.',
+          )}
         </p>
         <button
           className="button secondary"
@@ -378,12 +386,12 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
             })
           }
         >
-          Propose portable summary baseline
+          {t('Propose portable summary baseline')}
         </button>
         {state?.bundles.length ? (
           <>
             <label>
-              Skill bundle
+              {t('Skill bundle')}
               <select
                 value={bundleId}
                 onChange={(e) => {
@@ -405,19 +413,21 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
               <>
                 <Status value={bundle.status} />
                 <p>
-                  <b>Observed problem:</b> {bundle.problem}
+                  <b>{t('Observed problem:')}</b> {bundle.problem}
                 </p>
                 <p>
-                  <b>Expected benefit:</b> {bundle.benefit}
+                  <b>{t('Expected benefit:')}</b> {bundle.benefit}
                 </p>
                 <code>Bundle SHA-256 {bundle.hash}</code>
                 <p>
-                  Evaluator:{' '}
+                  {t('Evaluator:')}{' '}
                   {bundle.evaluator ||
-                    'No supported behavioral evaluator; format alone cannot authorize activation.'}
+                    t(
+                      'No supported behavioral evaluator; format alone cannot authorize activation.',
+                    )}
                 </p>
                 <details>
-                  <summary>Inspect complete skill bundle and provenance</summary>
+                  <summary>{t('Inspect complete skill bundle and provenance')}</summary>
                   <pre>{JSON.stringify(bundle, null, 2)}</pre>
                 </details>
                 <button
@@ -429,10 +439,12 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                     )
                   }
                 >
-                  Inspect portable export
+                  {t('Inspect portable export')}
                 </button>
                 {!!exported && (
-                  <pre aria-label="Portable skill export">{JSON.stringify(exported, null, 2)}</pre>
+                  <pre aria-label={t('Portable skill export')}>
+                    {JSON.stringify(exported, null, 2)}
+                  </pre>
                 )}
                 <label className="checkbox">
                   <input
@@ -440,7 +452,7 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                     checked={trust}
                     onChange={(e) => setTrust(e.target.checked)}
                   />
-                  I trust this exact packaged evaluator for local execution
+                  {t('I trust this exact packaged evaluator for local execution')}
                 </label>
                 <button
                   className="button"
@@ -460,23 +472,28 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                     })
                   }
                 >
-                  Evaluate exact bundle against versioned cases
+                  {t('Evaluate exact bundle against versioned cases')}
                 </button>
                 {evaluation && (
                   <>
                     <h3>
-                      Evaluation comparison <Status value={evaluation.status} />
+                      {t('Evaluation comparison ')}
+                      <Status value={evaluation.status} />
                     </h3>
                     <p>
-                      Mode: {evaluation.mode}. This evaluates the packaged script, not model
-                      decision quality.
+                      {t('Mode: ')}
+                      {evaluation.mode}
+                      {t('. This evaluates the packaged script, not model decision quality.')}
                     </p>
-                    <pre aria-label="Skill evaluation">{JSON.stringify(evaluation, null, 2)}</pre>
+                    <pre aria-label={t('Skill evaluation')}>
+                      {JSON.stringify(evaluation, null, 2)}
+                    </pre>
                   </>
                 )}
                 {active && (
                   <p>
-                    Active on selected target: <b>{active.name}</b> · <code>{active.hash}</code>
+                    {t('Active on selected target: ')}
+                    <b>{active.name}</b> · <code>{active.hash}</code>
                   </p>
                 )}
                 <label className="checkbox">
@@ -489,7 +506,7 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                       setApprove(false);
                     }}
                   />
-                  Prepare as rollback to a previously approved bundle
+                  {t('Prepare as rollback to a previously approved bundle')}
                 </label>
                 <button
                   className="button secondary"
@@ -507,7 +524,7 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                     })
                   }
                 >
-                  Prepare reviewed skill change
+                  {t('Prepare reviewed skill change')}
                 </button>
                 <button
                   className="button secondary"
@@ -532,7 +549,7 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                     })
                   }
                 >
-                  Propose improvement from repeated health evidence
+                  {t('Propose improvement from repeated health evidence')}
                 </button>
                 <button
                   className="button danger"
@@ -547,7 +564,7 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                     })
                   }
                 >
-                  Reject unactivated bundle
+                  {t('Reject unactivated bundle')}
                 </button>
                 {active && (
                   <button
@@ -572,27 +589,28 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                       })
                     }
                   >
-                    Run active summary on recent health evidence
+                    {t('Run active summary on recent health evidence')}
                   </button>
                 )}
                 {change && (
                   <>
                     <h3>
-                      Exact active-instruction change <Status value={change.status} />
+                      {t('Exact active-instruction change ')}
+                      <Status value={change.status} />
                     </h3>
                     <p>
-                      {change.operation} · {change.name} · prior{' '}
-                      {change.priorHash || 'no managed active bundle'}
+                      {change.operation} · {change.name} {t('· prior')}{' '}
+                      {change.priorHash || t('no managed active bundle')}
                     </p>
                     <code>{change.hash}</code>
-                    <pre aria-label="Skill activation diff">{change.diff}</pre>
+                    <pre aria-label={t('Skill activation diff')}>{change.diff}</pre>
                     <label className="checkbox">
                       <input
                         type="checkbox"
                         checked={approve}
                         onChange={(e) => setApprove(e.target.checked)}
                       />
-                      I approve this exact active skill change on the selected target
+                      {t('I approve this exact active skill change on the selected target')}
                     </label>
                     <button
                       className="button"
@@ -609,7 +627,7 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                         })
                       }
                     >
-                      Apply approved skill change
+                      {t('Apply approved skill change')}
                     </button>
                     <button
                       className="button danger"
@@ -625,7 +643,7 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                         })
                       }
                     >
-                      Reject skill change
+                      {t('Reject skill change')}
                     </button>
                   </>
                 )}
@@ -634,19 +652,20 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
           </>
         ) : (
           <p className="muted">
-            No registered product skill bundles. Earlier documented candidates are not silently
-            imported or activated.
+            {t(
+              'No registered product skill bundles. Earlier documented candidates are not silently imported or activated.',
+            )}
           </p>
         )}
         <details>
-          <summary>Import an additional inactive proposal</summary>
+          <summary>{t('Import an additional inactive proposal')}</summary>
           <p>
-            Use a JSON object with name, version, optional parentId, files (path/content), problem,
-            benefit and evidence. Arbitrary scripts cannot execute without a separately supported
-            evaluator.
+            {t(
+              'Use a JSON object with name, version, optional parentId, files (path/content), problem, benefit and evidence. Arbitrary scripts cannot execute without a separately supported evaluator.',
+            )}
           </p>
           <label>
-            Skill proposal JSON
+            {t('Skill proposal JSON')}
             <textarea value={importText} onChange={(e) => setImportText(e.target.value)} />
           </label>
           <button
@@ -664,12 +683,12 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
               })
             }
           >
-            Store inactive skill proposal
+            {t('Store inactive skill proposal')}
           </button>
         </details>
       </section>
       <section className="panel">
-        <h2>Workflow metrics and execution history</h2>
+        <h2>{t('Workflow metrics and execution history')}</h2>
         {job && (
           <>
             <Status value={job.status} />
@@ -678,7 +697,9 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
             </p>
             {job.error && <p role="alert">{job.error}</p>}
             {job.result !== undefined && (
-              <pre aria-label="Evolution job result">{JSON.stringify(job.result, null, 2)}</pre>
+              <pre aria-label={t('Evolution job result')}>
+                {JSON.stringify(job.result, null, 2)}
+              </pre>
             )}
             {running && (
               <button
@@ -688,28 +709,29 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                   void work(async () => setJob(await api(`/evolution/jobs/${job.id}/cancel`, {})))
                 }
               >
-                Cancel knowledge/evaluation job
+                {t('Cancel knowledge/evaluation job')}
               </button>
             )}
           </>
         )}
         <p>
-          Recorded denominators, null unavailable usage, labelled byte proxies and deterministic
-          comparisons. No model-token savings claim.
+          {t(
+            'Recorded denominators, null unavailable usage, labelled byte proxies and deterministic comparisons. No model-token savings claim.',
+          )}
         </p>
         {state && (
           <>
             <details>
-              <summary>Inspect metric definitions and values</summary>
-              <pre aria-label="Workflow metrics">{JSON.stringify(state.metrics, null, 2)}</pre>
+              <summary>{t('Inspect metric definitions and values')}</summary>
+              <pre aria-label={t('Workflow metrics')}>{JSON.stringify(state.metrics, null, 2)}</pre>
             </details>
             <div className="table-wrap">
               <table>
                 <thead>
                   <tr>
-                    <th>Operation</th>
-                    <th>Status</th>
-                    <th>Started</th>
+                    <th>{t('Operation')}</th>
+                    <th>{t('Status')}</th>
+                    <th>{t('Started')}</th>
                     <th />
                   </tr>
                 </thead>
@@ -725,7 +747,7 @@ export function KnowledgePanel({ targetId }: { targetId: string }) {
                       <td>{j.createdAt}</td>
                       <td>
                         <button className="text-button" onClick={() => setJob(j)}>
-                          Inspect operation
+                          {t('Inspect operation')}
                         </button>
                       </td>
                     </tr>

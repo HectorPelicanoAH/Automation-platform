@@ -1,3 +1,5 @@
+import { LocaleProvider, useLocale } from './locale.tsx';
+import { FailureConversation } from './FailureConversation.tsx';
 import { KnowledgePanel } from './KnowledgePanel.tsx';
 import { HealthPanel, HealthSummary } from './HealthPanel.tsx';
 import { MaintenancePanel } from './MaintenancePanel.tsx';
@@ -26,6 +28,7 @@ type Check = { name: string; ready: boolean; detail: string };
 const active = (run: Run) => ['QUEUED', 'RUNNING', 'CANCEL_REQUESTED'].includes(run.status);
 const time = (value: string) => new Date(value).toLocaleString();
 function App() {
+  const { setLanguage, t } = useLocale();
   const [view, setView] = useState<View>('Dashboard');
   const [recordingsRevision, setRecordingsRevision] = useState(0);
   const [state, setState] = useState<State>();
@@ -48,10 +51,11 @@ function App() {
     const next = await api<State>('/state');
     setCsrf(next.csrf);
     setState(next);
+    setLanguage(next.settings.language);
     setTargetId((current) =>
       next.targets.some((t) => t.id === current) ? current : next.targets[0]?.id || '',
     );
-  }, []);
+  }, [setLanguage]);
   const task = async (work: () => Promise<void>) => {
     setBusy(true);
     setError('');
@@ -174,11 +178,11 @@ function App() {
       <table>
         <thead>
           <tr>
-            <th>Run / context</th>
-            <th>Framework</th>
-            <th>Outcome</th>
-            <th>Executed</th>
-            <th>Started</th>
+            <th>{t('Run / context')}</th>
+            <th>{t('Framework')}</th>
+            <th>{t('Outcome')}</th>
+            <th>{t('Executed')}</th>
+            <th>{t('Started')}</th>
             <th></th>
           </tr>
         </thead>
@@ -186,15 +190,15 @@ function App() {
           {runs.map((r) => (
             <tr key={r.id}>
               <td>
-                <b>{r.selection.kind === 'suite' ? 'Full suite' : r.selection.value}</b>
+                <b>{r.selection.kind === 'suite' ? t('Full suite') : r.selection.value}</b>
                 <small>
                   {short(r.id)} ·{' '}
-                  {state?.targets.find((t) => t.id === r.targetId)?.name || 'Target'}
+                  {state?.targets.find((t) => t.id === r.targetId)?.name || t('Target')}
                 </small>
               </td>
               <td>
                 <span className="framework">
-                  {r.framework === 'playwright' ? '◈ Playwright' : '◇ Karate'}
+                  {r.framework === 'playwright' ? t('◈ Playwright') : t('◇ Karate')}
                 </span>
               </td>
               <td>
@@ -214,7 +218,7 @@ function App() {
                     setSelectedRun(r.id);
                   }}
                 >
-                  Inspect ↗
+                  {t('Inspect ↗')}
                 </button>
               </td>
             </tr>
@@ -228,12 +232,13 @@ function App() {
     <div className="shell">
       <aside>
         <a className="brand" href="#" onClick={() => setView('Dashboard')}>
-          <span className="brand-mark">q.</span>
+          <span className="brand-mark">{t('q.')}</span>
           <span>
-            QA Local<small>functional engineering</small>
+            {t('QA Local')}
+            <small>{t('functional engineering')}</small>
           </span>
         </a>
-        <div className="nav-label">WORKBENCH</div>
+        <div className="nav-label">{t('WORKBENCH')}</div>
         <nav>
           {(
             [
@@ -249,45 +254,47 @@ function App() {
             ] as View[]
           ).map((name, index) => (
             <button
-              key={name}
-              aria-label={name}
+              key={t(name)}
+              aria-label={t(name)}
               className={view === name ? 'nav-item selected' : 'nav-item'}
               onClick={() => setView(name)}
             >
               <span>{['◫', '▦', '≡', '⌘', '▷', '●', '✧', '◇', '✚'][index]}</span>
-              {name}
+              {t(name)}
               {name === 'Runs' && state?.runs.some(active) ? <i className="dot" /> : null}
             </button>
           ))}
         </nav>
         <div className="sidebar-note">
-          <span className="phase-label">PHASE 06</span>
+          <span className="phase-label">{t('PHASE 06')}</span>
           <p>
-            A local foundation.
+            {t('A local foundation.')}
             <br />
-            Real tests. Clear evidence.
+            {t('Real tests. Clear evidence.')}
           </p>
           <small>
-            Record demonstrations, review AI proposals, and approve each generated change.
+            {t('Record demonstrations, review AI proposals, and approve each generated change.')}
           </small>
         </div>
         <div className="local-badge">
-          <i className="dot" /> Local workstation<small>Bound to loopback</small>
+          <i className="dot" /> {t('Local workstation')}
+          <small>{t('Bound to loopback')}</small>
         </div>
       </aside>
       <div className="main">
         <header>
           <div className="breadcrumb">
-            Workspace <span>/</span> <b>{view}</b>
+            {t('Workspace ')}
+            <span>/</span> <b>{t(view)}</b>
           </div>
           <div className="header-right">
-            <span className="local-pill">● LOCAL FIRST</span>
+            <span className="local-pill">{t('● LOCAL FIRST')}</span>
             <select
-              aria-label="Active automation target"
+              aria-label={t('Active automation target')}
               value={targetId}
               onChange={(e) => setTargetId(e.target.value)}
             >
-              <option value="">No target selected</option>
+              <option value="">{t('No target selected')}</option>
               {state?.targets.map((t) => (
                 <option value={t.id} key={t.id}>
                   {t.name}
@@ -299,39 +306,57 @@ function App() {
         <main>
           <div className="page-heading">
             <div>
-              <p className="eyebrow">YOUR FUNCTIONAL TESTING WORKBENCH</p>
+              <p className="eyebrow">{t('YOUR FUNCTIONAL TESTING WORKBENCH')}</p>
               <h1>
                 {view === 'Dashboard'
-                  ? 'Good tests start with clarity.'
-                  : {
-                      Workspace: 'Your repositories, connected.',
-                      Scenarios: 'Behavior, written clearly.',
-                      Repository: 'Understand what you run.',
-                      Runs: 'Execution with evidence.',
-                      Record: 'Capture what actually happened.',
-                      Generate: 'From evidence to reviewed tests.',
-                      'Knowledge & Skills': 'Knowledge with evidence and review.',
-                      Autohealth: 'Inspect health. Preserve control.',
-                    }[view]}
+                  ? t('Good tests start with clarity.')
+                  : t(
+                      {
+                        Workspace: 'Your repositories, connected.',
+                        Scenarios: 'Behavior, written clearly.',
+                        Repository: 'Understand what you run.',
+                        Runs: 'Execution with evidence.',
+                        Record: 'Capture what actually happened.',
+                        Generate: 'From evidence to reviewed tests.',
+                        'Knowledge & Skills': 'Knowledge with evidence and review.',
+                        Autohealth: 'Inspect health. Preserve control.',
+                      }[view],
+                    )}
               </h1>
               <p className="muted">
                 {view === 'Dashboard'
-                  ? 'Configure your workspace, run your contracts, and see what actually happened.'
+                  ? t(
+                      'Configure your workspace, run your contracts, and see what actually happened.',
+                    )
                   : view === 'Workspace'
-                    ? 'Application sources stay read-only. Automation lives in its own repository.'
+                    ? t(
+                        'Application sources stay read-only. Automation lives in its own repository.',
+                      )
                     : view === 'Scenarios'
-                      ? 'Review the canonical Gherkin contract before executing its implementation.'
+                      ? t(
+                          'Review the canonical Gherkin contract before executing its implementation.',
+                        )
                       : view === 'Repository'
-                        ? 'Read the target files behind your functional coverage.'
+                        ? t('Read the target files behind your functional coverage.')
                         : view === 'Generate'
-                          ? 'Inspect evidence, review requirements and validate staged UI/API automation.'
+                          ? t(
+                              'Inspect evidence, review requirements and validate staged UI/API automation.',
+                            )
                           : view === 'Knowledge & Skills'
-                            ? 'Source-linked discoveries, evaluated procedures and explicit reversible activation.'
+                            ? t(
+                                'Source-linked discoveries, evaluated procedures and explicit reversible activation.',
+                              )
                             : view === 'Autohealth'
-                              ? 'Read-only local checks with evidence, limits and recommended actions.'
+                              ? t(
+                                  'Read-only local checks with evidence, limits and recommended actions.',
+                                )
                               : view === 'Record'
-                                ? 'Capture interactions and narration, preserve evidence and inspect gaps.'
-                                : 'Independent UI and API coverage, with native reports and honest outcomes.'}
+                                ? t(
+                                    'Capture interactions and narration, preserve evidence and inspect gaps.',
+                                  )
+                                : t(
+                                    'Independent UI and API coverage, with native reports and honest outcomes.',
+                                  )}
               </p>
             </div>
             {state && (
@@ -341,31 +366,34 @@ function App() {
                 target="_blank"
                 rel="noreferrer"
               >
-                Open application ↗
+                {t('Open application ↗')}
               </a>
             )}
           </div>
           {error && (
             <div role="alert" className="alert error">
-              <b>Action needed</b> {error}
-              <button aria-label="Dismiss error" onClick={() => setError('')}>
+              <b>{t('Action needed')}</b> {error}
+              <button aria-label={t('Dismiss error')} onClick={() => setError('')}>
                 ×
               </button>
             </div>
           )}
           {notice && (
             <div role="status" className="alert success">
-              {notice}
+              {t(notice)}
             </div>
           )}
           {busy && (
             <p role="status" className="working">
-              Working…
+              {t('Working…')}
             </p>
           )}
           {!state ? (
-            <Empty title={busy ? 'Starting local session…' : 'A private local session is required'}>
-              Start the platform and use <code>pnpm open</code> to open its one-time launch link.
+            <Empty
+              title={busy ? t('Starting local session…') : t('A private local session is required')}
+            >
+              {t('Start the platform and use ')}
+              <code>pnpm open</code> {t('to open its one-time launch link.')}
             </Empty>
           ) : (
             <>
@@ -399,27 +427,27 @@ function App() {
                 <>
                   <section className="welcome">
                     <div>
-                      <span className="phase-label">WORKSPACE OVERVIEW</span>
+                      <span className="phase-label">{t('WORKSPACE OVERVIEW')}</span>
                       <h2>
-                        One place for your
+                        {t('One place for your')}
                         <br />
-                        functional contracts.
+                        {t('functional contracts.')}
                       </h2>
                       <p>
-                        Keep the business intent readable.
+                        {t('Keep the business intent readable.')}
                         <br />
-                        Let the runners provide the evidence.
+                        {t('Let the runners provide the evidence.')}
                       </p>
                       <button
                         className="button"
                         onClick={() => setView(target ? 'Runs' : 'Workspace')}
                       >
-                        {target ? 'Start a run' : 'Connect a workspace'} <span>↗</span>
+                        {target ? t('Start a run') : t('Connect a workspace')} <span>↗</span>
                       </button>
                     </div>
                     <div className="contract-card">
                       <div>
-                        <i className="dot" /> CONTRACT → EXECUTION
+                        <i className="dot" /> {t('CONTRACT → EXECUTION')}
                       </div>
                       <pre>
                         <em>Given</em> a clear business context
@@ -429,8 +457,8 @@ function App() {
                         <em>Then</em> verify the observable result
                       </pre>
                       <div className="contract-runners">
-                        <span>◈ Playwright / UI</span>
-                        <span>◇ Karate / API</span>
+                        <span>{t('◈ Playwright / UI')}</span>
+                        <span>{t('◇ Karate / API')}</span>
                       </div>
                     </div>
                   </section>
@@ -455,28 +483,29 @@ function App() {
                   <section className="panel">
                     <div className="panel-heading">
                       <div>
-                        <h2>Recent executions</h2>
-                        <p className="muted">Results from your actual test runners.</p>
+                        <h2>{t('Recent executions')}</h2>
+                        <p className="muted">{t('Results from your actual test runners.')}</p>
                       </div>
                       <button className="text-button" onClick={() => setView('Runs')}>
-                        View all runs →
+                        {t('View all runs →')}
                       </button>
                     </div>
                     {recent.length ? (
                       table(recent)
                     ) : (
-                      <Empty title="Your first run starts here">
-                        Connect an automation target, install its dependencies, then run a feature
-                        or suite.
+                      <Empty title={t('Your first run starts here')}>
+                        {t(
+                          'Connect an automation target, install its dependencies, then run a feature or suite.',
+                        )}
                       </Empty>
                     )}
                   </section>
                   <section className="panel">
                     <div className="panel-heading">
                       <div>
-                        <h2>System readiness</h2>
+                        <h2>{t('System readiness')}</h2>
                         <p className="muted">
-                          On-demand checks. No repository scripts are executed.
+                          {t('On-demand checks. No repository scripts are executed.')}
                         </p>
                       </div>
                       <button
@@ -490,7 +519,7 @@ function App() {
                           )
                         }
                       >
-                        Check readiness
+                        {t('Check readiness')}
                       </button>
                     </div>
                     {checks.length ? (
@@ -505,7 +534,9 @@ function App() {
                       </div>
                     ) : (
                       <p className="muted pad">
-                        Run a check to inspect SQLite, Chromium, Java and the selected target.
+                        {t(
+                          'Run a check to inspect SQLite, Chromium, Java and the selected target.',
+                        )}
                       </p>
                     )}
                   </section>
@@ -525,18 +556,19 @@ function App() {
                 <section className="panel">
                   <div className="panel-heading">
                     <div>
-                      <h2>Canonical features</h2>
+                      <h2>{t('Canonical features')}</h2>
                       <p className="muted">
-                        Saved in your automation repository. Invalid edits remain recoverable
-                        drafts.
+                        {t(
+                          'Saved in your automation repository. Invalid edits remain recoverable drafts.',
+                        )}
                       </p>
                     </div>
                     <select
-                      aria-label="Feature to edit"
+                      aria-label={t('Feature to edit')}
                       value={selectedFeature}
                       onChange={(e) => setSelectedFeature(e.target.value)}
                     >
-                      <option value="">Select a feature</option>
+                      <option value="">{t('Select a feature')}</option>
                       {features.map((f) => (
                         <option key={f.path} value={f.path}>
                           {f.name}
@@ -549,12 +581,13 @@ function App() {
                       <div className="file-header">
                         <code>{feature.path}</code>
                         <span>
-                          base {short(feature.hash)} · {feature.scenarios.length} scenario(s)
+                          {t('base ')}
+                          {short(feature.hash)} · {feature.scenarios.length} {t('scenario(s)')}
                         </span>
                       </div>
                       <textarea
                         className="editor"
-                        aria-label="Gherkin editor"
+                        aria-label={t('Gherkin editor')}
                         spellCheck={false}
                         value={editor}
                         onChange={(e) => setEditor(e.target.value)}
@@ -562,8 +595,8 @@ function App() {
                       <div className="editor-actions">
                         <span className="muted">
                           {editor === feature.text
-                            ? 'No unsaved changes'
-                            : 'Unsaved draft · API bindings may need separate review'}
+                            ? t('No unsaved changes')
+                            : t('Unsaved draft · API bindings may need separate review')}
                         </span>
                         <button
                           className="button secondary"
@@ -584,7 +617,7 @@ function App() {
                             })
                           }
                         >
-                          Validate draft
+                          {t('Validate draft')}
                         </button>
                         <button
                           className="button"
@@ -608,7 +641,7 @@ function App() {
                             })
                           }
                         >
-                          Save reviewed feature
+                          {t('Save reviewed feature')}
                         </button>
                       </div>
                       <div className="scenario-list">
@@ -616,12 +649,14 @@ function App() {
                           <article key={s.id}>
                             <div>
                               <span className="eyebrow">
-                                {s.examples.length ? 'SCENARIO OUTLINE' : 'SCENARIO'}
+                                {s.examples.length ? t('SCENARIO OUTLINE') : t('SCENARIO')}
                               </span>
                               <h3>{s.name}</h3>
                               <p>{s.tags.join(' ')}</p>
                             </div>
-                            <span>{s.examples.length || 1} example(s)</span>
+                            <span>
+                              {s.examples.length || 1} {t('example(s)')}
+                            </span>
                             {s.examples.length > 0 && (
                               <div className="table-wrap">
                                 <table>
@@ -651,11 +686,14 @@ function App() {
                   ) : (
                     <Empty
                       title={
-                        target ? 'Choose a functional contract' : 'Connect an automation target'
+                        target
+                          ? t('Choose a functional contract')
+                          : t('Connect an automation target')
                       }
                     >
-                      Features and their Examples will appear here after you initialize or import a
-                      supported target.
+                      {t(
+                        'Features and their Examples will appear here after you initialize or import a supported target.',
+                      )}
                     </Empty>
                   )}
                 </section>
@@ -664,7 +702,7 @@ function App() {
                 <section className="panel repository">
                   <div className="file-tree">
                     <div className="panel-heading">
-                      <h2>Target files</h2>
+                      <h2>{t('Target files')}</h2>
                     </div>
                     {fileList.map((path) => (
                       <button
@@ -689,14 +727,15 @@ function App() {
                       <>
                         <div className="file-header">
                           <code>{file.path}</code>
-                          <span>read-only preview</span>
+                          <span>{t('read-only preview')}</span>
                         </div>
                         <pre>{file.text}</pre>
                       </>
                     ) : (
-                      <Empty title="Explore your implementation">
-                        Select a file to inspect it. Dependency, secret and generated directories
-                        are excluded.
+                      <Empty title={t('Explore your implementation')}>
+                        {t(
+                          'Select a file to inspect it. Dependency, secret and generated directories are excluded.',
+                        )}
                       </Empty>
                     )}
                   </div>
@@ -707,62 +746,65 @@ function App() {
                   <section className="panel">
                     <div className="panel-heading">
                       <div>
-                        <h2>Run a functional contract</h2>
-                        <p className="muted">Environment: {state.settings.baseUrl}</p>
+                        <h2>{t('Run a functional contract')}</h2>
+                        <p className="muted">
+                          {t('Environment: ')}
+                          {state.settings.baseUrl}
+                        </p>
                       </div>
                       <button
                         className="button secondary"
                         disabled={busy}
                         onClick={() => task(loadFeatures)}
                       >
-                        Refresh project
+                        {t('Refresh project')}
                       </button>
-                      <span className="subtle-label">ROW SELECTION NOT YET SUPPORTED</span>
+                      <span className="subtle-label">{t('ROW SELECTION NOT YET SUPPORTED')}</span>
                     </div>
                     {!target ? (
-                      <Empty title="No automation target selected">
-                        Connect a target in Workspace first.
+                      <Empty title={t('No automation target selected')}>
+                        {t('Connect a target in Workspace first.')}
                       </Empty>
                     ) : (
                       <>
                         <div className="run-builder">
                           <label>
-                            Framework
+                            {t('Framework')}
                             <select
-                              aria-label="Framework"
+                              aria-label={t('Framework')}
                               value={framework}
                               onChange={(e) => setFramework(e.target.value as Framework)}
                             >
-                              <option value="playwright">Playwright · visible UI</option>
-                              <option value="karate">Karate · API state</option>
+                              <option value="playwright">{t('Playwright · visible UI')}</option>
+                              <option value="karate">{t('Karate · API state')}</option>
                             </select>
                           </label>
                           <label>
-                            Selection
+                            {t('Selection')}
                             <select
-                              aria-label="Selection"
+                              aria-label={t('Selection')}
                               value={selection.kind}
                               onChange={(e) =>
                                 setSelection({ kind: e.target.value as Selection['kind'] })
                               }
                             >
-                              <option value="suite">Full suite</option>
-                              <option value="feature">Feature</option>
-                              <option value="scenario">Scenario identity</option>
-                              <option value="tags">Tag</option>
+                              <option value="suite">{t('Full suite')}</option>
+                              <option value="feature">{t('Feature')}</option>
+                              <option value="scenario">{t('Scenario identity')}</option>
+                              <option value="tags">{t('Tag')}</option>
                             </select>
                           </label>
                           {selection.kind !== 'suite' && (
                             <label>
-                              Contract / tag
+                              {t('Contract / tag')}
                               <select
-                                aria-label="Selection value"
+                                aria-label={t('Selection value')}
                                 value={selection.value || ''}
                                 onChange={(e) =>
                                   setSelection({ ...selection, value: e.target.value })
                                 }
                               >
-                                <option value="">Choose…</option>
+                                <option value="">{t('Choose…')}</option>
                                 {(selection.kind === 'feature'
                                   ? features.map((f) => [f.path, f.name])
                                   : selection.kind === 'scenario'
@@ -795,12 +837,12 @@ function App() {
                             }
                             onClick={execute}
                           >
-                            ▷ Start run
+                            {t('▷ Start run')}
                           </button>
                         </div>
                         {trust && !trust.trusted && (
                           <div className="trust">
-                            <b>Review execution trust</b>
+                            <b>{t('Review execution trust')}</b>
                             <p>{trust.warning}</p>
                             <code>SHA-256 {trust.fingerprint}</code>
                             <button
@@ -818,32 +860,41 @@ function App() {
                                 })
                               }
                             >
-                              Trust this project fingerprint
+                              {t('Trust this project fingerprint')}
                             </button>
                           </div>
                         )}
                         <div className="setup-note">
-                          New target? Install its dependencies first:{' '}
-                          <code>pnpm --dir ui install --frozen-lockfile</code> and{' '}
-                          <code>cd api &amp;&amp; ./gradlew test --no-daemon</code>. Use Java 21.
-                          The platform never auto-installs imported projects.
+                          {t('New target? Install its dependencies first:')}{' '}
+                          <code>pnpm --dir ui install --frozen-lockfile</code> {t('and')}{' '}
+                          <code>cd api &amp;&amp; ./gradlew test --no-daemon</code>
+                          {t('. Use Java 21. The platform never auto-installs imported projects.')}
                         </div>
                       </>
                     )}
                   </section>
                   <section className="panel">
                     <div className="panel-heading">
-                      <h2>Execution history</h2>
-                      <span className="muted">{state.runs.length} run(s)</span>
+                      <h2>{t('Execution history')}</h2>
+                      <span className="muted">
+                        {state.runs.length} {t('run(s)')}
+                      </span>
                     </div>
                     {state.runs.length ? (
                       table(state.runs)
                     ) : (
-                      <Empty title="No executions yet">
-                        A run will show real outcomes, logs and collected native artifacts.
+                      <Empty title={t('No executions yet')}>
+                        {t('A run will show real outcomes, logs and collected native artifacts.')}
                       </Empty>
                     )}
                   </section>
+                  {run && ['FAILED', 'INTERRUPTED'].includes(run.status) && (
+                    <FailureConversation
+                      key={'chat-' + run.id}
+                      runId={run.id}
+                      visible={view === 'Runs'}
+                    />
+                  )}
                   {run && !run.proposalId && ['FAILED', 'INTERRUPTED'].includes(run.status) && (
                     <MaintenancePanel key={run.id} run={run} />
                   )}
@@ -851,9 +902,12 @@ function App() {
                     <section className="panel run-detail">
                       <div className="panel-heading">
                         <div>
-                          <h2>Run {short(run.id)}</h2>
+                          <h2>
+                            {t('Run ')}
+                            {short(run.id)}
+                          </h2>
                           <p className="muted">
-                            {run.framework} · {run.snapshot.length} contract snapshot(s) ·{' '}
+                            {run.framework} · {run.snapshot.length} {t('contract snapshot(s) ·')}{' '}
                             {time(run.createdAt)}
                           </p>
                         </div>
@@ -869,15 +923,17 @@ function App() {
                               })
                             }
                           >
-                            Cancel run
+                            {t('Cancel run')}
                           </button>
                         )}
                       </div>
                       {run.error && <div className="alert error">{run.error}</div>}
                       <p className="coverage-note">
                         {run.framework === 'karate'
-                          ? 'API state coverage. This result does not establish correct visible UI.'
-                          : 'UI coverage. Assertions run against rendered browser content.'}
+                          ? t(
+                              'API state coverage. This result does not establish correct visible UI.',
+                            )
+                          : t('UI coverage. Assertions run against rendered browser content.')}
                       </p>
                       {run.tests.map((test) => (
                         <details key={test.nativeId}>
@@ -885,8 +941,8 @@ function App() {
                             <Status value={test.status} />
                             <b>{test.name}</b>
                             <span>
-                              {Math.round(test.durationMs)} ms ·{' '}
-                              {test.scenarioId || 'unmapped identity'}
+                              {Math.round(test.durationMs)} {t('ms ·')}{' '}
+                              {test.scenarioId || t('unmapped identity')}
                             </span>
                           </summary>
                           {test.error && <pre className="failure">{test.error}</pre>}
@@ -902,14 +958,14 @@ function App() {
                             </ol>
                           ) : (
                             <p className="muted pad">
-                              Step detail unavailable in this native result.
+                              {t('Step detail unavailable in this native result.')}
                             </p>
                           )}
                         </details>
                       ))}
-                      <h3>Runner log</h3>
+                      <h3>{t('Runner log')}</h3>
                       <pre className="terminal">{log || 'Loading log…'}</pre>
-                      <h3>Collected artifacts</h3>
+                      <h3>{t('Collected artifacts')}</h3>
                       <div className="artifacts">
                         {run.artifacts.map((a) => (
                           <a
@@ -939,13 +995,16 @@ function App() {
                             }}
                           >
                             <span>↧ {a.name}</span>
-                            <small>{(a.size / 1024).toFixed(1)} KB</small>
+                            <small>
+                              {(a.size / 1024).toFixed(1)} {t('KB')}
+                            </small>
                           </a>
                         ))}
                       </div>
                       <p className="muted">
-                        Native files may contain sensitive test evidence. Downloads never execute
-                        inside the platform UI.
+                        {t(
+                          'Native files may contain sensitive test evidence. Downloads never execute inside the platform UI.',
+                        )}
                       </p>
                     </section>
                   )}
@@ -955,13 +1014,17 @@ function App() {
           )}
           <footer className="page-footer">
             <span>
-              QA LOCAL <i>/</i> PHASE 06 FOUNDATION
+              {t('QA LOCAL ')}
+              <i>/</i> {t('PHASE 06 FOUNDATION')}
             </span>
             <span>
               {state
-                ? `Node ${state.versions.node} · SQLite ${state.versions.sqlite}`
-                : 'Local-only session'}{' '}
-              · No AI required
+                ? t('Node {value0} · SQLite {value1}', {
+                    value0: state.versions.node,
+                    value1: state.versions.sqlite,
+                  })
+                : t('Local-only session')}{' '}
+              {t('· No AI required')}
             </span>
           </footer>
         </main>
@@ -970,4 +1033,8 @@ function App() {
   );
 }
 
-createRoot(document.getElementById('root')!).render(<App />);
+createRoot(document.getElementById('root')!).render(
+  <LocaleProvider>
+    <App />
+  </LocaleProvider>,
+);

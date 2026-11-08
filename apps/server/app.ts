@@ -216,14 +216,18 @@ export function createPlatform(options: {
       rowSelection: false,
     },
   }));
-  app.put<{ Body: { baseUrl: string; retentionDays: number } }>(
+  app.put<{ Body: { baseUrl: string; retentionDays: number; language?: 'en' | 'es' } }>(
     '/api/settings',
     {
       schema: {
-        body: object({
-          baseUrl: text,
-          retentionDays: { type: 'integer', minimum: 1, maximum: 3650 },
-        }),
+        body: object(
+          {
+            baseUrl: text,
+            retentionDays: { type: 'integer', minimum: 1, maximum: 3650 },
+            language: { enum: ['en', 'es'] },
+          },
+          ['baseUrl', 'retentionDays'],
+        ),
       },
     },
     async (request) => {
@@ -235,7 +239,7 @@ export function createPlatform(options: {
       }
       if (!['http:', 'https:'].includes(url.protocol) || url.username || url.password)
         throw new AppError(400, 'Use an HTTP(S) URL without credentials');
-      return store.settings(request.body);
+      return store.settings({ ...store.settings(), ...request.body });
     },
   );
   app.post<{

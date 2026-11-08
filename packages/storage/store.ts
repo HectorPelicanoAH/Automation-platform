@@ -83,7 +83,7 @@ export class Store {
   integrity() {
     return this.db.pragma('integrity_check', { simple: true });
   }
-  settings(value?: { baseUrl: string; retentionDays: number }) {
+  settings(value?: { baseUrl: string; retentionDays: number; language?: 'en' | 'es' }) {
     if (value)
       this.db
         .prepare(
@@ -93,8 +93,15 @@ export class Store {
     const row = this.db.prepare('SELECT data FROM settings WHERE id=1').get() as
       { data: string } | undefined;
     return row
-      ? (JSON.parse(row.data) as { baseUrl: string; retentionDays: number })
-      : { baseUrl: 'http://127.0.0.1:4311', retentionDays: 14 };
+      ? {
+          language: 'en' as 'en' | 'es',
+          ...(JSON.parse(row.data) as {
+            baseUrl: string;
+            retentionDays: number;
+            language?: 'en' | 'es';
+          }),
+        }
+      : { baseUrl: 'http://127.0.0.1:4311', retentionDays: 14, language: 'en' as 'en' | 'es' };
   }
   close() {
     this.db.close();
