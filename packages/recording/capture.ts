@@ -336,6 +336,12 @@ export class BrowserCapture {
       sourceMs: sourceMs as number,
       offsetMs: offsetMs as number,
       uncertaintyMs: uncertaintyMs as number,
+      documentLanguage:
+        typeof input.documentLanguage === 'string' &&
+        /^[a-zA-Z]{2,8}(?:-[a-zA-Z0-9]{1,8})*$/.test(input.documentLanguage) &&
+        input.documentLanguage.length <= 64
+          ? input.documentLanguage
+          : undefined,
       producer: 'browser',
       provenance: 'OBSERVED',
       url: safeUrl(typeof input.documentUrl === 'string' ? input.documentUrl : frame.url()),

@@ -1,3 +1,4 @@
+import { constructorExtends, normalizedSource } from './ui-locators.ts';
 import {
   existsSync,
   lstatSync,
@@ -142,9 +143,11 @@ export function validateGeneratedFile(path: string, text: string) {
     )
   )
     throw new AppError(422, 'UI interaction belongs in Pages/components, not step definitions');
-  if (/\.(getByRole|getByLabel|getByTestId)\s*\(/.test(text) && !/\.toHaveCount\(1\)/.test(text))
-    throw new AppError(422, 'Generated locators require scoped uniqueness assertions');
-  if (/\.locator\s*\(|\.nth\s*\(|\.first\s*\(/.test(text))
+  if (
+    /\.locator\s*\(|\.nth\s*\(|\.first\s*\(/.test(
+      text.replace(/\.locator\(\s*['"]html['"]\s*\)/g, ''),
+    )
+  )
     throw new AppError(422, 'Unjustified positional/CSS locators require manual review');
 }
 export function makeDiff(files: FileChange[]) {
@@ -314,23 +317,32 @@ export function preserveExistingCapabilities(
           owner +
             ':' +
             (ts.isConstructorDeclaration(node) ? 'constructor' : node.name.getText(file)),
-          node.getText(file).replace(/\s+/g, ''),
+          normalizedSource(node, file),
         );
+      }
+      if (ts.isPropertyDeclaration(node)) {
+        const parent = node.parent;
+        const owner =
+          ts.isClassDeclaration(parent) || ts.isClassExpression(parent)
+            ? parent.name?.text || 'anonymous'
+            : 'unknown';
+        result.set(owner + ':field:' + node.name.getText(file), normalizedSource(node, file));
       }
       if (ts.isCallExpression(node) && /^(Given|When|Then)$/.test(node.expression.getText(file)))
         result.set(
           'step:' + node.arguments[0]?.getText(file).replace(/["']/g, ''),
-          node.getText(file).replace(/\s+/g, ''),
+          normalizedSource(node, file),
         );
       ts.forEachChild(node, walk);
     };
     walk(file);
     return result;
   };
+  const extendedConstructors = constructorExtends(before, after, path);
   const previous = signatures(before),
     next = signatures(after);
   for (const [name, body] of previous)
-    if (next.get(name) !== body)
+    if (next.get(name) !== body && !extendedConstructors.has(name))
       throw new AppError(
         422,
         'Existing methods/steps must be preserved during generation: ' + name,

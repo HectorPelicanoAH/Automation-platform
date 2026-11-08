@@ -532,3 +532,36 @@ test('Instructions embedded in source cannot grant context access or approval', 
     await p.app.close();
   }
 });
+
+test('Recording language and unique target references guide selectors without duplicating locator payloads', async () => {
+  const p = generationFixture({
+    async run(request) {
+      const input = JSON.parse(request.prompt);
+      assert.ok(input.evidence.observedLanguages.includes('es-ES'));
+      assert.deepEqual(input.evidence.observedUniqueLocatorRefs[0].candidateIndexes, [0]);
+      assert.equal(input.evidence.events[0].locators[0].value, 'link');
+      assert.equal(input.evidence.observedUniqueLocatorRefs[0].locator, undefined);
+      return fixtureProvider.run(request);
+    },
+  });
+  try {
+    const recording = p.recorder.repository.get(p.recordingId);
+    p.recorder.repository.append(recording, {
+      kind: 'context',
+      detail: 'Synthetic selector metadata; not native browser evidence',
+      timeMs: 0,
+      receivedMs: 0,
+      provenance: 'OBSERVED',
+      documentLanguage: 'es-ES',
+      locators: [
+        { kind: 'role', value: 'link', name: 'Promoción', count: 1, matchesTarget: true },
+        { kind: 'role', value: 'button', name: 'Promoción', count: 0, matchesTarget: false },
+        { kind: 'label', value: 'Promoción', count: 2, matchesTarget: false },
+      ],
+    });
+    const task = await finished(p, (await analyze(p)).id);
+    assert.equal(task.status, 'SUCCEEDED', task.error);
+  } finally {
+    await p.app.close();
+  }
+});

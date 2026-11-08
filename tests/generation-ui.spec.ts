@@ -52,6 +52,12 @@ test('Generation web flow: real recording, reviewed fixture proposal, native UI 
         p.recorder.repository.events(record.id).some((e) => e.aria?.includes('Envio grátis')),
       )
       .toBe(true);
+    await expect
+      .poll(() => p.recorder.repository.events(record.id).some((e) => e.documentLanguage === 'es'))
+      .toBe(true);
+    await expect
+      .poll(() => p.recorder.repository.events(record.id).some((e) => e.documentLanguage === 'pt'))
+      .toBe(true);
     await capture.stop();
     capture = undefined;
     const final = p.recorder.repository.get(record.id);

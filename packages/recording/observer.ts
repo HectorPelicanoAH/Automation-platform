@@ -33,7 +33,7 @@ export const OBSERVER_SCRIPT = String.raw`(config) => {
     const sourceMs = performance.now();
     if (!calibration) await ready;
     if (!calibration) return;
-    const payload = {kind,detail,sourceMs,...calibration,eventId:documentId+'-'+(++eventNumber),documentUrl:location.href};
+    const payload = {kind,detail,sourceMs,...calibration,eventId:documentId+'-'+(++eventNumber),documentUrl:location.href,documentLanguage:document.documentElement.lang};
     if (element instanceof Element) {
       const el = element.closest('button,a,input,select,textarea,[role],[contenteditable=true]') || element;
       const token = 'q'+(++serial)+'-'+Math.random().toString(36).slice(2);

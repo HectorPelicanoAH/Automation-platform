@@ -34,6 +34,7 @@ export interface EvidenceEvent {
   provenance: 'OBSERVED';
   detail: string;
   url?: string;
+  documentLanguage?: string;
   dom?: string;
   aria?: string;
   locators?: LocatorEvidence[];

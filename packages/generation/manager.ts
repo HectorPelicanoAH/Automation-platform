@@ -1,3 +1,4 @@
+import { validateNewPageLocators } from './ui-locators.ts';
 import {
   adviceInstruction,
   adviceSchema,
@@ -42,6 +43,7 @@ import {
   tools,
   analysisInstruction,
   implementationInstruction,
+  uiLocatorInstruction,
   karateInstruction,
 } from './prompts.ts';
 import { privateDirectory } from './private-directory.ts';
@@ -232,6 +234,9 @@ export class GenerationManager {
         detail: clean(e.detail),
         aria: clean(e.aria || '').slice(0, 1000),
         locators: e.locators?.slice(0, 6),
+        documentLanguage: e.documentLanguage,
+        pageId: e.pageId,
+        frameId: e.frameId,
         url: e.url,
       };
       const size = Buffer.byteLength(JSON.stringify(item));
@@ -254,6 +259,15 @@ export class GenerationManager {
         status: recording.status,
         incomplete: recording.incomplete,
         events: selected,
+        observedLanguages: [
+          ...new Set(selected.map((event) => event.documentLanguage).filter(Boolean)),
+        ],
+        observedUniqueLocatorRefs: selected.flatMap((event) => {
+          const candidateIndexes = (event.locators || []).flatMap((locator, index) =>
+            locator.count === 1 && locator.matchesTarget ? [index] : [],
+          );
+          return candidateIndexes.length ? [{ eventId: event.id, candidateIndexes }] : [];
+        }),
         narration: narrated,
         truncated:
           relevantEvents > selected.length || (transcript?.segments.length || 0) > narrated.length,
@@ -842,7 +856,10 @@ export class GenerationManager {
     if (!apiPath.startsWith('api/src/test/resources/features/'))
       throw new AppError(422, 'Unsupported existing API binding path');
     const prompt = JSON.stringify({
-      task: framework === 'karate' ? karateInstruction : implementationInstruction,
+      task:
+        framework === 'karate'
+          ? karateInstruction
+          : implementationInstruction + '\n' + uiLocatorInstruction,
       framework,
       ...(endpoint ? { endpoint, apiFeaturePath: apiPath } : {}),
       repositories: refs,
@@ -981,6 +998,7 @@ export class GenerationManager {
           )
             throw new AppError(403, 'Only the approved feature may change');
           const before = currentText(target.path, f.path);
+          validateNewPageLocators(f.path, before, f.content);
           preserveExistingCapabilities(
             before,
             f.content,

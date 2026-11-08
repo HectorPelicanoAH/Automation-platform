@@ -1,3 +1,4 @@
+import { locatorBinding, uniquenessSites } from '../generation/ui-locators.ts';
 import ts from 'typescript';
 import { AppError } from '../domain/model.ts';
 import { validateGeneratedFile } from '../generation/staging.ts';
@@ -51,6 +52,17 @@ export function replaceLocator(path: string, before: string, oldValue: string, n
   if (!matches.length || matches.length > 12)
     throw new AppError(422, 'No bounded literal locator occurrences found');
   for (const site of sites) {
+    const binding = locatorBinding(site, file);
+    if (binding?.startsWith('this.')) {
+      let cls: ts.Node | undefined = site;
+      while (cls && !ts.isClassDeclaration(cls) && !ts.isClassExpression(cls)) cls = cls.parent;
+      if (!cls || !uniquenessSites(cls, binding, file).length)
+        throw new AppError(
+          422,
+          'Repaired constructor locator requires an awaited uniqueness assertion for the same field in its class scope',
+        );
+      continue;
+    }
     let scope: ts.Node = site;
     while (
       scope.parent &&

@@ -95,7 +95,7 @@ test('Versioned failure cases preserve uncertainty and distinguish four symptom 
 test('Literal repair changes only approved locator arguments and rejects arbitrary code/paths', () => {
   const broken = original.replaceAll('promotion-amount', 'obsolete-amount');
   const result = replaceLocator(pagePath, broken, 'obsolete-amount', 'promotion-amount');
-  assert.equal(result.occurrences, 3);
+  assert.equal(result.occurrences, 1);
   assert.equal(result.after.replaceAll('"promotion-amount"', "'promotion-amount'"), original);
   assert.throws(
     () => replaceLocator('ui/steps/promotions.ts', broken, 'obsolete-amount', 'new'),
@@ -107,11 +107,11 @@ test('Literal repair changes only approved locator arguments and rejects arbitra
     () =>
       replaceLocator(
         pagePath,
-        broken.replace("await expect(card.getByTestId('obsolete-amount')).toHaveCount(1);", ''),
+        broken.replace('await expect(this.amount).toHaveCount(1);', ''),
         'obsolete-amount',
         'new',
       ),
-    /same scope/,
+    /scope/,
   );
   assert.equal(
     replaceLocator(pagePath, original, 'Free shipping promotion', 'Observed shipping promotion')
