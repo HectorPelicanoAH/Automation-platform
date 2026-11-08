@@ -105,3 +105,5 @@ Phase 6 transition on 2026-11-07: IN_PROGRESS → VALIDATION. Local implementati
 ## Owner-requested usability corrections — 2026-11-08
 
 After trying the local application, the owner explicitly requested optional context sources and removal of blocked page content at `https://shop.mango.com`. This authorizes these concrete corrections to existing Workspace/Generate and recorder behavior, including separating resource loading from capture grants. It does not approve a new phase, source writes, skill activation, a CI waiver or bypassing website restrictions. The existing Phase 3–6 VALIDATION states and CI obligations remain. Validation and supported boundaries are recorded in [the correction report](usability-corrections-2026-11-08.md).
+
+On 2026-11-08 the owner additionally requested correcting unnecessary recording polling. This authorizes the concrete UI refresh correction in Record/Generate, including active-session supervision and idle/error pause. No new phase, AI invocation or skill/source mutation is implied. Existing CI obligations remain. See the polling section in [the correction report](usability-corrections-2026-11-08.md).

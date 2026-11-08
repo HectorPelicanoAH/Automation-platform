@@ -51,6 +51,7 @@ export function GenerationPanel({
   sources,
   targets,
   baseUrl,
+  recordingsRevision = 0,
   onRun,
 }: {
   visible: boolean;
@@ -58,6 +59,7 @@ export function GenerationPanel({
   sources: Source[];
   targets: Target[];
   baseUrl: string;
+  recordingsRevision?: number;
   onRun: (id: string) => void;
 }) {
   const [state, setState] = useState<GenerationState>();
@@ -133,13 +135,15 @@ export function GenerationPanel({
       return;
     storeChange(next);
   };
-  const refresh = useCallback(async () => {
+  const refresh = useCallback(async (includeRecordings = true) => {
     const request = ++revision.current;
     const next = await api<GenerationState>('/generation/state');
-    const list = await api<{ recordings: Recording[] }>('/recordings');
+    const list = includeRecordings
+      ? await api<{ recordings: Recording[] }>('/recordings')
+      : undefined;
     if (request !== revision.current) return;
     setState(next);
-    setRecords(list.recordings);
+    if (list) setRecords(list.recordings);
     if (!initialized.current) {
       setBinary(next.settings.binary);
       setAnalysisModel(next.settings.analysisModel);
@@ -162,28 +166,29 @@ export function GenerationPanel({
       setBusy(false);
     }
   };
+  const hasRunningTasks = Boolean(state?.tasks.some((t) => running(t.status)));
   useEffect(() => {
     if (!visible) return;
     let stopped = false,
       inFlight = false;
-    const load = async () => {
-      if (inFlight) return;
+    const load = async (includeRecordings = false) => {
+      if (inFlight || stopped) return;
       inFlight = true;
       try {
-        await refresh();
+        await refresh(includeRecordings);
       } catch (e) {
         if (!stopped) setError(String(e));
       } finally {
         inFlight = false;
       }
     };
-    void load();
-    const timer = setInterval(() => void load(), 1500);
+    void load(true);
+    const timer = hasRunningTasks ? setInterval(() => void load(), 1500) : undefined;
     return () => {
       stopped = true;
       clearInterval(timer);
     };
-  }, [visible, refresh]);
+  }, [visible, refresh, hasRunningTasks, recordingsRevision]);
   useEffect(() => {
     setTaskId('');
     setTask(undefined);

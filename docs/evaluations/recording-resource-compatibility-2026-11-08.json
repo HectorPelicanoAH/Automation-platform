@@ -136,5 +136,72 @@
     "Service workers remain blocked; browser/site restrictions are preserved",
     "No full unrelated-suite or five-minute audio rerun",
     "Three-system CI still pending"
-  ]
+  ],
+  "pollingCorrection": {
+    "date": "2026-11-08",
+    "source": "Actual HTTP request-count assertions with virtual control-page timers; real native recording/generation regressions separately. No real inference.",
+    "browserCommand": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts tests/recording-polling.spec.ts tests/recording-ui.spec.ts tests/generation-ui.spec.ts --grep-invert \"Five real minutes\"",
+    "browserStats": {
+      "startTime": "2026-11-08T11:21:29.075Z",
+      "duration": 94655.762,
+      "expected": 3,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "browserCases": [
+      {
+        "file": "generation-ui.spec.ts",
+        "name": "Generation web flow: real recording, reviewed fixture proposal, native UI validation and exact diff application",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 63813
+          }
+        ]
+      },
+      {
+        "file": "recording-polling.spec.ts",
+        "name": "Recording requests stay idle between actions, supervise active sessions across views and drain final evidence",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 7002
+          }
+        ]
+      },
+      {
+        "file": "recording-ui.spec.ts",
+        "name": "Record UI: real worker, denied microphone, manual revisions, cancellation and restart",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 16443
+          }
+        ]
+      }
+    ],
+    "checks": {
+      "typecheck": "PASSED",
+      "lint": "PASSED",
+      "format": "PASSED",
+      "build": "PASSED"
+    },
+    "assertions": [
+      "Zero additional recordings/detail/generation-state requests over each idle five-second virtual window",
+      "600 terminal events fetched once in three pages, without duplicate timeline entries",
+      "Active-session detail requests continue while Record is hidden; no periodic full list requests",
+      "Final evidence and visible Generate choice update arrive through active supervision and parent notification",
+      "Terminal and failed polling pauses; explicit refresh recovers"
+    ],
+    "limits": [
+      "Active-state transition fixture is synthetic stored metadata, not native worker/audio evidence",
+      "Physical microphone and five-minute timing benchmark not rerun for UI-only scheduling change",
+      "No cross-window push subscription: new external recordings require section entry or explicit refresh",
+      "Three-system CI remains pending"
+    ]
+  }
 }

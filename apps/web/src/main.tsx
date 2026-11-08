@@ -27,6 +27,7 @@ const active = (run: Run) => ['QUEUED', 'RUNNING', 'CANCEL_REQUESTED'].includes(
 const time = (value: string) => new Date(value).toLocaleString();
 function App() {
   const [view, setView] = useState<View>('Dashboard');
+  const [recordingsRevision, setRecordingsRevision] = useState(0);
   const [state, setState] = useState<State>();
   const [targetId, setTargetId] = useState('');
   const [error, setError] = useState('');
@@ -369,10 +370,15 @@ function App() {
           ) : (
             <>
               {state && (
-                <RecordPanel visible={view === 'Record'} defaultUrl={state.settings.baseUrl} />
+                <RecordPanel
+                  visible={view === 'Record'}
+                  defaultUrl={state.settings.baseUrl}
+                  onRecordingsChanged={() => setRecordingsRevision((revision) => revision + 1)}
+                />
               )}
               <GenerationPanel
                 visible={view === 'Generate'}
+                recordingsRevision={recordingsRevision}
                 targetId={targetId}
                 sources={state.sources}
                 targets={state.targets}

@@ -15,7 +15,15 @@ async function artifact(id: string, name: string) {
   if (!response.ok) throw new Error('Artifact unavailable, expired or failed integrity validation');
   return response.arrayBuffer();
 }
-export function RecordPanel({ visible, defaultUrl }: { visible: boolean; defaultUrl: string }) {
+export function RecordPanel({
+  visible,
+  defaultUrl,
+  onRecordingsChanged,
+}: {
+  visible: boolean;
+  defaultUrl: string;
+  onRecordingsChanged?: () => void;
+}) {
   const [list, setList] = useState<Recording[]>([]);
   const [record, setRecord] = useState<Recording>();
   const [events, setEvents] = useState<EvidenceEvent[]>([]);
@@ -56,67 +64,122 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
       setBusy(false);
     }
   };
-  const refresh = async () => {
-    const all = await api<{ recordings: Recording[] }>('/recordings');
-    setList(all.recordings);
-    if (!current.current) {
-      const running = all.recordings.find((r) => active(r));
-      if (running) {
-        current.current = running.id;
-        setSelected(running.id);
-      } else return;
+  const refreshQueue = useRef<Promise<void>>(Promise.resolve());
+  const initialized = useRef(false);
+  const knownChoices = useRef(new Map<string, string>());
+  const rememberChoices = (records: Recording[]) => {
+    let changed = false;
+    for (const r of records) {
+      const signature = JSON.stringify([r.name, r.status, r.incomplete]);
+      if (knownChoices.current.get(r.id) !== signature) {
+        knownChoices.current.set(r.id, signature);
+        changed = true;
+      }
     }
-    const requested = current.current;
-    const data = await api<{ recording: Recording; events: EvidenceEvent[] }>(
-      `/recordings/${current.current}?after=${cursor.current}`,
-    );
-    if (current.current !== requested) return;
-    setRecord(data.recording);
-    if (data.events.length) {
-      cursor.current = data.events.at(-1)!.sequence;
-      setEvents((old) => [...old, ...data.events]);
-    }
-    const latest = data.recording.transcript.at(-1);
-    if (previousRevision.current < 0) {
-      previousRevision.current = latest?.revision || 0;
-      setBaseRevision(latest?.revision || 0);
-      if (editorVersion.current === 0) setSegments(latest?.segments || []);
-    }
-    if (!active(data.recording) && mic.current) {
-      const capture = mic.current;
-      mic.current = undefined;
-      await capture.stop();
-      setAudioMessage('Recording ended; microphone stopped.');
-    }
+    if (changed) onRecordingsChanged?.();
   };
-  useEffect(() => {
-    let done = false;
-    let pending = false;
-    const tick = async () => {
-      if (pending || done) return;
-      pending = true;
-      try {
-        await refresh();
-      } catch (e) {
-        if (!done) setError(String(e));
-        if (mic.current) {
+  const [pollFailed, setPollFailed] = useState(false);
+  const refresh = (includeList = true, id?: string) => {
+    const load = async () => {
+      if (includeList) {
+        const all = await api<{ recordings: Recording[] }>('/recordings');
+        rememberChoices(all.recordings);
+        setList(all.recordings);
+        if (!current.current) {
+          const running = all.recordings.find((r) => active(r));
+          if (running) {
+            current.current = running.id;
+            setSelected(running.id);
+          }
+        }
+      }
+      const requested = id || current.current;
+      if (!requested) return;
+      let more = true;
+      while (more) {
+        const after =
+          requested === current.current
+            ? cursor.current
+            : list.find((r) => r.id === requested)?.events || 0;
+        const data = await api<{ recording: Recording; events: EvidenceEvent[] }>(
+          `/recordings/${requested}?after=${after}`,
+        );
+        rememberChoices([data.recording]);
+        setList((old) => old.map((r) => (r.id === requested ? data.recording : r)));
+        if (current.current !== requested) return;
+        setRecord(data.recording);
+        if (data.events.length) {
+          cursor.current = data.events.at(-1)!.sequence;
+          setEvents((old) => [...old, ...data.events]);
+        }
+        const latest = data.recording.transcript.at(-1);
+        if (previousRevision.current < 0) {
+          previousRevision.current = latest?.revision || 0;
+          setBaseRevision(latest?.revision || 0);
+          if (editorVersion.current === 0) setSegments(latest?.segments || []);
+        }
+        if (!active(data.recording) && mic.current) {
           const capture = mic.current;
           mic.current = undefined;
-          void capture.stop();
-          setAudioMessage('Server disconnected; microphone stopped.');
+          await capture.stop();
+          setAudioMessage('Recording ended; microphone stopped.');
         }
-      } finally {
-        pending = false;
+        // Drain a stopped session's remaining pages once, then leave it idle.
+        more =
+          !active(data.recording) &&
+          data.events.length > 0 &&
+          cursor.current < data.recording.events;
       }
     };
-    void tick();
-    const timer = setInterval(() => void tick(), 1000);
+    // Selection, actions and heartbeat share one cursor; never append the same page concurrently.
+    const next = refreshQueue.current.then(load);
+    refreshQueue.current = next.catch(() => {});
+    return next;
+  };
+  const refreshError = (e: unknown) => {
+    setError(String(e));
+    setPollFailed(true);
+    if (mic.current) {
+      const capture = mic.current;
+      mic.current = undefined;
+      void capture.stop();
+      setAudioMessage('Server disconnected; microphone stopped.');
+    }
+  };
+  const latestRefresh = useRef({ refresh, refreshError });
+  latestRefresh.current = { refresh, refreshError };
+  useEffect(() => {
+    // Discover an existing live session once on startup, even while the panel is hidden.
+    if (!visible && initialized.current) return;
+    initialized.current = true;
+    setPollFailed(false);
+    void latestRefresh.current.refresh().catch(latestRefresh.current.refreshError);
+  }, [visible]);
+  useEffect(() => {
+    if (selected)
+      void latestRefresh.current.refresh(false, selected).catch(latestRefresh.current.refreshError);
+  }, [selected]);
+  const liveId = list.find((r) => active(r))?.id || (active(record) ? record!.id : '');
+  useEffect(() => {
+    if (!liveId || pollFailed) return;
+    let done = false;
+    let timer: ReturnType<typeof setTimeout>;
+    const tick = async () => {
+      try {
+        // Keep supervising an active microphone/worker across workbench navigation.
+        await latestRefresh.current.refresh(false, liveId);
+      } catch (e) {
+        if (!done) latestRefresh.current.refreshError(e);
+        return;
+      }
+      if (!done) timer = setTimeout(() => void tick(), 1000);
+    };
+    timer = setTimeout(() => void tick(), 1000);
     return () => {
       done = true;
-      clearInterval(timer);
+      clearTimeout(timer);
     };
-    // A single live recorder panel stays mounted while navigating the workbench.
-  }, []);
+  }, [liveId, pollFailed]);
   useEffect(
     () => () => {
       void mic.current?.stop();
@@ -351,6 +414,18 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
           </section>
           <section className="panel">
             <h3>Sessions</h3>
+            <button
+              className="button secondary"
+              disabled={busy}
+              onClick={() =>
+                void run(async () => {
+                  await refresh();
+                  setPollFailed(false);
+                })
+              }
+            >
+              Refresh sessions
+            </button>
             {!list.length ? (
               <Empty title="No recordings yet">
                 Start a local demonstration to collect real evidence.
