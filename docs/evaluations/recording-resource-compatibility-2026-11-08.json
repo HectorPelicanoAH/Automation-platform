@@ -203,5 +203,47 @@
       "No cross-window push subscription: new external recordings require section entry or explicit refresh",
       "Three-system CI remains pending"
     ]
+  },
+  "combinedChoiceAndSaveStatus": {
+    "date": "2026-11-08",
+    "interpretation": "Karate + UI exposes separate real framework actions, with independent validation and approval. No hybrid runner, combined save, automatic second inference or automatic rebase.",
+    "apiJourney": {
+      "command": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts tests/generation-ui.spec.ts tests/api-generation-ui.spec.ts",
+      "apiCase": "PASSED",
+      "durationMinutes": 2.7,
+      "overallInvocation": "1 passed, 1 failed: UI fixture locator could not find Execution target with exact getByLabel"
+    },
+    "finalUIJourney": {
+      "command": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts tests/generation-ui.spec.ts",
+      "stats": {
+        "startTime": "2026-11-08T20:00:03.035Z",
+        "duration": 48062.608,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "correction": "Use accessible combobox role/name; native behavior and validation/application assertions retained"
+    },
+    "checks": {
+      "typecheck": "PASSED",
+      "lint": "PASSED",
+      "format": "PASSED",
+      "build": "PASSED",
+      "whitespace": "PASSED"
+    },
+    "coverage": [
+      "Both selection sends the native framework to each real adapter; no fictitious both framework reaches the backend",
+      "Karate still needs the reviewed indexed endpoint; UI is available independently",
+      "Private proposal and actual applied target-file save status are distinguished",
+      "Existing native negative/positive controls, exact review/application and independent runner checks remain"
+    ],
+    "limits": [
+      "Framework journeys use separate owned disposable targets and deterministic provider fixtures, not the owner recording or real inference",
+      "Applying a diff changes the target base; reanalyze and review the updated base before generating the other side",
+      "No combined atomic validation/save or hybrid API-preparation runner",
+      "No owner proposal was applied",
+      "Three-system CI remains pending"
+    ]
   }
 }

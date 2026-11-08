@@ -74,7 +74,7 @@ export function GenerationPanel({
   const [implementationModel, setImplementationModel] = useState('');
   const [analysisEffort, setAnalysisEffort] = useState('medium');
   const [implementationEffort, setImplementationEffort] = useState('medium');
-  const [framework, setFramework] = useState<Framework>('playwright');
+  const [framework, setFramework] = useState<Framework | 'both'>('playwright');
   const [endpoints, setEndpoints] = useState<EndpointChoice[]>([]);
   const [endpointKey, setEndpointKey] = useState('');
   const [hybrid, setHybrid] = useState<unknown>();
@@ -294,6 +294,8 @@ export function GenerationPanel({
     };
   }, [visible, changeId, change?.status]);
   const selectedTarget = targets.find((t) => t.id === targetId);
+  const generationFrameworks: Framework[] =
+    framework === 'both' ? ['playwright', 'karate'] : [framework];
   const refs: RootRef[] = [
     ...(targetId ? [{ kind: 'target' as const, id: targetId }] : []),
     ...sourceIds.map((id) => ({ kind: 'source' as const, id })),
@@ -883,13 +885,23 @@ export function GenerationPanel({
                   Execution target
                   <select
                     value={framework}
-                    onChange={(e) => setFramework(e.target.value as Framework)}
+                    onChange={(e) => setFramework(e.target.value as Framework | 'both')}
                   >
                     <option value="playwright">Playwright · visible UI</option>
                     <option value="karate">Karate · API business state</option>
+                    <option value="both">Karate + UI · independent API and browser tests</option>
                   </select>
                 </label>
-                {framework === 'karate' && (
+                {framework === 'both' && (
+                  <p className="coverage-note" role="note">
+                    Generate each implementation separately with the buttons below. Each has its own
+                    diff, native validation and approval. API assertions do not validate UI
+                    rendering. Applying a diff changes the target base: analyze and review the
+                    updated base before generating the other implementation; older pending proposals
+                    are not applied automatically.
+                  </p>
+                )}
+                {framework !== 'playwright' && (
                   <>
                     <p className="coverage-note">
                       API assertions do not validate visible rendering. Select an indexed endpoint;
@@ -914,42 +926,46 @@ export function GenerationPanel({
                       ))}
                   </>
                 )}
-                <button
-                  className="button"
-                  disabled={
-                    busy ||
-                    dirty ||
-                    (framework === 'karate' && endpointKey === '') ||
-                    contract.status !== 'APPROVED' ||
-                    !state?.settings.enabled ||
-                    state.tasks.some((t) => running(t.status))
-                  }
-                  onClick={() =>
-                    void act(async () => {
-                      const next = await api<GenerationTask>(
-                        '/generation/contracts/' + contract.id + '/implement',
-                        {
-                          expectedHash: contract.hash,
-                          framework,
-                          ...(framework === 'karate'
-                            ? {
-                                endpoint: {
-                                  ref: endpoints[Number(endpointKey)].ref,
-                                  path: endpoints[Number(endpointKey)].path,
-                                  symbol: endpoints[Number(endpointKey)].symbol,
-                                  hash: endpoints[Number(endpointKey)].hash,
-                                },
-                              }
-                            : {}),
-                        },
-                      );
-                      setTaskId(next.id);
-                      setTask(next);
-                    })
-                  }
-                >
-                  Plan and generate {framework === 'karate' ? 'Karate' : 'Playwright'} changes
-                </button>
+                {generationFrameworks.map((targetFramework) => (
+                  <button
+                    key={targetFramework}
+                    className="button"
+                    disabled={
+                      busy ||
+                      dirty ||
+                      (targetFramework === 'karate' && endpointKey === '') ||
+                      contract.status !== 'APPROVED' ||
+                      !state?.settings.enabled ||
+                      state.tasks.some((t) => running(t.status))
+                    }
+                    onClick={() =>
+                      void act(async () => {
+                        const next = await api<GenerationTask>(
+                          '/generation/contracts/' + contract.id + '/implement',
+                          {
+                            expectedHash: contract.hash,
+                            framework: targetFramework,
+                            ...(targetFramework === 'karate'
+                              ? {
+                                  endpoint: {
+                                    ref: endpoints[Number(endpointKey)].ref,
+                                    path: endpoints[Number(endpointKey)].path,
+                                    symbol: endpoints[Number(endpointKey)].symbol,
+                                    hash: endpoints[Number(endpointKey)].hash,
+                                  },
+                                }
+                              : {}),
+                          },
+                        );
+                        setTaskId(next.id);
+                        setTask(next);
+                      })
+                    }
+                  >
+                    Plan and generate {targetFramework === 'karate' ? 'Karate' : 'Playwright'}{' '}
+                    changes
+                  </button>
+                ))}
               </>
             )}
           </section>
@@ -973,6 +989,19 @@ export function GenerationPanel({
               <>
                 <p>
                   <Status value={change.status} /> Diff {change.hash.slice(0, 12)}
+                </p>
+                <p role="status" aria-label="Test save status">
+                  {change.status === 'APPLIED'
+                    ? `Test files saved in ${selectedTarget.path}. No Git commit or push was performed.`
+                    : change.status === 'APPLY_FAILED'
+                      ? 'Applying the proposal failed. Target files may have changed partially; inspect the error and journal before retrying.'
+                      : change.status === 'VALIDATED'
+                        ? 'Validation passed. To save the test files in your target, approve the exact diff below and select Apply approved diff.'
+                        : change.status === 'VALIDATING'
+                          ? 'Proposal saved in platform history. Validation is running; target files have not been changed.'
+                          : change.status === 'STAGED'
+                            ? 'Proposal saved in platform history; target files have not been changed. Prepare private validation, run it, then approve and apply the diff to save the test files.'
+                            : 'Proposal retained in platform history. Review its status and validation before applying files to the target.'}
                 </p>
                 <p>{change.plan.summary}</p>
                 <p className="coverage-note">

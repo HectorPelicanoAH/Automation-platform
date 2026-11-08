@@ -68,7 +68,7 @@ test('API generation web flow uses reviewed fixture proposals, real Karate and i
     await page.getByRole('button', { name: 'Approve this Gherkin revision', exact: true }).click();
     await page
       .getByRole('combobox', { name: 'Execution target', exact: true })
-      .selectOption('karate');
+      .selectOption('both');
     await expect(
       page.getByRole('button', { name: 'Plan and generate Karate changes', exact: true }),
     ).toBeDisabled();

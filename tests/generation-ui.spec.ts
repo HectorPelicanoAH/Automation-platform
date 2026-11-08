@@ -91,11 +91,20 @@ test('Generation web flow: real recording, reviewed fixture proposal, native UI 
       .fill('I confirm both narrated synthetic datasets and the visible UI expectations.');
     await page.getByRole('button', { name: 'Approve this Gherkin revision', exact: true }).click();
     await page
+      .getByRole('combobox', { name: 'Execution target', exact: true })
+      .selectOption('both');
+    await expect(
+      page.getByRole('button', { name: 'Plan and generate Karate changes', exact: true }),
+    ).toBeDisabled();
+    await page
       .getByRole('button', { name: 'Plan and generate Playwright changes', exact: true })
       .click();
     await expect(
       page.getByRole('button', { name: 'Prepare private validation', exact: true }),
     ).toBeVisible();
+    await expect(page.getByLabel('Test save status')).toContainText(
+      'target files have not been changed',
+    );
     expect(readFileSync(join(p.target.path, 'ui/steps/promotions.ts'), 'utf8')).toBe(original);
     const proposal = p.generation.repository.list('changes')[0];
     writeFileSync('test-results/generated-fixture-diff.txt', proposal.diff);
@@ -142,6 +151,8 @@ test('Generation web flow: real recording, reviewed fixture proposal, native UI 
     expect(readFileSync(join(p.target.path, 'ui/steps/promotions.ts'), 'utf8')).toContain(
       'promotions.expectPromotion',
     );
+    await expect(page.getByLabel('Test save status')).toContainText('Test files saved in');
+    await expect(page.getByLabel('Test save status')).toContainText(p.target.path);
     const cliEnv: NodeJS.ProcessEnv = {
       ...process.env,
       QA_BASE_URL: demoUrl,
