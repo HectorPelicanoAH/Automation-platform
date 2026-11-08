@@ -190,6 +190,8 @@ test('Local session, CSRF, path, argument and source-write boundaries', async ()
         .statusCode,
       404,
     );
+    assert.equal((await app.inject({ url: '/api/runs/unknown', headers })).statusCode, 404);
+    assert.equal((await app.inject({ url: '/api/runs/unknown' })).statusCode, 401);
     const featurePath = 'contracts/features/promotions.feature';
     const original = (await read(featurePath)).json<{ hash: string; text: string }>();
     const invalid = await app.inject({

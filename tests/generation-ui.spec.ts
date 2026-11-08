@@ -127,6 +127,16 @@ test('Generation web flow: real recording, reviewed fixture proposal, native UI 
       const run = p.store.get('runs', current.validationRunId!)!;
       expect(run.status).toBe(expected === 'VALIDATED' ? 'PASSED' : 'FAILED');
       expect(run.tests).toHaveLength(2);
+      const activity = page.getByRole('region', { name: 'Validation activity', exact: true });
+      await expect(activity).toContainText(run.status);
+      await expect(activity.getByLabel('Validation next steps')).toContainText(
+        expected === 'VALIDATED' ? 'Review and approve the exact diff' : 'Validation did not pass',
+      );
+      await expect(activity.locator('.validation-log').last()).not.toHaveText(
+        'Waiting for runner output…',
+      );
+      if (expected === 'STAGED') await expect(activity).toContainText('FAILED ·');
+
       expect(readFileSync(join(p.target.path, 'ui/steps/promotions.ts'), 'utf8')).toBe(original);
       if (expected === 'STAGED')
         await expect(

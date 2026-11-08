@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from './api.ts';
+import { ValidationRunPanel } from './ValidationRunPanel.tsx';
 import { Empty, Status, short } from './ui.tsx';
 import type { Framework, Source, Target } from '../../../packages/domain/model.ts';
 import type {
@@ -153,6 +154,7 @@ export function GenerationPanel({
       initialized.current = true;
     }
   }, []);
+  const [preparation, setPreparation] = useState<{ id: string; message: string }>();
   const act = async (work: () => Promise<void>) => {
     setBusy(true);
     setError('');
@@ -1037,11 +1039,28 @@ export function GenerationPanel({
                     disabled={busy || change.status !== 'STAGED'}
                     onClick={() =>
                       void act(async () => {
-                        await api('/generation/changes/' + change.id + '/prepare', {
-                          expectedHash: change.hash,
+                        setPreparation({
+                          id: change.id,
+                          message: 'Preparing private files and checking validation prerequisites…',
                         });
-                        setChange(await api<ChangeProposal>('/generation/changes/' + change.id));
-                        setTrustStage(false);
+                        try {
+                          await api('/generation/changes/' + change.id + '/prepare', {
+                            expectedHash: change.hash,
+                          });
+                          setChange(await api<ChangeProposal>('/generation/changes/' + change.id));
+                          setTrustStage(false);
+                          setPreparation({
+                            id: change.id,
+                            message:
+                              'Private validation prepared. Check the application URL, review execution trust, then select Run staged validation. No test has been started by preparation.',
+                          });
+                        } catch (e) {
+                          setPreparation({
+                            id: change.id,
+                            message: `Preparation failed: ${e instanceof Error ? e.message : 'Unknown error'}. Resolve the reported prerequisite, then prepare again. No test was started.`,
+                          });
+                          throw e;
+                        }
                       })
                     }
                   >
@@ -1064,6 +1083,11 @@ export function GenerationPanel({
                     Reject proposed diff
                   </button>
                 </div>
+                {preparation?.id === change.id && (
+                  <p role="status" aria-label="Validation preparation">
+                    {preparation.message}
+                  </p>
+                )}
                 {change.validationFingerprint && change.status === 'STAGED' && (
                   <>
                     <p className="muted">
@@ -1114,17 +1138,14 @@ export function GenerationPanel({
                   </>
                 )}
                 {change.validationRunId && (
-                  <button
-                    className="button secondary"
-                    onClick={() => onRun(change.validationRunId!)}
-                  >
-                    Inspect validation run
-                  </button>
-                )}
-                {change.status === 'VALIDATING' && (
-                  <p role="status">
-                    Native validation is running. Cancel it or inspect artifacts in Runs.
-                  </p>
+                  <ValidationRunPanel
+                    key={change.validationRunId}
+                    runId={change.validationRunId}
+                    proposalId={change.id}
+                    targetId={targetId}
+                    visible={visible}
+                    onInspect={onRun}
+                  />
                 )}
                 {change.status === 'VALIDATED' && (
                   <>

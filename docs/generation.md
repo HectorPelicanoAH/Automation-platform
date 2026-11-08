@@ -97,3 +97,11 @@ A staged proposal is already saved in the platform's private history, but is not
 **Execution target → Karate + UI** exposes the existing independent **Plan and generate Playwright changes** and **Plan and generate Karate changes** actions. UI generation does not require an API endpoint; Karate still requires an inspected endpoint with supported response/authentication facts. Each click starts only its selected framework task, with its own diff, native validation and exact application approval. This does not claim API assertions validate browser rendering, and it does not implement a combined atomic save or a Karate-to-browser hybrid runner.
 
 Apply and review one implementation at a time. Applying a proposal changes the automation target base; reanalyze the same recording against that updated base and review its contract before generating/applying the other implementation. A pending proposal against the earlier base intentionally remains stale. No automatic rebase, second inference call, source modification or approval is implied by choosing both.
+
+### Inline validation activity
+
+Generate shows preparation start, success or prerequisite failure beside the validation controls. Preparation creates private validation files; it does not execute or repair the test. Starting the runner remains a separate explicit trust action.
+
+The Validation activity panel loads the associated native run and redacted runner output, shows reported failures and their steps, and keeps the last 32 KB of plain-text output visible. It refreshes serially only while that run is active and Generate is visible; terminal runs load once. Loading errors stop refresh and offer a read-only retry. Cancelling uses the existing runner cancellation action. Inspect validation run opens the full results and available artifacts.
+
+A missing locator requires inspecting the actual page state, previous steps, accessible role/name and available screenshots or traces. An assertion mismatch requires comparing observed behavior with the approved requirement before deciding whether the product or automation needs correction. Review or regenerate the proposal and explicitly validate again; preparing or retrying unchanged code does not fix its behavior. A passed native run still requires exact diff approval before target files are saved.

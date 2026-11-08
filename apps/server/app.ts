@@ -426,6 +426,11 @@ export function createPlatform(options: {
   app.post<{ Params: { id: string } }>('/api/runs/:id/cancel', async (request) =>
     manager.cancel(request.params.id),
   );
+  app.get<{ Params: { id: string } }>('/api/runs/:id', async (request) => {
+    const run = store.get('runs', request.params.id);
+    if (!run) throw new AppError(404, 'Run not found');
+    return run;
+  });
   app.get<{ Params: { id: string } }>('/api/runs/:id/log', async (request) => ({
     text: manager.log(request.params.id),
   }));
