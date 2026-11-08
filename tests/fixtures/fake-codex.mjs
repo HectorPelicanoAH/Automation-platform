@@ -72,7 +72,8 @@ createInterface({ input: process.stdin }).on('line', (line) => {
     send({ id: m.id, result: { userAgent: 'explicit-protocol-fixture' } });
   if (m.method === 'permissionProfile/list')
     send({ id: m.id, result: { data: [{ id: 'qa-proposals', allowed: true }], nextCursor: null } });
-  if (m.method === 'account/read') send({ id: m.id, result: { account: null } });
+  if (m.method === 'account/read')
+    send({ id: m.id, result: { account: { type: 'chatgpt' }, requiresOpenaiAuth: true } });
   if (m.method === 'model/list')
     send({
       id: m.id,
@@ -90,6 +91,35 @@ createInterface({ input: process.stdin }).on('line', (line) => {
     const text = m.params.input[0].text;
     unicode = text === 'UTF8';
     if (text === 'WAIT') return;
+    if (['AUTH_FAILURE', 'AUTH_ERROR_EVENT', 'RETRY_SUCCESS', 'UNKNOWN_FAILURE'].includes(text)) {
+      const error = {
+        message:
+          text === 'UNKNOWN_FAILURE'
+            ? 'Private provider payload password=secret-value https://private.example/?token=hidden'
+            : 'HTTP 401 Unauthorized Bearer synthetic-token-secret',
+        codexErrorInfo: text === 'UNKNOWN_FAILURE' ? null : 'unauthorized',
+      };
+      if (text === 'AUTH_ERROR_EVENT' || text === 'RETRY_SUCCESS')
+        send({
+          method: 'error',
+          params: { threadId, turnId, error, willRetry: text === 'RETRY_SUCCESS' },
+        });
+      if (text !== 'RETRY_SUCCESS') {
+        send({
+          method: 'turn/completed',
+          params: {
+            threadId,
+            turn: {
+              id: turnId,
+              status: 'failed',
+              error: text === 'AUTH_ERROR_EVENT' ? null : error,
+            },
+          },
+        });
+        return;
+      }
+    }
+
     setTimeout(
       () =>
         send({

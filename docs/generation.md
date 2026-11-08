@@ -77,3 +77,13 @@ For E01/E04, follow the web workflow above against the local demo. The controlle
 ## API and hybrid planning extension
 
 The approved Phase 4 extension adds explicit Karate endpoint selection, framework-scoped native validation, host-generated binding diffs and separate coverage. Read [API generation](api-generation.md) only when working on that target. The original Playwright path and approvals remain available. Read-only hybrid plans identify existing preparation/navigation/assertion capabilities without granting execution.
+
+## Authentication failure diagnostics — 2026-11-08
+
+A trusted executable and a listed model do not authenticate the platform's isolated Codex home. Before creating a thread, the adapter calls `account/read` with `refreshToken: false`. If the provider requires OpenAI authentication (or does not declare otherwise) and no account is present, it stops before `thread/start`/`turn/start` with a message directing the user to the isolated login command in Generate. Providers explicitly reporting `requiresOpenaiAuth: false` remain supported without an OpenAI account. The preflight does not prove token validity or model entitlement; a later 401 can still require signing in again.
+
+Turn error notifications and terminal error objects are classified into safe authentication, usage/context-limit, unavailable-model or request-configuration diagnostics. Retryable notifications do not fail a subsequently successful turn. Unknown errors receive a bounded generic diagnostic; raw provider messages and stderr are not copied into turn-error UI text. Failed historical tasks remain unchanged. No automatic login, credential copy, quota reset, model fallback or inference retry is introduced.
+
+Recovery: run the displayed isolated `CODEX_HOME=... codex login` command in a local terminal, complete the browser sign-in, then select **Check authentication and models** and explicitly analyze again. Do not paste credentials into narration or this repository. The platform analyzes its recording events/DOM/narration; this error is not evidence of a video decoding problem.
+
+Protocol basis: [official OpenAI app-server documentation](https://learn.chatgpt.com/docs/app-server), account/read requirements and turn/error notifications. Local regression: `node --import tsx --test tests/provider.test.ts tests/generation.test.ts` — 25 passed, including missing-auth preflight with no inference, an explicit auth-free provider, nested/notification-only auth errors, unknown-payload suppression, retry followed by success, cancellation and process cleanup. No real provider turn or credential operation was performed for this correction.

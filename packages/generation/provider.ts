@@ -78,6 +78,39 @@ export function prepareCodexHome(directory: string) {
   }
 }
 
+// Provider errors can contain URLs, credentials or echoed input. Persist only classified diagnostics.
+function turnFailure(error: unknown, status: string) {
+  const value = error && typeof error === 'object' ? (error as JsonObject) : {};
+  const message = typeof value.message === 'string' ? value.message.slice(0, 8000) : '';
+  const code = typeof value.codexErrorInfo === 'string' ? value.codexErrorInfo : '';
+  if (
+    code === 'unauthorized' ||
+    /\b401\b|unauthorized|missing bearer|authentication/i.test(message)
+  )
+    return new Error(
+      'Codex authentication required or expired. Sign in using the isolated CLI login shown in AI configuration, then check authentication and models.',
+    );
+  if (code === 'usageLimitExceeded' || /usage limit|quota exceeded/i.test(message))
+    return new Error(
+      'Codex usage limit reached. Check the configured account limits before retrying.',
+    );
+  if (code === 'contextWindowExceeded')
+    return new Error('Codex context limit exceeded. Narrow the recording or repository context.');
+  if (code === 'modelNotFound' || /model.*(?:not found|not available|not supported)/i.test(message))
+    return new Error(
+      'The selected Codex model is unavailable. Check the account model catalog; no fallback was applied.',
+    );
+  if (code === 'badRequest')
+    return new Error(
+      'Codex rejected the request configuration (badRequest). Check model and reasoning settings.',
+    );
+  return new Error(
+    'Codex turn ' +
+      status +
+      '. No safe provider diagnostic was available. Check the isolated connection and provider logs.',
+  );
+}
+
 type Pending = {
   resolve: (value: unknown) => void;
   reject: (error: Error) => void;
@@ -255,6 +288,7 @@ export class CodexConnection {
       turnId = '',
       output = '',
       usage: unknown = null;
+    let lastError: unknown;
     let finish: ((value: AgentResult) => void) | undefined;
     let fail: ((error: Error) => void) | undefined;
     const completion = new Promise<AgentResult>((resolve, reject) => {
@@ -292,10 +326,19 @@ export class CodexConnection {
         usage = params.tokenUsage;
         request.onEvent({ kind: 'usage', text: 'Provider token usage', data: usage });
       }
+      if (method === 'error') {
+        lastError = params.error;
+        request.onEvent({
+          kind: 'provider-error',
+          text:
+            (params.willRetry === true ? 'Provider retry: ' : '') +
+            turnFailure(lastError, 'failed').message,
+        });
+      }
       if (method === 'turn/completed') {
         const turn = asObject(params.turn);
         if (turn.status !== 'completed') {
-          fail?.(new Error('Codex turn ' + String(turn.status)));
+          fail?.(turnFailure(turn.error || lastError, String(turn.status)));
           return;
         }
         try {
@@ -350,6 +393,9 @@ export class CodexConnection {
     try {
       if (request.signal.aborted) throw new Error('Task cancelled');
       await this.connect();
+      const account = asObject(await this.account());
+      if (account.requiresOpenaiAuth !== false && account.account == null)
+        throw turnFailure({ codexErrorInfo: 'unauthorized' }, 'failed');
       const started = asObject(
         await this.request('thread/start', {
           cwd: this.cwd,

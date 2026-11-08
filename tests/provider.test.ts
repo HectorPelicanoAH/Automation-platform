@@ -141,3 +141,69 @@ for (const method of ['initialize', 'turn/start'])
       assert.throws(() => process.kill(-notes.pid, 0));
     },
   );
+
+test('Missing isolated account stops before thread creation or inference', async () => {
+  const p = fixture();
+  writeFileSync(
+    p.binary,
+    readFileSync(p.binary, 'utf8').replace(
+      "account: { type: 'chatgpt' }, requiresOpenaiAuth: true",
+      'account: null, requiresOpenaiAuth: true',
+    ),
+  );
+  await assert.rejects(() => p.connection.run(request()), /authentication required or expired/);
+  const rpc = readFileSync(join(p.cwd, 'fixture-rpc.jsonl'), 'utf8');
+  assert.match(rpc, /account\/read/);
+  assert.doesNotMatch(rpc, /thread\/start|turn\/start/);
+});
+
+test('A provider not requiring OpenAI auth can run without an OpenAI account', async () => {
+  const p = fixture();
+  writeFileSync(
+    p.binary,
+    readFileSync(p.binary, 'utf8').replace(
+      "account: { type: 'chatgpt' }, requiresOpenaiAuth: true",
+      'account: null, requiresOpenaiAuth: false',
+    ),
+  );
+  assert.deepEqual((await p.connection.run(request())).output, { answer: 'fixture-only' });
+});
+
+for (const prompt of ['AUTH_FAILURE', 'AUTH_ERROR_EVENT', 'UNKNOWN_FAILURE'])
+  test('Failed turn preserves safe diagnostics: ' + prompt, async () => {
+    const p = fixture(),
+      events: AgentEvent[] = [];
+    await assert.rejects(
+      () => p.connection.run({ ...request(prompt), onEvent: (e) => events.push(e) }),
+      (e) => {
+        const message = String(e);
+        assert.match(
+          message,
+          prompt === 'UNKNOWN_FAILURE'
+            ? /No safe provider diagnostic/
+            : /authentication required or expired/,
+        );
+        assert.doesNotMatch(
+          message + JSON.stringify(events),
+          /synthetic-token-secret|secret-value|private.example|token=hidden/,
+        );
+        return true;
+      },
+    );
+    const notes = JSON.parse(readFileSync(join(p.cwd, 'fixture-process.json'), 'utf8'));
+    assert.throws(() => process.kill(-notes.pid, 0));
+  });
+
+test('Retryable provider error does not turn a subsequent successful completion into failure', async () => {
+  const p = fixture(),
+    events: AgentEvent[] = [];
+  const result = await p.connection.run({
+    ...request('RETRY_SUCCESS'),
+    onEvent: (e) => events.push(e),
+  });
+  assert.deepEqual(result.output, { answer: 'fixture-only' });
+  assert.ok(
+    events.some((e) => e.kind === 'provider-error' && e.text.startsWith('Provider retry:')),
+  );
+  assert.doesNotMatch(JSON.stringify(events), /synthetic-token-secret/);
+});
