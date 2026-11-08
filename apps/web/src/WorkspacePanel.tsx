@@ -65,7 +65,8 @@ export function WorkspacePanel({
           <div>
             <h2>Context sources</h2>
             <p className="muted">
-              Frontend, backend and shared code. Registration does not execute repository scripts.
+              Optional frontend, backend and shared code. You can record, generate UI tests and run
+              tests without application source repositories. Registration does not execute scripts.
             </p>
           </div>
           <span className="read-only">READ ONLY</span>
@@ -97,85 +98,92 @@ export function WorkspacePanel({
             </article>
           ))}
         </div>
-        <form className="form" onSubmit={saveSource}>
-          <h3>{editing ? `Edit ${editing.name}` : 'Add a context source'}</h3>
-          <div className="form-grid">
-            <label>
-              Display name
+        {!state.sources.length && (
+          <p className="muted">
+            No context sources configured. You can continue without adding one.
+          </p>
+        )}
+        <details open={editing ? true : undefined}>
+          <summary>{editing ? `Edit ${editing.name}` : 'Add a context source (optional)'}</summary>
+          <form className="form" onSubmit={saveSource}>
+            <div className="form-grid">
+              <label>
+                Display name
+                <input
+                  required
+                  value={source.name}
+                  onChange={(e) => setSource({ ...source, name: e.target.value })}
+                  placeholder="Storefront"
+                />
+              </label>
+              <label>
+                Absolute local path
+                <input
+                  required
+                  disabled={Boolean(editing)}
+                  value={source.path}
+                  onChange={(e) => setSource({ ...source, path: e.target.value })}
+                  placeholder="/workspace/storefront"
+                />
+              </label>
+              <label>
+                Repository type
+                <select
+                  aria-label="Repository type"
+                  value={source.kind}
+                  disabled={Boolean(editing)}
+                  onChange={(e) => setSource({ ...source, kind: e.target.value })}
+                >
+                  <option value="frontend">Frontend</option>
+                  <option value="backend">Backend</option>
+                  <option value="shared">Shared library</option>
+                  <option value="other">Other</option>
+                </select>
+              </label>
+              <label>
+                Preferred branch or revision
+                <input
+                  value={source.preferredRef}
+                  onChange={(e) => setSource({ ...source, preferredRef: e.target.value })}
+                  placeholder="Optional; never checks out your tree"
+                />
+              </label>
+              <label>
+                Include patterns, comma-separated
+                <input
+                  value={source.include}
+                  onChange={(e) => setSource({ ...source, include: e.target.value })}
+                />
+              </label>
+              <label>
+                Exclude patterns, comma-separated
+                <input
+                  value={source.exclude}
+                  onChange={(e) => setSource({ ...source, exclude: e.target.value })}
+                />
+              </label>
+            </div>
+            <label className="checkbox">
               <input
-                required
-                value={source.name}
-                onChange={(e) => setSource({ ...source, name: e.target.value })}
-                placeholder="Storefront"
+                type="checkbox"
+                checked={source.enabled}
+                onChange={(e) => setSource({ ...source, enabled: e.target.checked })}
               />
+              Source enabled
             </label>
-            <label>
-              Absolute local path
+            <label className="checkbox">
               <input
-                required
-                disabled={Boolean(editing)}
-                value={source.path}
-                onChange={(e) => setSource({ ...source, path: e.target.value })}
-                placeholder="/workspace/storefront"
+                type="checkbox"
+                checked={source.indexEnabled}
+                onChange={(e) => setSource({ ...source, indexEnabled: e.target.checked })}
               />
+              Allow context indexing in Generate
             </label>
-            <label>
-              Repository type
-              <select
-                aria-label="Repository type"
-                value={source.kind}
-                disabled={Boolean(editing)}
-                onChange={(e) => setSource({ ...source, kind: e.target.value })}
-              >
-                <option value="frontend">Frontend</option>
-                <option value="backend">Backend</option>
-                <option value="shared">Shared library</option>
-                <option value="other">Other</option>
-              </select>
-            </label>
-            <label>
-              Preferred branch or revision
-              <input
-                value={source.preferredRef}
-                onChange={(e) => setSource({ ...source, preferredRef: e.target.value })}
-                placeholder="Optional; never checks out your tree"
-              />
-            </label>
-            <label>
-              Include patterns, comma-separated
-              <input
-                value={source.include}
-                onChange={(e) => setSource({ ...source, include: e.target.value })}
-              />
-            </label>
-            <label>
-              Exclude patterns, comma-separated
-              <input
-                value={source.exclude}
-                onChange={(e) => setSource({ ...source, exclude: e.target.value })}
-              />
-            </label>
-          </div>
-          <label className="checkbox">
-            <input
-              type="checkbox"
-              checked={source.enabled}
-              onChange={(e) => setSource({ ...source, enabled: e.target.checked })}
-            />
-            Source enabled
-          </label>
-          <label className="checkbox">
-            <input
-              type="checkbox"
-              checked={source.indexEnabled}
-              onChange={(e) => setSource({ ...source, indexEnabled: e.target.checked })}
-            />
-            Allow context indexing in Generate
-          </label>
-          <button className="button" disabled={busy}>
-            {editing ? 'Save source settings' : 'Register read-only source'}
-          </button>
-        </form>
+            <button className="button" disabled={busy}>
+              {editing ? 'Save source settings' : 'Register read-only source'}
+            </button>
+          </form>
+        </details>
       </section>
       <section className="panel">
         <div className="panel-heading">

@@ -33,7 +33,7 @@ export function policyFor(input: CapturePolicy, control: string): CapturePolicy 
     input.maskSelectors.length > 16
   )
     throw new AppError(400, 'Use at most 16 bounded masking selectors');
-  return { ...input, url: url.href, allowedOrigins: origins };
+  return { ...input, url: url.href, allowedOrigins: origins, controlOrigin: control };
 }
 export function safeUrl(value: string) {
   try {

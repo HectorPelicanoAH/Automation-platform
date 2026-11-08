@@ -47,6 +47,11 @@ function fixture() {
   return { store, manager, r, root };
 }
 test('Recording policy suppresses query secrets and denies control/internal origins', () => {
+  assert.equal(
+    policyFor({ ...policy, controlOrigin: 'https://forged.invalid' }, 'http://localhost:4310')
+      .controlOrigin,
+    'http://localhost:4310',
+  );
   assert.throws(() => policyFor({ ...policy, url: 'file:///etc/passwd' }, 'http://localhost:4310'));
   assert.throws(() =>
     policyFor({ ...policy, url: 'http://127.0.0.1:4310' }, 'http://localhost:4310'),
@@ -205,6 +210,15 @@ test('Recorder HTTP schema/session/CSRF/artifact boundaries', async () => {
         await request('/api/recordings', {
           name: 'Bad protocol',
           policy: { ...policy, url: 'file:///secret' },
+        })
+      ).statusCode,
+      400,
+    );
+    assert.equal(
+      (
+        await request('/api/recordings', {
+          name: 'Cannot supply the server control origin',
+          policy: { ...policy, controlOrigin: 'https://forged.invalid' },
         })
       ).statusCode,
       400,

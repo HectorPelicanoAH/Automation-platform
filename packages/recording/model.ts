@@ -3,6 +3,8 @@ export type RecordingStatus =
 export interface CapturePolicy {
   url: string;
   allowedOrigins: string[];
+  /** Server-owned control origin; never accepted from a recording request. */
+  controlOrigin?: string;
   screenshots: boolean;
   maskSelectors: string[];
   sensitiveQueryKeys: string[];

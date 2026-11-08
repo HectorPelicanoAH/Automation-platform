@@ -524,8 +524,10 @@ export function GenerationPanel({
               </div>
             </div>
             <p className="muted">
-              Target: {selectedTarget.name}. Source indexing requires opt-in in Workspace. Syntax
-              facts are incomplete for dynamic behavior; no repository scripts are executed.
+              Target: {selectedTarget.name}. Application source repositories are optional. With none
+              selected, generation uses the recording and automation target. Source indexing
+              requires opt-in in Workspace. Syntax facts are incomplete for dynamic behavior; no
+              repository scripts are executed.
             </p>
             <div className="source-choices">
               {sources.map((source) => (

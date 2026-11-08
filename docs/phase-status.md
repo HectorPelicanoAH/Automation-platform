@@ -1,6 +1,6 @@
 # Phase status
 
-Updated: 2026-11-07. This file records authorization and acceptance evidence. The roadmap describes scope, not permission to implement it.
+Updated: 2026-11-08. This file records authorization and acceptance evidence. The roadmap describes scope, not permission to implement it.
 
 | Phase | Name                                        | Status     | Authorization                                                                                    | Acceptance evidence                                                                                                                                                                   |
 | ----- | ------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -101,3 +101,7 @@ On 2026-11-06 the owner sent `APPROVE PHASE 6`. Transition: PROPOSED → APPROVE
 On 2026-11-06 the owner explicitly authorized beginning Phase 6 while retaining CI validation pending for Phases 3, 4 and 5. Transition: APPROVED → IN_PROGRESS. This is a sequencing exception only; prior validation, exact-bundle activation review, credential and source-write boundaries remain in force.
 
 Phase 6 transition on 2026-11-07: IN_PROGRESS → VALIDATION. Local implementation, 71 deterministic and 12 browser regressions passed; final affected-code validation passed 16 deterministic cases and one real browser/native flow. Exact skill activation/rollback occurred only in owned disposable QA targets. Required three-system CI remains NOT_RUN for Phases 3–6. No later phase begins. See the [report](phase-6-report.md) for supported scope, evidence and missing checks.
+
+## Owner-requested usability corrections — 2026-11-08
+
+After trying the local application, the owner explicitly requested optional context sources and removal of blocked page content at `https://shop.mango.com`. This authorizes these concrete corrections to existing Workspace/Generate and recorder behavior, including separating resource loading from capture grants. It does not approve a new phase, source writes, skill activation, a CI waiver or bypassing website restrictions. The existing Phase 3–6 VALIDATION states and CI obligations remain. Validation and supported boundaries are recorded in [the correction report](usability-corrections-2026-11-08.md).

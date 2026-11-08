@@ -15,7 +15,7 @@ import {
   type EvidenceEvent,
   type LocatorEvidence,
 } from './model.ts';
-import { safeText, safeUrl, recordingUrl } from './privacy.ts';
+import { safeText, safeUrl, recordingUrl, controlOrigin } from './privacy.ts';
 
 type CapturedEvent = Omit<EvidenceEvent, 'sequence' | 'receivedMs'>;
 export class BrowserCapture {
@@ -57,9 +57,20 @@ export class BrowserCapture {
     }
     return { pageId: this.pages.get(page), frameId: frame ? this.frames.get(frame) : undefined };
   }
+  private blockedControl(url: string) {
+    if (!this.policy.controlOrigin) return false;
+    try {
+      const candidate = new URL(url);
+      if (candidate.protocol === 'ws:') candidate.protocol = 'http:';
+      if (candidate.protocol === 'wss:') candidate.protocol = 'https:';
+      return controlOrigin(candidate.href, this.policy.controlOrigin);
+    } catch {
+      return true;
+    }
+  }
   private allowed(url: string) {
     try {
-      return this.policy.allowedOrigins.includes(new URL(url).origin);
+      return !this.blockedControl(url) && this.policy.allowedOrigins.includes(new URL(url).origin);
     } catch {
       return false;
     }
@@ -106,16 +117,42 @@ export class BrowserCapture {
         await route.fulfill({ status: 204, body: '' });
         return;
       }
-      if (this.allowed(route.request().url())) {
+      const request = route.request();
+      const url = new URL(request.url());
+      let topNavigation = request.isNavigationRequest();
+      if (topNavigation) {
+        try {
+          topNavigation = !request.frame().parentFrame();
+        } catch {
+          // A popup can request its document before Playwright exposes its Frame.
+          // Keep the stricter navigation grant until a frame is available.
+        }
+      }
+      if (
+        ['http:', 'https:'].includes(url.protocol) &&
+        !this.blockedControl(url.href) &&
+        (!topNavigation || this.allowed(url.href))
+      ) {
+        // Loading a resource does not authorize observing its origin or persisting its data.
         await route.continue();
       } else {
-        this.event('gap', 'Blocked unapproved origin: ' + safeUrl(route.request().url()));
+        this.event(
+          'gap',
+          (this.blockedControl(url.href)
+            ? 'Blocked platform control origin: '
+            : 'Blocked unapproved navigation: ') + safeUrl(url.href),
+        );
         await route.abort('blockedbyclient');
       }
     });
     await this.context.routeWebSocket('**/*', (socket) => {
-      socket.close();
-      this.event('gap', 'WebSocket capture unsupported; connection blocked');
+      if (this.blockedControl(socket.url())) {
+        void socket.close();
+        this.event('gap', 'Blocked platform control WebSocket');
+      } else {
+        socket.connectToServer();
+        this.limited('WebSocket connection permitted; messages are not captured');
+      }
     });
     this.context.on('response', (response) => {
       if (

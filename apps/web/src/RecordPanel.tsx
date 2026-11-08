@@ -270,8 +270,14 @@ export function RecordPanel({ visible, defaultUrl }: { visible: boolean; default
                 placeholder="http://127.0.0.1:4311/promotions?countryIso=es&languageIso=es&brand=demo"
               />
             </label>
+            <p className="muted">
+              Page resources (images, styles, scripts, APIs, embedded frames and WebSockets) may
+              load from other domains. Only approved origins are observed and stored. Approve an
+              additional origin to navigate there or capture its interactions. Service workers
+              remain disabled; browser and website restrictions still apply.
+            </p>
             <label>
-              Additional approved origins (one per line)
+              Additional navigation / capture origins (optional, one per line)
               <textarea
                 disabled={Boolean(recording)}
                 value={origins}

@@ -18,3 +18,7 @@ Source: Phase 2 implementation and synthetic acceptance fixtures; confidence lim
 - Persist observed intent before optional DOM/ARIA/screenshot enrichment; retain separately linked context and a deadline. Never block action intake on a document that may be unloading. A save response must not clear edits made after that save began.
 
 - PCM decoded duration can differ from container presentation time when samples arrive discontinuously. The benchmark checks actual PCM duration against monotonic capture span before scoring tone alignment. The pinned-Chromium test fixture supplies 48 kHz timestamped PCM frames at the getUserMedia boundary, paced against monotonic wall time; it checks producer lag and preserves diagnostics. A virtual AudioContext source proved discontinuous on CI and cannot certify alignment. Neither synthetic source certifies physical hardware.
+
+## Resource loading correction — 2026-11-08
+
+Loading permission is not observation permission. Third-party page resources and frames load without automatically adding their origins to capture scope; WebSocket connections forward normally without message capture. Top-level navigation still needs an approved origin. Keep the server-owned platform control-origin denial on resource/frame/redirect/WebSocket paths, and keep service workers blocked so they cannot bypass interception. Public website access controls and browser restrictions remain applicable. See [the correction report](../usability-corrections-2026-11-08.md) for actual tests and the limited Mango smoke.

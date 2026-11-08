@@ -73,6 +73,7 @@ test('Real workstation journey: sources, contracts, both runners, failures, canc
       });
     };
     await page.getByRole('button', { name: 'Workspace', exact: true }).click();
+    await page.getByText('Add a context source (optional)', { exact: true }).click();
     for (const [index, kind] of ['frontend', 'backend'].entries()) {
       console.log(`Configure synthetic ${kind} context source`);
       const path = join(root, 'source-' + index);

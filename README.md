@@ -29,7 +29,7 @@ Private state defaults to `~/.local/share/ai-native-qa` outside Git. Override wi
 
 ## First functional run
 
-1. In **Workspace**, register existing frontend/backend directories. Metadata detection is read-only; opt-in indexing is available through Generate.
+1. Optionally register frontend/backend directories in **Workspace**. You can record and generate UI automation without application source repositories; generation still uses the recording and managed automation target. Metadata detection is read-only; opt-in indexing is available through Generate.
 2. Initialize a starter in an empty external directory, or import a compatible existing automation checkout. Neither operation creates a nested Git repository. Sources, target, platform and private data roots must not overlap.
 3. Follow the target README to explicitly install its pinned UI/API dependencies. The platform never installs or executes a project during discovery/import.
 4. In **Scenarios**, select and review the canonical feature and Examples. Invalid text remains a draft; saves check base hashes. A changed contract invalidates its existing API binding until separately reviewed.
@@ -40,7 +40,7 @@ The synthetic demo covers Spanish/Portuguese free-shipping messaging. The displa
 
 ## Record a demonstration
 
-Open **Record**, enter the application's HTTP(S) URL and approve any additional service origins. Start recording, then interact with the separate headed Chromium window. Form values and network headers/bodies are omitted; query values are redacted. Screenshots are opt-in and mask forms, frames and configured private regions.
+Open **Record**, enter the application's final HTTP(S) URL (prefer its HTTPS address). Page resources load from their normal domains; approve additional origins when you intend to navigate there or capture their interactions. Start recording, then interact with the separate headed Chromium window. Form values and network headers/bodies are omitted; query values are redacted. Screenshots are opt-in and mask forms, frames and configured private regions.
 
 Microphone capture requires session consent and a separate **Start microphone** action in the platform tab. Browser/OS permission and codec support apply. Raw audio may contain secrets; it stays local. If microphone permission is denied, add timestamped manual transcript segments and save immutable revisions. No automatic transcription engine or cloud upload is configured. **Stop recording** flushes bounded acknowledged data and closes the controlled browser; cancellation preserves partial evidence.
 
