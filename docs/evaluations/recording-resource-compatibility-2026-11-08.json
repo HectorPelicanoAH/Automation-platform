@@ -1,0 +1,249 @@
+{
+  "date": "2026-11-08",
+  "scope": "Owner-requested optional source context and normal cross-origin resource loading; existing capture/navigation/control-origin grants retained. No new phase.",
+  "environment": "macOS Intel; pinned Node 24.22.2, workspace dependencies/Chromium, Java 21.0.13 and existing pnpm/Gradle caches",
+  "deterministic": {
+    "command": "node --import tsx --test tests/recording.test.ts tests/generation.test.ts",
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "finalPolicyAssertions": {
+    "command": "node --import tsx --test tests/recording.test.ts",
+    "passed": 4,
+    "failed": 0,
+    "addedAssertions": [
+      "Server overwrites spoofed control-origin field",
+      "HTTP schema rejects client control-origin property"
+    ]
+  },
+  "browser": {
+    "command": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts tests/recording-resources.spec.ts tests/recorder.spec.ts tests/acceptance.spec.ts",
+    "stats": {
+      "startTime": "2026-11-08T10:44:23.064Z",
+      "duration": 346687.34099999996,
+      "expected": 7,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "cases": [
+      {
+        "file": "acceptance.spec.ts",
+        "name": "Real workstation journey: sources, contracts, both runners, failures, cancellation and restart",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 312682
+          }
+        ]
+      },
+      {
+        "file": "recorder.spec.ts",
+        "name": "Public headed capture: real actions, frames, popups, privacy and origin denial",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 7252
+          }
+        ]
+      },
+      {
+        "file": "recorder.spec.ts",
+        "name": "Recorder can cancel during Chromium startup without leaving a worker",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 3364
+          }
+        ]
+      },
+      {
+        "file": "recorder.spec.ts",
+        "name": "Oversized native screenshots are omitted with an explicit capture gap",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 3812
+          }
+        ]
+      },
+      {
+        "file": "recorder.spec.ts",
+        "name": "Slow optional context does not delay observed actions",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 4179
+          }
+        ]
+      },
+      {
+        "file": "recording-resources.spec.ts",
+        "name": "External resources and live sockets load without expanding capture or navigation grants",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 3915
+          }
+        ]
+      },
+      {
+        "file": "recording-resources.spec.ts",
+        "name": "No context sources: optional Workspace form and real analysis host flow use recording plus target",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 3800
+          }
+        ]
+      }
+    ]
+  },
+  "checks": {
+    "typecheck": "PASSED",
+    "lint": "PASSED",
+    "format": "PASSED",
+    "build": "PASSED",
+    "localMarkdownLinks": "271 checked; zero broken",
+    "whitespace": "PASSED"
+  },
+  "mangoExploratory": {
+    "url": "https://shop.mango.com",
+    "mode": "Fresh isolated headless BrowserCapture; no login/interaction or bypass",
+    "title": "Mango España (Península y Baleares) | Moda online",
+    "images": 1,
+    "loadedImages": 1,
+    "bodyTextLength": 1085,
+    "recorderResourceBlocks": [],
+    "limits": "Initial load only; no complete rendering, consent, checkout or general site compatibility claim."
+  },
+  "developmentFailuresCorrected": [
+    "Initial fixture type mismatch: Node upgrade sockets are Duplex",
+    "Initial original popup regression: request Frame unavailable; now defaults to stricter top-level navigation classification"
+  ],
+  "limits": [
+    "No provider inference; generation uses labelled deterministic fixture",
+    "No user/global skill activation or external source writes",
+    "Service workers remain blocked; browser/site restrictions are preserved",
+    "No full unrelated-suite or five-minute audio rerun",
+    "Three-system CI still pending"
+  ],
+  "pollingCorrection": {
+    "date": "2026-11-08",
+    "source": "Actual HTTP request-count assertions with virtual control-page timers; real native recording/generation regressions separately. No real inference.",
+    "browserCommand": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts tests/recording-polling.spec.ts tests/recording-ui.spec.ts tests/generation-ui.spec.ts --grep-invert \"Five real minutes\"",
+    "browserStats": {
+      "startTime": "2026-11-08T11:21:29.075Z",
+      "duration": 94655.762,
+      "expected": 3,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "browserCases": [
+      {
+        "file": "generation-ui.spec.ts",
+        "name": "Generation web flow: real recording, reviewed fixture proposal, native UI validation and exact diff application",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 63813
+          }
+        ]
+      },
+      {
+        "file": "recording-polling.spec.ts",
+        "name": "Recording requests stay idle between actions, supervise active sessions across views and drain final evidence",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 7002
+          }
+        ]
+      },
+      {
+        "file": "recording-ui.spec.ts",
+        "name": "Record UI: real worker, denied microphone, manual revisions, cancellation and restart",
+        "status": "expected",
+        "attempts": [
+          {
+            "status": "passed",
+            "durationMs": 16443
+          }
+        ]
+      }
+    ],
+    "checks": {
+      "typecheck": "PASSED",
+      "lint": "PASSED",
+      "format": "PASSED",
+      "build": "PASSED"
+    },
+    "assertions": [
+      "Zero additional recordings/detail/generation-state requests over each idle five-second virtual window",
+      "600 terminal events fetched once in three pages, without duplicate timeline entries",
+      "Active-session detail requests continue while Record is hidden; no periodic full list requests",
+      "Final evidence and visible Generate choice update arrive through active supervision and parent notification",
+      "Terminal and failed polling pauses; explicit refresh recovers"
+    ],
+    "limits": [
+      "Active-state transition fixture is synthetic stored metadata, not native worker/audio evidence",
+      "Physical microphone and five-minute timing benchmark not rerun for UI-only scheduling change",
+      "No cross-window push subscription: new external recordings require section entry or explicit refresh",
+      "Three-system CI remains pending"
+    ]
+  },
+  "combinedChoiceAndSaveStatus": {
+    "date": "2026-11-08",
+    "interpretation": "Karate + UI exposes separate real framework actions, with independent validation and approval. No hybrid runner, combined save, automatic second inference or automatic rebase.",
+    "apiJourney": {
+      "command": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts tests/generation-ui.spec.ts tests/api-generation-ui.spec.ts",
+      "apiCase": "PASSED",
+      "durationMinutes": 2.7,
+      "overallInvocation": "1 passed, 1 failed: UI fixture locator could not find Execution target with exact getByLabel"
+    },
+    "finalUIJourney": {
+      "command": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts tests/generation-ui.spec.ts",
+      "stats": {
+        "startTime": "2026-11-08T20:00:03.035Z",
+        "duration": 48062.608,
+        "expected": 1,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "correction": "Use accessible combobox role/name; native behavior and validation/application assertions retained"
+    },
+    "checks": {
+      "typecheck": "PASSED",
+      "lint": "PASSED",
+      "format": "PASSED",
+      "build": "PASSED",
+      "whitespace": "PASSED"
+    },
+    "coverage": [
+      "Both selection sends the native framework to each real adapter; no fictitious both framework reaches the backend",
+      "Karate still needs the reviewed indexed endpoint; UI is available independently",
+      "Private proposal and actual applied target-file save status are distinguished",
+      "Existing native negative/positive controls, exact review/application and independent runner checks remain"
+    ],
+    "limits": [
+      "Framework journeys use separate owned disposable targets and deterministic provider fixtures, not the owner recording or real inference",
+      "Applying a diff changes the target base; reanalyze and review the updated base before generating the other side",
+      "No combined atomic validation/save or hybrid API-preparation runner",
+      "No owner proposal was applied",
+      "Three-system CI remains pending"
+    ]
+  }
+}

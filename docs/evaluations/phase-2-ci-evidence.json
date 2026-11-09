@@ -1,0 +1,485 @@
+{
+  "evidenceVersion": 1,
+  "codeCommit": "8ba997d56eabbe105f700f35c71caee6ffb3b12f",
+  "workflowRun": 42194716728,
+  "workflowUrl": "https://github.com/HectorPelicanoAH/Automation-platform/actions/runs/42194716728",
+  "conclusion": "success",
+  "artifactRetentionDays": 7,
+  "deterministicTestCountPerSystem": 14,
+  "browserTestCountPerSystem": 7,
+  "retries": 0,
+  "synchronizationLimitMs": 500,
+  "results": {
+    "ubuntu-24.04": {
+      "jobId": 127814969868,
+      "conclusion": "success",
+      "os": "linux",
+      "architecture": "x64",
+      "node": "v24.22.2",
+      "checks": {
+        "Run pnpm install --frozen-lockfile": "success",
+        "Run pnpm exec playwright install --with-deps chromium": "success",
+        "Run pnpm typecheck": "success",
+        "Run pnpm lint": "success",
+        "Run pnpm format:check": "success",
+        "Run pnpm test": "success",
+        "Run pnpm build": "success",
+        "Run headed recorder and platform acceptance": "success"
+      },
+      "browserTests": {
+        "expected": 7,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "duration": 489805.202
+      },
+      "audio": {
+        "source": "Timestamped synthetic PCM MediaStream at getUserMedia boundary; actual MediaRecorder, transport and storage; physical microphone not tested",
+        "syntheticSource": "Chromium MediaStreamTrackGenerator, 48000 Hz f32-planar, 10 ms frames",
+        "physicalMicrophoneVerified": false,
+        "elapsedMs": 311201.6427099999,
+        "acknowledgedChunks": 152,
+        "decodedDurationSeconds": 308.04,
+        "pcmDurationErrorMs": 65.53867900010664,
+        "maxProducerLagMs": 21.79999999998836,
+        "toneActionErrorsMs": [37.43804200008162, 51.760461000027135],
+        "clockCalibrationEvents": 11
+      },
+      "nativeRuns": [
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 3486,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 3508,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 3459,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 3449,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 11549,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 11592,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 11778,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 11985,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "FAILED",
+          "tests": 2,
+          "durationMs": 8617,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 11991,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 3565,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "missing-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 3797,
+          "idsMapped": 0
+        },
+        {
+          "framework": "playwright",
+          "selection": "malformed-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 3749,
+          "idsMapped": 0
+        }
+      ],
+      "nativeCancellation": "Both native frameworks cancelled with process-group cleanup",
+      "evidenceSha256": {
+        "platform-results.json": "8541036da860201424937d1a3c8d7616bf8a30368bae74c8ed841d1da1d99466",
+        "recording-clock-evidence.json": "2c9a87d125564e3be720d9a3b6d69a239162ef4df7ea0991dc675f6e04cd8280",
+        "recording-clock-diagnostic.json": "26d779762866c0810de95b9be4827bc1073ea219791949f7b31d3fac701ce61b",
+        "phase1-evidence.json": "a035c26da8cc503c159ad7366865e5b4d1d73b5ac70a82b2d06f4704221bae35"
+      },
+      "osVersion": "24.04.5 LTS",
+      "artifactId": 13491509719,
+      "artifactUrl": "https://github.com/HectorPelicanoAH/Automation-platform/actions/runs/42194716728/artifacts/13491509719",
+      "artifactReportedDigest": "sha256:732371621f5579183387a92159c8acb55f0b069c5cb1db105425ec7bd2eedf45"
+    },
+    "macos-15": {
+      "jobId": 127814970130,
+      "conclusion": "success",
+      "os": "darwin",
+      "architecture": "arm64",
+      "node": "v24.22.2",
+      "checks": {
+        "Run pnpm install --frozen-lockfile": "success",
+        "Run pnpm exec playwright install --with-deps chromium": "success",
+        "Run pnpm typecheck": "success",
+        "Run pnpm lint": "success",
+        "Run pnpm format:check": "success",
+        "Run pnpm test": "success",
+        "Run pnpm build": "success",
+        "Run headed recorder and platform acceptance": "success"
+      },
+      "browserTests": {
+        "expected": 7,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "duration": 407753.05
+      },
+      "audio": {
+        "source": "Timestamped synthetic PCM MediaStream at getUserMedia boundary; actual MediaRecorder, transport and storage; physical microphone not tested",
+        "syntheticSource": "Chromium MediaStreamTrackGenerator, 48000 Hz f32-planar, 10 ms frames",
+        "physicalMicrophoneVerified": false,
+        "elapsedMs": 310971.227541,
+        "acknowledgedChunks": 152,
+        "decodedDurationSeconds": 308.1,
+        "pcmDurationErrorMs": 41.18733300000895,
+        "maxProducerLagMs": 180.19999999998254,
+        "toneActionErrorsMs": [83.06766699995205, 82.54341699997894],
+        "clockCalibrationEvents": 11
+      },
+      "nativeRuns": [
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 1306,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 1523,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 1294,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 1292,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 4830,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 5012,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 5255,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 4893,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "FAILED",
+          "tests": 2,
+          "durationMs": 6370,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 5937,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 1591,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "missing-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 1941,
+          "idsMapped": 0
+        },
+        {
+          "framework": "playwright",
+          "selection": "malformed-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 1701,
+          "idsMapped": 0
+        }
+      ],
+      "nativeCancellation": "Both native frameworks cancelled with process-group cleanup",
+      "evidenceSha256": {
+        "platform-results.json": "525f36c65f51bce6fed05cb2d6364b9ebe35bc37ecddc58faa4018544f2767fc",
+        "recording-clock-evidence.json": "d83f03014079393562d1122b2bdcaf16af846d828c41e0ba4bd6bdc8e01f4719",
+        "recording-clock-diagnostic.json": "3fe7fbdc9947d117188732cf76e4e62ba6f149b629c5733604af9426e9b325f8",
+        "phase1-evidence.json": "fa5d45c1e8bdfea8d98cf27026fdf91cd50e361a2463761df1356274c2d15617"
+      },
+      "osVersion": "15.8.2 (24H232)",
+      "artifactId": 13492321225,
+      "artifactUrl": "https://github.com/HectorPelicanoAH/Automation-platform/actions/runs/42194716728/artifacts/13492321225",
+      "artifactReportedDigest": "sha256:c0b89485ed6bf015af13cbd2c4ccc144609936f826b74f4b0b46f9dc166504a0"
+    },
+    "macos-15-intel": {
+      "jobId": 127814970315,
+      "conclusion": "success",
+      "os": "darwin",
+      "architecture": "x64",
+      "node": "v24.22.2",
+      "checks": {
+        "Run pnpm install --frozen-lockfile": "success",
+        "Run pnpm exec playwright install --with-deps chromium": "success",
+        "Run pnpm typecheck": "success",
+        "Run pnpm lint": "success",
+        "Run pnpm format:check": "success",
+        "Run pnpm test": "success",
+        "Run pnpm build": "success",
+        "Run headed recorder and platform acceptance": "success"
+      },
+      "browserTests": {
+        "expected": 7,
+        "unexpected": 0,
+        "flaky": 0,
+        "skipped": 0,
+        "duration": 578258.762
+      },
+      "audio": {
+        "source": "Timestamped synthetic PCM MediaStream at getUserMedia boundary; actual MediaRecorder, transport and storage; physical microphone not tested",
+        "syntheticSource": "Chromium MediaStreamTrackGenerator, 48000 Hz f32-planar, 10 ms frames",
+        "physicalMicrophoneVerified": false,
+        "elapsedMs": 314363.81587399996,
+        "acknowledgedChunks": 151,
+        "decodedDurationSeconds": 308.1,
+        "pcmDurationErrorMs": 122.43585599993821,
+        "maxProducerLagMs": 225.40000000002328,
+        "toneActionErrorsMs": [262.0316969999112, 394.1877610000083],
+        "clockCalibrationEvents": 11
+      },
+      "nativeRuns": [
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 3896,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 6465,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 4316,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 9974,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 25676,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 19347,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 23552,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 17716,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "FAILED",
+          "tests": 2,
+          "durationMs": 8337,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 13155,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 3895,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "missing-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 4556,
+          "idsMapped": 0
+        },
+        {
+          "framework": "playwright",
+          "selection": "malformed-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 4395,
+          "idsMapped": 0
+        }
+      ],
+      "nativeCancellation": "Both native frameworks cancelled with process-group cleanup",
+      "evidenceSha256": {
+        "platform-results.json": "083def3ebcd579c9df8dff7914576784a197327b99708a632276bdace14cc42e",
+        "recording-clock-evidence.json": "50a4bac9d38a51c4e58ae253aac9bc443da06e9d1b9612366a59619aaa48ee8f",
+        "recording-clock-diagnostic.json": "7cf3248c85ca0fc8075e7c55c012202f6d39953a9d00b1b73333ab8645eabe5a",
+        "phase1-evidence.json": "8b726d1ff58c430c157fc9c085dbb7d4446b0f954098860e801f8b5b0f9a31e9"
+      },
+      "osVersion": "15.7.9 (24G830)",
+      "artifactId": 13492720150,
+      "artifactUrl": "https://github.com/HectorPelicanoAH/Automation-platform/actions/runs/42194716728/artifacts/13492720150",
+      "artifactReportedDigest": "sha256:7dca8d91fe23c13257035e32644847dc935b76b00b83b163cfe8b39674a67bb1"
+    }
+  },
+  "limitations": [
+    "Physical microphone hardware and real OS permission dialogs require manual validation.",
+    "Synthetic PCM input is a test-only pinned-Chromium boundary; MediaRecorder, transport, storage and waveform decoding are real.",
+    "Automatic transcription is unavailable; manual timestamped revisions are operational."
+  ],
+  "localPromotionComposition": {
+    "status": "PASS",
+    "events": 10,
+    "evidenceAfterRestart": true,
+    "nativeScreenshotSha256": "d8ffc601c36ada8cf70fbe5abbca46b94e80502c899eca2046cff4d96f1c734f",
+    "scope": "In-process public capture composition; worker lifecycle separately tested"
+  }
+}

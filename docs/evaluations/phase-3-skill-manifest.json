@@ -1,0 +1,52 @@
+{
+  "caseSet": "1.0.0",
+  "candidates": [
+    {
+      "name": "discover-business-scenarios",
+      "version": "v1",
+      "path": "docs/skills/candidates/v1/discover-business-scenarios/SKILL.md",
+      "sha256": "59000040610c09896b93493923532de5968ab2be996cf6682713c419bced73a5",
+      "formatValidation": "PASS",
+      "behavioralEvaluation": {
+        "status": "REJECTED_E01_INVALID_EVIDENCE",
+        "cases": ["E01"],
+        "attemptsPerCase": 1,
+        "evidence": "phase-3-live-evidence.json"
+      },
+      "activation": "NOT_APPROVED"
+    },
+    {
+      "name": "discover-business-scenarios",
+      "version": "v2",
+      "path": "docs/skills/candidates/v2/discover-business-scenarios/SKILL.md",
+      "sha256": "d19fd45aa2c4f98a4bacfa6d3cc11da16cb4a9a5fc67c8c2f83ca49cd34c2fe3",
+      "formatValidation": "PASS",
+      "behavioralEvaluation": {
+        "status": "EXPLORATORY_PASS",
+        "cases": ["E01", "E02"],
+        "attemptsPerCase": 1,
+        "evidence": "phase-3-live-evidence.json"
+      },
+      "activation": "NOT_APPROVED"
+    },
+    {
+      "name": "implement-playwright",
+      "version": "v1",
+      "path": "docs/skills/candidates/v1/implement-playwright/SKILL.md",
+      "sha256": "c93f6ea5e8681d5574be74bd3199b74f5fc4cfd1b141e9bdcd1a80295230dfca",
+      "formatValidation": "PASS",
+      "behavioralEvaluation": {
+        "status": "EXPLORATORY_PASS",
+        "cases": ["E04", "E12"],
+        "attemptsPerCase": 1,
+        "evidence": "phase-3-live-evidence.json"
+      },
+      "activation": "NOT_APPROVED"
+    }
+  ],
+  "claims": {
+    "generalQualityImprovement": "UNMEASURED",
+    "tokenSavings": "NOT_ESTABLISHED"
+  },
+  "note": "One trial per arm/case is exploratory. V1 rejection is retained; passing candidates are not activated."
+}

@@ -1,0 +1,471 @@
+{
+  "version": 1,
+  "phase": 5,
+  "status": "VALIDATION",
+  "date": "2026-11-06",
+  "environment": {
+    "os": "macOS 15.7.3",
+    "architecture": "x64",
+    "node": "24.22.2",
+    "java": "21.0.13+9",
+    "frameworks": "Existing pinned Playwright 1.65.0 and Karate 2.1.4"
+  },
+  "source": "Actual native runners against owned synthetic local demos. Review actions performed by an automated synthetic QA actor through web/API; no preexisting user targets modified.",
+  "checks": {
+    "deterministic": {
+      "passed": 55,
+      "failed": 0,
+      "skipped": 0,
+      "cancelled": 0,
+      "durationMs": 30338.573861
+    },
+    "affectedBrowserFlows": {
+      "passed": 4,
+      "failed": 0,
+      "durationReported": "3.9 minutes"
+    },
+    "postUniquenessGuardMaintenanceFlow": {
+      "passed": 1,
+      "failed": 0,
+      "durationReported": "1.2 minutes"
+    },
+    "typecheck": "PASSED",
+    "lint": "PASSED",
+    "build": "PASSED",
+    "format": "PASSED",
+    "documentationLinks": {
+      "status": "PASSED",
+      "markdownFiles": 58,
+      "localLinks": 235,
+      "brokenLinks": 0
+    },
+    "whitespace": "PASSED",
+    "diagnosisAssociationIsolation": "PASSED",
+    "finalAssociationAndMaintenanceFlow": {
+      "passed": 1,
+      "failed": 0,
+      "durationMs": 58500,
+      "testDurationMs": 56600
+    }
+  },
+  "provider": {
+    "maintenanceInferenceCalls": 0,
+    "credentialsCopied": false,
+    "scope": "Platform acceptance only; does not measure the development conversation or establish token savings."
+  },
+  "repair": {
+    "id": "repair-726724b3-613e-43fd-af3a-f36e5316d980",
+    "diffHash": "f7d247d1163658f563fea2d8a93a5dc181f1432b946efe5416e92539424e0aef",
+    "files": [
+      {
+        "path": "ui/pages/PromotionsPage.ts",
+        "baseHash": "8e4036b9dd7f1cfcf65fab666b24390f64917269517df77b49479fd3869e16ab",
+        "afterHash": "bacad75c55a14171d4e2e25b34f00e30ec022674f1ca76783335a6a8f987ddb2"
+      }
+    ],
+    "status": "APPLIED",
+    "approval": {
+      "hash": "f7d247d1163658f563fea2d8a93a5dc181f1432b946efe5416e92539424e0aef",
+      "at": "2026-11-06T20:40:20.116Z",
+      "reviewer": "local-user"
+    },
+    "rollback": {
+      "status": "APPLIED",
+      "hash": "ad79c8adbe5dbad2af06e71c14425a6c858da76fd100f85c1ae1a8362853308d"
+    },
+    "proof": "Only JSON-encoded locator literals changed; whole remaining source and original business assertions retained. Scoped existing count-one assertions plus actual native positive/negative controls."
+  },
+  "nativeControls": [
+    {
+      "label": "Actual obsolete locator baseline",
+      "id": "beca052e-23bf-4cb9-95f1-b23d09da4f07",
+      "framework": "playwright",
+      "status": "FAILED",
+      "createdAt": "2026-11-06T20:39:50.946Z",
+      "proposalId": null,
+      "executableHash": "afe689d709f7c8d771d5f9f17f8700512350d7fb52a85878c5f3b13288a4aa80",
+      "selection": {
+        "kind": "feature",
+        "value": "contracts/features/promotions.feature"
+      },
+      "tests": [
+        {
+          "nativeIdentityHash": "8aa85d84234319496d2f9673228cd924f0a02bb69d367c18c3f009499df8874f",
+          "scenarioId": "free-shipping",
+          "featurePath": "contracts/features/promotions.feature",
+          "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #1",
+          "status": "FAILED",
+          "durationMs": 5784,
+          "failureEvidencePresent": true
+        },
+        {
+          "nativeIdentityHash": "9a0e55317b5731e9c92b4b19eb4e71c2fba7c23dc450b2d06264b294358a37d2",
+          "scenarioId": "free-shipping",
+          "featurePath": "contracts/features/promotions.feature",
+          "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #2",
+          "status": "FAILED",
+          "durationMs": 5831,
+          "failureEvidencePresent": true
+        }
+      ],
+      "primaryArtifacts": [
+        {
+          "name": "contract-snapshot.json",
+          "size": 1423,
+          "hash": "771704432bef416dd46fb32a96641c1b94f318830a8ffe4fe5b162f8011d589c"
+        },
+        {
+          "name": "results.json",
+          "size": 31316,
+          "hash": "72cceff16b0cdec461423295efe5c25dc7f3afe15d301c94f6e12e3fbc63b866"
+        },
+        {
+          "name": "runner.log",
+          "size": 8916,
+          "hash": "58743690188f219cfe7b45cf0f20e620e7acc7a719c2b49b1f993b1aa66f5728"
+        }
+      ]
+    },
+    {
+      "label": "Actual cancelled validation; no successful evidence",
+      "id": "048ce9d4-f6c7-4922-9d67-22e70747225e",
+      "framework": "playwright",
+      "status": "CANCELLED",
+      "createdAt": "2026-11-06T20:40:02.094Z",
+      "proposalId": "repair-726724b3-613e-43fd-af3a-f36e5316d980",
+      "executableHash": "925c44af01dfeeaa69ded63ded9ef037a72cebb8068c81a7f33c103faf45e01a",
+      "selection": {
+        "kind": "feature",
+        "value": "contracts/features/promotions.feature"
+      },
+      "tests": [],
+      "primaryArtifacts": [
+        {
+          "name": "contract-snapshot.json",
+          "size": 1423,
+          "hash": "771704432bef416dd46fb32a96641c1b94f318830a8ffe4fe5b162f8011d589c"
+        },
+        {
+          "name": "runner.log",
+          "size": 28,
+          "hash": "10d37f1dd3378866efa260f80fc6a7831f9fc636ae235a6a80f58b8c275a129b"
+        }
+      ]
+    },
+    {
+      "label": "Actual wrong product remains failing after locator repair",
+      "id": "5aebbf50-bb9d-4c2b-9b46-186c123b43e0",
+      "framework": "playwright",
+      "status": "FAILED",
+      "createdAt": "2026-11-06T20:40:02.739Z",
+      "proposalId": "repair-726724b3-613e-43fd-af3a-f36e5316d980",
+      "executableHash": "925c44af01dfeeaa69ded63ded9ef037a72cebb8068c81a7f33c103faf45e01a",
+      "selection": {
+        "kind": "feature",
+        "value": "contracts/features/promotions.feature"
+      },
+      "tests": [
+        {
+          "nativeIdentityHash": "8aa85d84234319496d2f9673228cd924f0a02bb69d367c18c3f009499df8874f",
+          "scenarioId": "free-shipping",
+          "featurePath": "contracts/features/promotions.feature",
+          "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #1",
+          "status": "FAILED",
+          "durationMs": 5929,
+          "failureEvidencePresent": true
+        },
+        {
+          "nativeIdentityHash": "9a0e55317b5731e9c92b4b19eb4e71c2fba7c23dc450b2d06264b294358a37d2",
+          "scenarioId": "free-shipping",
+          "featurePath": "contracts/features/promotions.feature",
+          "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #2",
+          "status": "FAILED",
+          "durationMs": 5890,
+          "failureEvidencePresent": true
+        }
+      ],
+      "primaryArtifacts": [
+        {
+          "name": "contract-snapshot.json",
+          "size": 1423,
+          "hash": "771704432bef416dd46fb32a96641c1b94f318830a8ffe4fe5b162f8011d589c"
+        },
+        {
+          "name": "results.json",
+          "size": 34344,
+          "hash": "ff2777dd4443a611d493f4f5d68a24403bdda738f84ead3ec752a8cf4b47d5e7"
+        },
+        {
+          "name": "runner.log",
+          "size": 9386,
+          "hash": "46a17614074f43dee0c9f3dd7d650c3c99849a428410d100c197ab38222e47d2"
+        }
+      ]
+    },
+    {
+      "label": "Actual corrected locator and correct product",
+      "id": "a914675d-6e3f-43f2-8ac2-65b44b1bfe02",
+      "framework": "playwright",
+      "status": "PASSED",
+      "createdAt": "2026-11-06T20:40:13.948Z",
+      "proposalId": "repair-726724b3-613e-43fd-af3a-f36e5316d980",
+      "executableHash": "925c44af01dfeeaa69ded63ded9ef037a72cebb8068c81a7f33c103faf45e01a",
+      "selection": {
+        "kind": "feature",
+        "value": "contracts/features/promotions.feature"
+      },
+      "tests": [
+        {
+          "nativeIdentityHash": "8aa85d84234319496d2f9673228cd924f0a02bb69d367c18c3f009499df8874f",
+          "scenarioId": "free-shipping",
+          "featurePath": "contracts/features/promotions.feature",
+          "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #1",
+          "status": "PASSED",
+          "durationMs": 870,
+          "failureEvidencePresent": false
+        },
+        {
+          "nativeIdentityHash": "9a0e55317b5731e9c92b4b19eb4e71c2fba7c23dc450b2d06264b294358a37d2",
+          "scenarioId": "free-shipping",
+          "featurePath": "contracts/features/promotions.feature",
+          "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #2",
+          "status": "PASSED",
+          "durationMs": 869,
+          "failureEvidencePresent": false
+        }
+      ],
+      "primaryArtifacts": [
+        {
+          "name": "contract-snapshot.json",
+          "size": 1423,
+          "hash": "771704432bef416dd46fb32a96641c1b94f318830a8ffe4fe5b162f8011d589c"
+        },
+        {
+          "name": "results.json",
+          "size": 8852,
+          "hash": "089bf3b3607c682421ea21ecc57643016d8dc11e6c1d63241171373144d661bf"
+        },
+        {
+          "name": "runner.log",
+          "size": 442,
+          "hash": "953f9792d25017557d9fc2437ccd076892f670795134a531aab6986efb6bbb28"
+        }
+      ]
+    },
+    {
+      "label": "Independent post-application native execution",
+      "id": "bd8927d1-af64-407a-8c45-8cc2a1cefc1f",
+      "framework": "playwright",
+      "status": "PASSED",
+      "createdAt": "2026-11-06T20:40:20.134Z",
+      "proposalId": null,
+      "executableHash": "b6861952394bb21790ae53f7c4b25880fb7233412a7ff552316abc099e3ec2bf",
+      "selection": {
+        "kind": "feature",
+        "value": "contracts/features/promotions.feature"
+      },
+      "tests": [
+        {
+          "nativeIdentityHash": "8aa85d84234319496d2f9673228cd924f0a02bb69d367c18c3f009499df8874f",
+          "scenarioId": "free-shipping",
+          "featurePath": "contracts/features/promotions.feature",
+          "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #1",
+          "status": "PASSED",
+          "durationMs": 1106,
+          "failureEvidencePresent": false
+        },
+        {
+          "nativeIdentityHash": "9a0e55317b5731e9c92b4b19eb4e71c2fba7c23dc450b2d06264b294358a37d2",
+          "scenarioId": "free-shipping",
+          "featurePath": "contracts/features/promotions.feature",
+          "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #2",
+          "status": "PASSED",
+          "durationMs": 1000,
+          "failureEvidencePresent": false
+        }
+      ],
+      "primaryArtifacts": [
+        {
+          "name": "contract-snapshot.json",
+          "size": 1423,
+          "hash": "771704432bef416dd46fb32a96641c1b94f318830a8ffe4fe5b162f8011d589c"
+        },
+        {
+          "name": "results.json",
+          "size": 8488,
+          "hash": "e3045f8e53d6febe52ff77169477290be509b9fe48c52b05051ef37a89db243a"
+        },
+        {
+          "name": "runner.log",
+          "size": 440,
+          "hash": "b091c4c1745f4097db653dd688250819da1ff08784dbee08a8b31d2f161f2b75"
+        }
+      ]
+    },
+    {
+      "label": "Actual product regression; repair refused",
+      "id": "d8b4bd8f-e9e8-4927-ace8-538670642cd1",
+      "framework": "playwright",
+      "status": "FAILED",
+      "createdAt": "2026-11-06T20:40:25.029Z",
+      "proposalId": null,
+      "executableHash": "b6861952394bb21790ae53f7c4b25880fb7233412a7ff552316abc099e3ec2bf",
+      "selection": {
+        "kind": "feature",
+        "value": "contracts/features/promotions.feature"
+      },
+      "tests": [
+        {
+          "nativeIdentityHash": "8aa85d84234319496d2f9673228cd924f0a02bb69d367c18c3f009499df8874f",
+          "scenarioId": "free-shipping",
+          "featurePath": "contracts/features/promotions.feature",
+          "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #1",
+          "status": "FAILED",
+          "durationMs": 6044,
+          "failureEvidencePresent": true
+        },
+        {
+          "nativeIdentityHash": "9a0e55317b5731e9c92b4b19eb4e71c2fba7c23dc450b2d06264b294358a37d2",
+          "scenarioId": "free-shipping",
+          "featurePath": "contracts/features/promotions.feature",
+          "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #2",
+          "status": "FAILED",
+          "durationMs": 6040,
+          "failureEvidencePresent": true
+        }
+      ],
+      "primaryArtifacts": [
+        {
+          "name": "contract-snapshot.json",
+          "size": 1423,
+          "hash": "771704432bef416dd46fb32a96641c1b94f318830a8ffe4fe5b162f8011d589c"
+        },
+        {
+          "name": "results.json",
+          "size": 32401,
+          "hash": "555372c5d1127b6fcb33218a04603fc010fbe7e2caf60728780f65ab658e832f"
+        },
+        {
+          "name": "runner.log",
+          "size": 9036,
+          "hash": "ec770ed7981badc768e5db641f53e009d7e4811dfc92e8c92b36a284bf9d3d8d"
+        }
+      ]
+    },
+    {
+      "label": "Actual unavailable environment",
+      "id": "188ffe00-e367-4860-8f9b-c749110d5785",
+      "framework": "playwright",
+      "status": "FAILED",
+      "createdAt": "2026-11-06T20:40:37.072Z",
+      "proposalId": null,
+      "executableHash": "b6861952394bb21790ae53f7c4b25880fb7233412a7ff552316abc099e3ec2bf",
+      "selection": {
+        "kind": "feature",
+        "value": "contracts/features/promotions.feature"
+      },
+      "tests": [
+        {
+          "nativeIdentityHash": "8aa85d84234319496d2f9673228cd924f0a02bb69d367c18c3f009499df8874f",
+          "scenarioId": "free-shipping",
+          "featurePath": "contracts/features/promotions.feature",
+          "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #1",
+          "status": "FAILED",
+          "durationMs": 1102,
+          "failureEvidencePresent": true
+        },
+        {
+          "nativeIdentityHash": "9a0e55317b5731e9c92b4b19eb4e71c2fba7c23dc450b2d06264b294358a37d2",
+          "scenarioId": "free-shipping",
+          "featurePath": "contracts/features/promotions.feature",
+          "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #2",
+          "status": "FAILED",
+          "durationMs": 1043,
+          "failureEvidencePresent": true
+        }
+      ],
+      "primaryArtifacts": [
+        {
+          "name": "contract-snapshot.json",
+          "size": 1423,
+          "hash": "771704432bef416dd46fb32a96641c1b94f318830a8ffe4fe5b162f8011d589c"
+        },
+        {
+          "name": "results.json",
+          "size": 27348,
+          "hash": "f79ed623eeff477d76e2856148c814fc7dbf23784b0bad51f3ac8e2395101581"
+        },
+        {
+          "name": "runner.log",
+          "size": 8670,
+          "hash": "c504ea22f183237ca1cd989490f4714789f12609ebefbee73ab6dfcce771df55"
+        }
+      ]
+    },
+    {
+      "label": "Invalid synthetic setup: actual Karate called-feature failure",
+      "id": "6b348782-3d60-45eb-a67b-f146e3ea1ddb",
+      "framework": "karate",
+      "status": "FAILED",
+      "createdAt": "2026-11-06T20:32:57.333Z",
+      "proposalId": null,
+      "executableHash": "e7ff25eb9465b20fa17b8bc069309db9fb546a25fcdf2fcbf3e4603085c80548",
+      "selection": {
+        "kind": "feature",
+        "value": "contracts/features/promotions.feature"
+      },
+      "tests": [
+        {
+          "nativeIdentityHash": "ef3fb9fd7eb258855095886a26bd496e07f1a9d68398d2bb1354ce94cb9e9677",
+          "scenarioId": "free-shipping",
+          "featurePath": "contracts/features/promotions.feature",
+          "name": "Return the correct promotion business state",
+          "status": "FAILED",
+          "durationMs": 531.385112,
+          "failureEvidencePresent": true
+        },
+        {
+          "nativeIdentityHash": "d83cde8c3c1485839a3dca12e37ea19f2ac9e323e9afba7e2f68c1e96d9a29e1",
+          "scenarioId": "free-shipping",
+          "featurePath": "contracts/features/promotions.feature",
+          "name": "Return the correct promotion business state",
+          "status": "FAILED",
+          "durationMs": 531.3747109999999,
+          "failureEvidencePresent": true
+        }
+      ],
+      "primaryArtifacts": [
+        {
+          "name": "cucumber-json/features.promotions.json",
+          "size": 10548,
+          "hash": "7248eb33d9f4c36488f5f188c4c6f86667879a712eaf5b746db7bbe6fb11fe76"
+        },
+        {
+          "name": "runner.log",
+          "size": 1019,
+          "hash": "3662537d22b2e5f471e373bcc5dbd35813eef36060bfb79db8fd80b7885f5883"
+        }
+      ]
+    }
+  ],
+  "dataBusinessAssertionsPreserved": true,
+  "classificationCases": "fixtures/phase-5-v1.json",
+  "ci": {
+    "status": "NOT_RUN",
+    "required": ["ubuntu-24.04-x64", "macos-15-arm64", "macos-15-intel"],
+    "lastRecordedBlocker": "Earlier final Phase 3 run was rejected before steps for GitHub account payments/spending limits; Phase 5 has not launched a new cloud job.",
+    "priorEvidence": "phase-3-ci-evidence.json",
+    "waived": false
+  },
+  "resolvedChecks": [
+    "Initial web actor selected GuestSetupPage instead of affected PromotionsPage; fixed explicit selection.",
+    "Initial DATA matcher did not recognize Karate nested expected-status/actual-status wording; versioned fixture and parser now cover it.",
+    "Auto-review rejected an unexecuted command proposing Git initialization in a synthetic source; new tests use read-only existing history and content invalidation instead."
+  ],
+  "notExecuted": [
+    "Current three-system CI",
+    "Full five-minute microphone/recorder regression in Phase 5",
+    "General/dynamic locator repair and automatic API repair outside supported scope"
+  ],
+  "privacy": "Raw failure reports/traces/screenshots remain private or Git-ignored. This is a safe projection, not a fabricated native report."
+}

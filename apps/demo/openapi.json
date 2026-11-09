@@ -1,0 +1,93 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Synthetic demonstration API",
+    "version": "1.0.0"
+  },
+  "security": [],
+  "paths": {
+    "/api/promotions/free-shipping": {
+      "get": {
+        "operationId": "getFreeShippingPromotion",
+        "parameters": [
+          {
+            "name": "countryIso",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "languageIso",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "brand",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Promotion business state; does not describe visible rendering",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "countryIso",
+                    "languageIso",
+                    "brand",
+                    "title",
+                    "discount",
+                    "subtitle",
+                    "thresholdMinor",
+                    "currency"
+                  ],
+                  "additionalProperties": false,
+                  "properties": {
+                    "countryIso": {
+                      "type": "string"
+                    },
+                    "languageIso": {
+                      "type": "string"
+                    },
+                    "brand": {
+                      "type": "string"
+                    },
+                    "title": {
+                      "type": "string"
+                    },
+                    "discount": {
+                      "type": "string"
+                    },
+                    "subtitle": {
+                      "type": "string"
+                    },
+                    "thresholdMinor": {
+                      "type": "integer"
+                    },
+                    "currency": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No promotion for context"
+          }
+        }
+      }
+    }
+  }
+}

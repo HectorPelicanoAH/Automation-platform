@@ -1,0 +1,356 @@
+{
+  "codeCommit": "f8e500608ffcfa9e485412db1ba808735999807a",
+  "workflowRun": 42125238265,
+  "conclusion": "success",
+  "artifactRetentionDays": 7,
+  "results": {
+    "macos-15": {
+      "os": "darwin",
+      "architecture": "arm64",
+      "node": "v24.22.2",
+      "runs": [
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 1336,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 1362,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 1307,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 1290,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 4925,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 4742,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 4578,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 5033,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "FAILED",
+          "tests": 2,
+          "durationMs": 6293,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 4876,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 1468,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "missing-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 1351,
+          "idsMapped": 0
+        },
+        {
+          "framework": "playwright",
+          "selection": "malformed-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 1401,
+          "idsMapped": 0
+        }
+      ],
+      "cancellation": "Both native frameworks cancelled with process-group cleanup",
+      "metadataLatency": {
+        "samples": 106,
+        "p95Ms": 6.280833000000712
+      }
+    },
+    "ubuntu-24.04": {
+      "os": "linux",
+      "architecture": "x64",
+      "node": "v24.22.2",
+      "runs": [
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 2835,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 2794,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 2961,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 2931,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 9469,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 9403,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 8978,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 9333,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "FAILED",
+          "tests": 2,
+          "durationMs": 7807,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 9454,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 2782,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "missing-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 2930,
+          "idsMapped": 0
+        },
+        {
+          "framework": "playwright",
+          "selection": "malformed-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 3034,
+          "idsMapped": 0
+        }
+      ],
+      "cancellation": "Both native frameworks cancelled with process-group cleanup",
+      "metadataLatency": {
+        "samples": 139,
+        "p95Ms": 18.776664999997593
+      }
+    },
+    "macos-15-intel": {
+      "os": "darwin",
+      "architecture": "x64",
+      "node": "v24.22.2",
+      "runs": [
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 6969,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 8304,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 8175,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 8034,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 26966,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "feature",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 23205,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "scenario",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 31259,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "tags",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 25544,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "FAILED",
+          "tests": 2,
+          "durationMs": 13230,
+          "idsMapped": 2
+        },
+        {
+          "framework": "karate",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 27237,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "suite",
+          "status": "PASSED",
+          "tests": 2,
+          "durationMs": 8405,
+          "idsMapped": 2
+        },
+        {
+          "framework": "playwright",
+          "selection": "missing-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 9077,
+          "idsMapped": 0
+        },
+        {
+          "framework": "playwright",
+          "selection": "malformed-report",
+          "status": "FAILED",
+          "tests": 0,
+          "durationMs": 8899,
+          "idsMapped": 0
+        }
+      ],
+      "cancellation": "Both native frameworks cancelled with process-group cleanup",
+      "metadataLatency": {
+        "samples": 267,
+        "p95Ms": 43.22472199998447
+      }
+    }
+  }
+}

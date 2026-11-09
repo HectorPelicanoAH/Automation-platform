@@ -1,0 +1,11 @@
+pnpm-lock.yaml
+templates/automation/ui/pnpm-lock.yaml
+templates/automation/api/gradlew
+templates/automation/api/gradlew.bat
+templates/automation/api/gradle/
+node_modules
+dist
+test-results
+playwright-report
+.features-gen
+docs/phase-0-validation.md

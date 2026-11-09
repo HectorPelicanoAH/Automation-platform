@@ -1,0 +1,71 @@
+--- a/ui/steps/promotions.ts
++++ b/ui/steps/promotions.ts
+@@ -1,16 +1,23 @@
+-import { createBdd } from 'playwright-bdd';
+-import { test } from '../fixtures';
+-import { guestCustomer } from '../builders/customer';
+-
+-const { Given, When, Then } = createBdd(test);
+-
+-Given(
+-  'a guest customer from {string} using language {string} and brand {string}',
+-  async ({ customer }, countryIso: string, languageIso: string, brand: string) => {
+-    Object.assign(customer, guestCustomer({ countryIso, languageIso, brand }));
+-  },
+-);
+-When('the customer visits the promotions page', async ({ promotions, customer }) => {
+-  await promotions.visit(customer);
+-});
+-
++import { createBdd } from 'playwright-bdd';
++import { test } from '../fixtures';
++import { guestCustomer } from '../builders/customer';
++
++const { Given, When, Then } = createBdd(test);
++
++Given(
++  'a guest customer from {string} using language {string} and brand {string}',
++  async ({ customer }, countryIso: string, languageIso: string, brand: string) => {
++    Object.assign(customer, guestCustomer({ countryIso, languageIso, brand }));
++  },
++);
++When('the customer visits the promotions page', async ({ promotions, customer }) => {
++  await promotions.visit(customer);
++});
++
++Then(
++  'the free shipping promotion shows title {string}, order threshold {string} and subtitle {string}',
++  async ({ promotions }, promoTitle: string, threshold: string, subtitle: string) => {
++    await promotions.expectPromotion(promoTitle, threshold, subtitle);
++  },
++);
++
+
+--- a/contracts/features/promotions.feature
++++ b/contracts/features/promotions.feature
+@@ -1,13 +1,12 @@
+-Feature: Promotional free shipping
+-
+-  @promotion @smoke @scenario:free-shipping
+-  Scenario Outline: Show the correct free shipping promotion
+-    Given a guest customer from "<countryIso>" using language "<languageIso>" and brand "<brand>"
+-    When the customer visits the promotions page
+-    Then the free shipping promotion shows title "<promoTitle>", discount "<discount>" and subtitle "<subtitle>"
+-
+-    Examples:
+-      | countryIso | languageIso | brand | promoTitle   | discount | subtitle                       |
+-      | es         | es          | demo  | Envío gratis | 50€      | En pedidos superiores a 50€     |
+-      | pt         | pt          | demo  | Envio grátis | 60€      | Em compras superiores a 60€     |
+-
++Feature: Promotional free shipping
++
++  @promotion @smoke @scenario:free-shipping
++  Scenario Outline: Show the correct free shipping promotion
++    Given a guest customer from "<countryIso>" using language "<languageIso>" and brand "<brand>"
++    When the customer visits the promotions page
++    Then the free shipping promotion shows title "<promoTitle>", order threshold "<threshold>" and subtitle "<subtitle>"
++
++    Examples:
++      | countryIso | languageIso | brand | promoTitle   | threshold | subtitle                   |
++      | es         | es          | demo  | Envío gratis | 50€       | En pedidos superiores a 50€ |
++      | pt         | pt          | demo  | Envio grátis | 60€       | Em compras superiores a 60€ |

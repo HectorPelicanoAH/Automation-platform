@@ -1,0 +1,1796 @@
+{
+  "evidenceVersion": 1,
+  "date": "2026-11-06",
+  "codeCommit": "9145c8c19ababe8f497641f3dde464eae5fbe0ae",
+  "scope": "Actual authenticated Codex against synthetic local repositories/demo only; not owner approval of production changes",
+  "provider": "Codex app-server",
+  "cliVersion": "0.162.0-alpha.2",
+  "model": "gpt-6.1-sol",
+  "reasoningEffort": "medium",
+  "pipeline": {
+    "analysis": {
+      "id": "9c7fb6a8-c482-4039-b17a-dfcd4eca5787",
+      "kind": "analysis",
+      "status": "SUCCEEDED",
+      "model": "gpt-6.1-sol",
+      "createdAt": "2026-11-06T12:13:04.956Z",
+      "finishedAt": "2026-11-06T12:13:25.390Z",
+      "toolCalls": 4,
+      "retrievalBytes": 9050,
+      "promptBytes": 4907,
+      "usage": {
+        "total": {
+          "totalTokens": 25023,
+          "inputTokens": 24360,
+          "cachedInputTokens": 14592,
+          "cacheWriteInputTokens": 0,
+          "outputTokens": 663,
+          "reasoningOutputTokens": 50
+        },
+        "last": {
+          "totalTokens": 10112,
+          "inputTokens": 9565,
+          "cachedInputTokens": 8064,
+          "cacheWriteInputTokens": 0,
+          "outputTokens": 547,
+          "reasoningOutputTokens": 50
+        },
+        "modelContextWindow": 475000
+      },
+      "error": null
+    },
+    "implementation": {
+      "id": "79f3d14e-9cd6-438a-80e4-5103015b3ca2",
+      "kind": "implementation",
+      "status": "SUCCEEDED",
+      "model": "gpt-6.1-sol",
+      "createdAt": "2026-11-06T12:19:59.607Z",
+      "finishedAt": "2026-11-06T12:20:22.249Z",
+      "toolCalls": 7,
+      "retrievalBytes": 14147,
+      "promptBytes": 5854,
+      "usage": {
+        "total": {
+          "totalTokens": 27731,
+          "inputTokens": 26984,
+          "cachedInputTokens": 15232,
+          "cacheWriteInputTokens": 0,
+          "outputTokens": 747,
+          "reasoningOutputTokens": 43
+        },
+        "last": {
+          "totalTokens": 12196,
+          "inputTokens": 11628,
+          "cachedInputTokens": 8448,
+          "cacheWriteInputTokens": 0,
+          "outputTokens": 568,
+          "reasoningOutputTokens": 43
+        },
+        "modelContextWindow": 475000
+      },
+      "error": null
+    },
+    "recording": "fixtures/phase-3-recording.json",
+    "generatedContract": "fixtures/phase-3-generated.feature",
+    "reviewedDiff": "fixtures/phase-3-real-generation.diff",
+    "nativeValidation": [
+      {
+        "status": "FAILED",
+        "framework": "playwright",
+        "tests": 2,
+        "passed": 0,
+        "failed": 2,
+        "scenarioIds": ["free-shipping"],
+        "stepNames": [
+          "Given a guest customer from \"es\" using language \"es\" and brand \"demo\"",
+          "When the customer visits the promotions page",
+          "Then the free shipping promotion shows title \"Envío gratis\", order threshold \"50€\" and subtitle \"En pedidos superiores a 50€\"",
+          "Given a guest customer from \"pt\" using language \"pt\" and brand \"demo\"",
+          "When the customer visits the promotions page",
+          "Then the free shipping promotion shows title \"Envio grátis\", order threshold \"60€\" and subtitle \"Em compras superiores a 60€\""
+        ],
+        "artifacts": [
+          {
+            "name": "artifacts/.last-run.json",
+            "sha256": "41f8b1a22efb2e0fe12355edd302564730d84a05413c63c07f47f8eb56042f3f",
+            "bytes": 145
+          },
+          {
+            "name": "artifacts/promotions.feature-Promoti-6ae84-hipping-promotion-Example-2/error-context.md",
+            "sha256": "09f08abf6734f1a182672b97b71e0227ed56b59cda23dbcfe84998921bcc0cfa",
+            "bytes": 2396
+          },
+          {
+            "name": "artifacts/promotions.feature-Promoti-6ae84-hipping-promotion-Example-2/test-failed-1.png",
+            "sha256": "c18b991a14acf11994031f3f24cd0693aa873d086b9b98685507e49454575203",
+            "bytes": 37478
+          },
+          {
+            "name": "artifacts/promotions.feature-Promoti-6ae84-hipping-promotion-Example-2/trace.zip",
+            "sha256": "c602c25e8e3fc7e8253890b47a4a09e14e5d3d27b924a4306c1351e0f6e207ff",
+            "bytes": 103476
+          },
+          {
+            "name": "artifacts/promotions.feature-Promoti-7da5e-hipping-promotion-Example-1/error-context.md",
+            "sha256": "f54b2fc796bab958d54aeb7680035bc14b4e625ca321dcdb1653d8f852973e89",
+            "bytes": 2395
+          },
+          {
+            "name": "artifacts/promotions.feature-Promoti-7da5e-hipping-promotion-Example-1/test-failed-1.png",
+            "sha256": "f2928c94db9e2e4f2131ead5daadff8e580b5c665d8c965a4aadf1bac9b8ebec",
+            "bytes": 37149
+          },
+          {
+            "name": "artifacts/promotions.feature-Promoti-7da5e-hipping-promotion-Example-1/trace.zip",
+            "sha256": "5fe87ef5560094e4db0ff9f92971e0a7bcaa886f4364a33bd0c2cf483d3af08a",
+            "bytes": 102963
+          },
+          {
+            "name": "contract-snapshot.json",
+            "sha256": "5f0ef7ba30fc44bbd66a1d9af0f42319ac42a2ce960d20d7220d3a5c94105189",
+            "bytes": 1422
+          },
+          {
+            "name": "html/data/1991bdfd0b04d1b5133bb26a51c1478ef2db2329.png",
+            "sha256": "c18b991a14acf11994031f3f24cd0693aa873d086b9b98685507e49454575203",
+            "bytes": 37478
+          },
+          {
+            "name": "html/data/1b35c453305889bd369bc7f15d61f533a7dbd1aa.zip",
+            "sha256": "5fe87ef5560094e4db0ff9f92971e0a7bcaa886f4364a33bd0c2cf483d3af08a",
+            "bytes": 102963
+          },
+          {
+            "name": "html/data/5b6e6fe5483caf3bc9b3c4c71a703abf8e5e781a.zip",
+            "sha256": "c602c25e8e3fc7e8253890b47a4a09e14e5d3d27b924a4306c1351e0f6e207ff",
+            "bytes": 103476
+          },
+          {
+            "name": "html/data/b00c50aaa27cd5b9ab80e2814acb5a7e2d1c73f3.md",
+            "sha256": "09f08abf6734f1a182672b97b71e0227ed56b59cda23dbcfe84998921bcc0cfa",
+            "bytes": 2396
+          },
+          {
+            "name": "html/data/c413fad5b1458c3e8eb13f087b43de8f0733620a.md",
+            "sha256": "f54b2fc796bab958d54aeb7680035bc14b4e625ca321dcdb1653d8f852973e89",
+            "bytes": 2395
+          },
+          {
+            "name": "html/data/f9b795cb721f0fee484b8b0e22a060c97484eaba.png",
+            "sha256": "f2928c94db9e2e4f2131ead5daadff8e580b5c665d8c965a4aadf1bac9b8ebec",
+            "bytes": 37149
+          },
+          {
+            "name": "html/index.html",
+            "sha256": "e3a486833aebd3e7a7ea524c4cdaca00c43ba48d2a9a73d0bd1cf929f48bfd75",
+            "bytes": 522470
+          },
+          {
+            "name": "html/trace/assets/codeMirrorModule-DNqxPF-E.js",
+            "sha256": "53102e1a7795f44c51b4f4172f9493d94922892a1f5cefe31edf50278e0b89cd",
+            "bytes": 307383
+          },
+          {
+            "name": "html/trace/assets/defaultSettingsView-BQT9Z6FV.js",
+            "sha256": "807a114bcf1e58a0f46a931b42ae3b94b1ba049d3d6a308f869dea12e9d15034",
+            "bytes": 669380
+          },
+          {
+            "name": "html/trace/assets/rolldown-runtime-QTnfLwEv.js",
+            "sha256": "5db5ba82eef00d1dee7e86e663098c9427d01183a88d357437daff295aec3e75",
+            "bytes": 694
+          },
+          {
+            "name": "html/trace/assets/urlMatch-Cgl6axSs.js",
+            "sha256": "2d35d162cc21790c6adc218fbd1c3ef77865646b50f60157e04715f48974d182",
+            "bytes": 806
+          },
+          {
+            "name": "html/trace/codeMirrorModule.-QdMvsKi.css",
+            "sha256": "20be824a82832b62cc04642d31da3c609fd280b23f1cdcb1e622c4f40aac5ab8",
+            "bytes": 6251
+          },
+          {
+            "name": "html/trace/codicon.DCmgc-ay.ttf",
+            "sha256": "0f1d5219934e96e83b8db162d60b4d8c09b5de1e7d38031cbafe4a3c0f2889c9",
+            "bytes": 80340
+          },
+          {
+            "name": "html/trace/defaultSettingsView.C8BeHuxd.css",
+            "sha256": "278101b68ab48ee6323a6afbf4e0e629324e10e96902a62a0875643a1bba3d94",
+            "bytes": 107270
+          },
+          {
+            "name": "html/trace/index.B5WWZ7O0.js",
+            "sha256": "9789a9a4d7ed850d2bd20d420f404c1eda41a99d2547f556a182b7f8e18216d5",
+            "bytes": 6642
+          },
+          {
+            "name": "html/trace/index.B_TqY17P.css",
+            "sha256": "08a212fcacae1866f44f065654afcc4c7d03409c68c74b3315c5bda17a0ca003",
+            "bytes": 2055
+          },
+          {
+            "name": "html/trace/index.html",
+            "sha256": "91ca3298b7beaf6fb7ed8448de516870fe7b625e57af10eba574fe009cc12157",
+            "bytes": 2451
+          },
+          {
+            "name": "html/trace/manifest.webmanifest",
+            "sha256": "d8540500603a32a39fe7e5a0375dc0f9ebafd11118e06a846db7efc608223ab9",
+            "bytes": 429
+          },
+          {
+            "name": "html/trace/playwright-logo.svg",
+            "sha256": "6b0a4367bdeab10995bc239278f04c68c10e48adbec15e799e01909a0d66dcb9",
+            "bytes": 5033
+          },
+          {
+            "name": "html/trace/snapshot.-ChLTbql.js",
+            "sha256": "339b2b5c67ef769f60fe959f78a3cfa42b2b8833e30f19cd32bf5194efe833b6",
+            "bytes": 650
+          },
+          {
+            "name": "html/trace/snapshot.html",
+            "sha256": "7b889f89c715eadd359d10462e3d8b6292cc632a7a86de75b07e8fc9934d1972",
+            "bytes": 389
+          },
+          {
+            "name": "html/trace/sw.bundle.js",
+            "sha256": "f2a3172345fbf372075d51204139002fe80dc573714a5c7508b581c049f94aca",
+            "bytes": 96720
+          },
+          {
+            "name": "html/trace/uiMode.CyMfwkXJ.css",
+            "sha256": "fb403cf0b07007bc1d771e29737f7408924da300e2fab8b289a3ef2e8fc08d7b",
+            "bytes": 54590
+          },
+          {
+            "name": "html/trace/uiMode.DuLwZHRf.js",
+            "sha256": "185efd95559d290f77cb5bb7c4efd58aeb8f0f74a5ae0b31d40d7a5413f0314c",
+            "bytes": 37909
+          },
+          {
+            "name": "html/trace/uiMode.html",
+            "sha256": "777b88825dacada77675168a4b44e17406992b85c7245cdde8588012cc42ba8b",
+            "bytes": 815
+          },
+          {
+            "name": "html/trace/xtermModule.kHJ-D0s7.css",
+            "sha256": "0dd60056134e6a2994a86b59a1e9789b9f04e92924da109aef8c923acaf08ce5",
+            "bytes": 2853
+          },
+          {
+            "name": "results.json",
+            "sha256": "27e4a097347cdf9fcf382e2d01e340932c981b1207d3bba9d430f08be0e7a393",
+            "bytes": 31754
+          },
+          {
+            "name": "runner.log",
+            "sha256": "d4b6073c7f85d02cf793f3bb427aa86f4c5d63de7ed8c343a3f618097f83272f",
+            "bytes": 8922
+          }
+        ]
+      },
+      {
+        "status": "PASSED",
+        "framework": "playwright",
+        "tests": 2,
+        "passed": 2,
+        "failed": 0,
+        "scenarioIds": ["free-shipping"],
+        "stepNames": [
+          "Given a guest customer from \"es\" using language \"es\" and brand \"demo\"",
+          "When the customer visits the promotions page",
+          "Then the free shipping promotion shows title \"Envío gratis\", order threshold \"50€\" and subtitle \"En pedidos superiores a 50€\"",
+          "Given a guest customer from \"pt\" using language \"pt\" and brand \"demo\"",
+          "When the customer visits the promotions page",
+          "Then the free shipping promotion shows title \"Envio grátis\", order threshold \"60€\" and subtitle \"Em compras superiores a 60€\""
+        ],
+        "artifacts": [
+          {
+            "name": "artifacts/.last-run.json",
+            "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903",
+            "bytes": 45
+          },
+          {
+            "name": "contract-snapshot.json",
+            "sha256": "5f0ef7ba30fc44bbd66a1d9af0f42319ac42a2ce960d20d7220d3a5c94105189",
+            "bytes": 1422
+          },
+          {
+            "name": "html/index.html",
+            "sha256": "3f58c1f38d000a01f9fb29d998ecab8e207fe3e21fff342b70c056d4d08fc6ae",
+            "bytes": 520754
+          },
+          {
+            "name": "results.json",
+            "sha256": "1816a557335515c16e9461c421ac243535b803e19e7aa5c5cc8514812357e52a",
+            "bytes": 8398
+          },
+          {
+            "name": "runner.log",
+            "sha256": "f736dcf22c3c974abbaf427b6f7c6e14ac40936417b7675f75198a84c1ebe059",
+            "bytes": 442
+          }
+        ]
+      }
+    ],
+    "application": {
+      "source": "Actual authenticated model output; explicit synthetic diff review and native execution; no owner repositories modified",
+      "proposalId": "75dec8aa-a705-4fba-adbd-872b3462bfdf",
+      "diffHash": "6086c22fae2622d5e7592b00081e3796656f65970ebb3d5a62b48d978f61b338",
+      "status": "APPLIED",
+      "independentStats": {
+        "startTime": "2026-11-06T12:44:45.420Z",
+        "duration": 3036.594,
+        "expected": 2,
+        "skipped": 0,
+        "unexpected": 0,
+        "flaky": 0
+      },
+      "index": {
+        "parsed": 2,
+        "reused": 4,
+        "stepFacts": [
+          "a guest customer from {string} using language {string} and brand {string}",
+          "the customer visits the promotions page",
+          "the free shipping promotion shows title {string}, order threshold {string} and subtitle {string}"
+        ]
+      }
+    }
+  },
+  "realCancellation": {
+    "status": "CANCELLED",
+    "latencyMs": 505.79409699999997,
+    "usage": null,
+    "note": "No usage notification before cancellation; missing is not zero."
+  },
+  "authentication": {
+    "humanExplicitlyAuthorizedTemporaryReuse": true,
+    "temporaryCodexHomeRemoved": true,
+    "aiDisabled": true,
+    "scope": "Explicitly authorized synthetic acceptance only; no global credential export"
+  },
+  "managerTaskHistory": {
+    "records": [
+      {
+        "id": "c4c1798b-da7e-48ba-9aed-a0af5bab8365",
+        "kind": "analysis",
+        "status": "CANCELLED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:39:40.426Z",
+        "finishedAt": "2026-11-06T12:39:43.073Z",
+        "toolCalls": 0,
+        "retrievalBytes": 0,
+        "promptBytes": 4907,
+        "usage": null,
+        "error": "Task cancelled"
+      },
+      {
+        "id": "62bed7c5-d0b4-4384-bac6-c0de20ea5d93",
+        "kind": "analysis",
+        "status": "SUCCEEDED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:36:45.292Z",
+        "finishedAt": "2026-11-06T12:37:11.325Z",
+        "toolCalls": 4,
+        "retrievalBytes": 6928,
+        "promptBytes": 4907,
+        "usage": {
+          "total": {
+            "totalTokens": 25872,
+            "inputTokens": 25012,
+            "cachedInputTokens": 15488,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 860,
+            "reasoningOutputTokens": 100
+          },
+          "last": {
+            "totalTokens": 10119,
+            "inputTokens": 9396,
+            "cachedInputTokens": 8576,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 723,
+            "reasoningOutputTokens": 100
+          },
+          "modelContextWindow": 475000
+        },
+        "error": null
+      },
+      {
+        "id": "915f2b1e-e015-4697-9b24-816ee8b2c1fa",
+        "kind": "implementation",
+        "status": "SUCCEEDED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:29:44.421Z",
+        "finishedAt": "2026-11-06T12:30:12.523Z",
+        "toolCalls": 9,
+        "retrievalBytes": 19363,
+        "promptBytes": 5854,
+        "usage": {
+          "total": {
+            "totalTokens": 42759,
+            "inputTokens": 41833,
+            "cachedInputTokens": 18944,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 926,
+            "reasoningOutputTokens": 32
+          },
+          "last": {
+            "totalTokens": 14424,
+            "inputTokens": 13790,
+            "cachedInputTokens": 11904,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 634,
+            "reasoningOutputTokens": 0
+          },
+          "modelContextWindow": 475000
+        },
+        "error": null
+      },
+      {
+        "id": "fefe5e8f-e7ca-4e28-8783-16494a730d36",
+        "kind": "analysis",
+        "status": "FAILED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:25:56.821Z",
+        "finishedAt": "2026-11-06T12:26:23.667Z",
+        "toolCalls": 5,
+        "retrievalBytes": 10610,
+        "promptBytes": 4907,
+        "usage": {
+          "total": {
+            "totalTokens": 26616,
+            "inputTokens": 25660,
+            "cachedInputTokens": 15104,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 956,
+            "reasoningOutputTokens": 57
+          },
+          "last": {
+            "totalTokens": 11208,
+            "inputTokens": 10389,
+            "cachedInputTokens": 8320,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 819,
+            "reasoningOutputTokens": 57
+          },
+          "modelContextWindow": 475000
+        },
+        "error": "Claim has missing/unknown evidence"
+      },
+      {
+        "id": "bcd0741c-9346-48b8-abfd-ead2f49d0164",
+        "kind": "analysis",
+        "status": "SUCCEEDED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:25:34.282Z",
+        "finishedAt": "2026-11-06T12:25:53.918Z",
+        "toolCalls": 4,
+        "retrievalBytes": 9114,
+        "promptBytes": 4907,
+        "usage": {
+          "total": {
+            "totalTokens": 25054,
+            "inputTokens": 24394,
+            "cachedInputTokens": 6528,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 660,
+            "reasoningOutputTokens": 60
+          },
+          "last": {
+            "totalTokens": 10125,
+            "inputTokens": 9582,
+            "cachedInputTokens": 0,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 543,
+            "reasoningOutputTokens": 60
+          },
+          "modelContextWindow": 475000
+        },
+        "error": null
+      },
+      {
+        "id": "79f3d14e-9cd6-438a-80e4-5103015b3ca2",
+        "kind": "implementation",
+        "status": "SUCCEEDED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:19:59.607Z",
+        "finishedAt": "2026-11-06T12:20:22.249Z",
+        "toolCalls": 7,
+        "retrievalBytes": 14147,
+        "promptBytes": 5854,
+        "usage": {
+          "total": {
+            "totalTokens": 27731,
+            "inputTokens": 26984,
+            "cachedInputTokens": 15232,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 747,
+            "reasoningOutputTokens": 43
+          },
+          "last": {
+            "totalTokens": 12196,
+            "inputTokens": 11628,
+            "cachedInputTokens": 8448,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 568,
+            "reasoningOutputTokens": 43
+          },
+          "modelContextWindow": 475000
+        },
+        "error": null
+      },
+      {
+        "id": "43787eac-5c13-484d-9d37-c81f26b43736",
+        "kind": "implementation",
+        "status": "FAILED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:18:24.858Z",
+        "finishedAt": "2026-11-06T12:18:45.678Z",
+        "toolCalls": 7,
+        "retrievalBytes": 14148,
+        "promptBytes": 5635,
+        "usage": {
+          "total": {
+            "totalTokens": 27432,
+            "inputTokens": 26730,
+            "cachedInputTokens": 14976,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 702,
+            "reasoningOutputTokens": 40
+          },
+          "last": {
+            "totalTokens": 12063,
+            "inputTokens": 11546,
+            "cachedInputTokens": 8320,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 517,
+            "reasoningOutputTokens": 40
+          },
+          "modelContextWindow": 475000
+        },
+        "error": "Reuse plan names an unknown capability"
+      },
+      {
+        "id": "d01eece7-e8a5-471b-99ed-5a45e9c11cf9",
+        "kind": "implementation",
+        "status": "FAILED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:15:05.744Z",
+        "finishedAt": "2026-11-06T12:15:24.672Z",
+        "toolCalls": 7,
+        "retrievalBytes": 13955,
+        "promptBytes": 5635,
+        "usage": {
+          "total": {
+            "totalTokens": 27433,
+            "inputTokens": 26795,
+            "cachedInputTokens": 14976,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 638,
+            "reasoningOutputTokens": 0
+          },
+          "last": {
+            "totalTokens": 12085,
+            "inputTokens": 11632,
+            "cachedInputTokens": 8320,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 453,
+            "reasoningOutputTokens": 0
+          },
+          "modelContextWindow": 475000
+        },
+        "error": "Reuse plan names an unknown capability"
+      },
+      {
+        "id": "9c7fb6a8-c482-4039-b17a-dfcd4eca5787",
+        "kind": "analysis",
+        "status": "SUCCEEDED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:13:04.956Z",
+        "finishedAt": "2026-11-06T12:13:25.390Z",
+        "toolCalls": 4,
+        "retrievalBytes": 9050,
+        "promptBytes": 4907,
+        "usage": {
+          "total": {
+            "totalTokens": 25023,
+            "inputTokens": 24360,
+            "cachedInputTokens": 14592,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 663,
+            "reasoningOutputTokens": 50
+          },
+          "last": {
+            "totalTokens": 10112,
+            "inputTokens": 9565,
+            "cachedInputTokens": 8064,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 547,
+            "reasoningOutputTokens": 50
+          },
+          "modelContextWindow": 475000
+        },
+        "error": null
+      },
+      {
+        "id": "e3ab416c-0c4a-4e59-9498-84a2518d82d7",
+        "kind": "analysis",
+        "status": "SUCCEEDED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:09:37.103Z",
+        "finishedAt": "2026-11-06T12:10:07.187Z",
+        "toolCalls": 4,
+        "retrievalBytes": 10836,
+        "promptBytes": 4680,
+        "usage": {
+          "total": {
+            "totalTokens": 34545,
+            "inputTokens": 33881,
+            "cachedInputTokens": 23168,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 664,
+            "reasoningOutputTokens": 10
+          },
+          "last": {
+            "totalTokens": 10820,
+            "inputTokens": 10304,
+            "cachedInputTokens": 8704,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 516,
+            "reasoningOutputTokens": 0
+          },
+          "modelContextWindow": 475000
+        },
+        "error": null
+      },
+      {
+        "id": "94e33466-11ed-4032-9679-efbc037304b7",
+        "kind": "analysis",
+        "status": "FAILED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:05:57.499Z",
+        "finishedAt": "2026-11-06T12:05:57.952Z",
+        "toolCalls": 0,
+        "retrievalBytes": 0,
+        "promptBytes": 4680,
+        "usage": null,
+        "error": "Codex RPC error: {\"code\":-32600,\"message\":\"Invalid request: readOnly.access is no longer supported; use permissionProfile for restricted reads\"}"
+      }
+    ],
+    "counts": {
+      "SUCCEEDED": 6,
+      "FAILED": 4,
+      "CANCELLED": 1
+    },
+    "knownReportedTokens": 262465,
+    "missingUsageTasks": 2,
+    "note": "Mixed analysis, implementation, rejected proposals, protocol failure and cancellation; not an end-to-end success-rate cohort."
+  },
+  "skillTrials": [
+    {
+      "case": "E01",
+      "arm": "baseline",
+      "task": {
+        "id": "bcd0741c-9346-48b8-abfd-ead2f49d0164",
+        "kind": "analysis",
+        "status": "SUCCEEDED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:25:34.282Z",
+        "finishedAt": "2026-11-06T12:25:53.918Z",
+        "toolCalls": 4,
+        "retrievalBytes": 9114,
+        "promptBytes": 4907,
+        "usage": {
+          "total": {
+            "totalTokens": 25054,
+            "inputTokens": 24394,
+            "cachedInputTokens": 6528,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 660,
+            "reasoningOutputTokens": 60
+          },
+          "last": {
+            "totalTokens": 10125,
+            "inputTokens": 9582,
+            "cachedInputTokens": 0,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 543,
+            "reasoningOutputTokens": 60
+          },
+          "modelContextWindow": 475000
+        },
+        "error": null
+      },
+      "effectivePromptBytes": 4907,
+      "skillSha256": null,
+      "outcome": "PASS_EXPLORATORY",
+      "humanReview": "Predefined synthetic rubric checked; no activation or production grants",
+      "gherkin": "Feature: Promotional free shipping\n\n  @promotion @smoke @scenario:free-shipping\n  Scenario Outline: Show the correct free shipping promotion\n    Given a guest customer from \"<countryIso>\" using language \"<languageIso>\" and brand \"<brand>\"\n    When the customer visits the promotions page\n    Then the free shipping promotion shows title \"<promoTitle>\", order threshold \"<threshold>\" and subtitle \"<subtitle>\"\n\n    Examples:\n      | countryIso | languageIso | brand | promoTitle   | threshold | subtitle                   |\n      | es         | es          | demo  | Envío gratis | 50€       | En pedidos superiores a 50€ |\n      | pt         | pt          | demo  | Envio grátis | 60€       | Em compras superiores a 60€ |\n",
+      "claims": [
+        {
+          "text": "The recorded promotion region contains title \"Envío gratis\", amount \"50€\" and subtitle \"En pedidos superiores a 50€\".",
+          "provenance": "OBSERVED",
+          "evidenceIds": ["event:9"]
+        },
+        {
+          "text": "The recorded promotion region contains title \"Envio grátis\", amount \"60€\" and subtitle \"Em compras superiores a 60€\".",
+          "provenance": "OBSERVED",
+          "evidenceIds": ["event:18"]
+        },
+        {
+          "text": "Narration identifies the guest contexts as es/es/demo and pt/pt/demo and associates them with the Spanish and Portuguese fields respectively; recorded URL parameter values are redacted.",
+          "provenance": "NARRATED",
+          "evidenceIds": ["narration:0"]
+        },
+        {
+          "text": "The amounts represent free-shipping order thresholds, not price reductions.",
+          "provenance": "NARRATED",
+          "evidenceIds": ["narration:0"]
+        }
+      ],
+      "questions": [
+        {
+          "id": "f79e8086-abf8-4a25-9a21-0a9792ddb031",
+          "text": "If checkout eligibility is in scope, what rules and boundary behavior should be verified?"
+        },
+        {
+          "id": "70cf5372-4781-4a49-8853-2e54b44ff1a5",
+          "text": "Are additional country, language or brand combinations in scope, and what should they display?"
+        }
+      ],
+      "evidenceHash": "253af0a8310675c6b4a137be57cf422da1bf1b2924c171ba3a6a2e7fee2b95a2",
+      "targetRevision": "197616f9025c250942e9b4f456a64b4f9f592e099e1cee8fa6b4e58053f68e80"
+    },
+    {
+      "case": "E01",
+      "arm": "candidate-v1",
+      "task": {
+        "id": "fefe5e8f-e7ca-4e28-8783-16494a730d36",
+        "kind": "analysis",
+        "status": "FAILED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:25:56.821Z",
+        "finishedAt": "2026-11-06T12:26:23.667Z",
+        "toolCalls": 5,
+        "retrievalBytes": 10610,
+        "promptBytes": 4907,
+        "usage": {
+          "total": {
+            "totalTokens": 26616,
+            "inputTokens": 25660,
+            "cachedInputTokens": 15104,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 956,
+            "reasoningOutputTokens": 57
+          },
+          "last": {
+            "totalTokens": 11208,
+            "inputTokens": 10389,
+            "cachedInputTokens": 8320,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 819,
+            "reasoningOutputTokens": 57
+          },
+          "modelContextWindow": 475000
+        },
+        "error": "Claim has missing/unknown evidence"
+      },
+      "effectivePromptBytes": 6811,
+      "skillSha256": "59000040610c09896b93493923532de5968ab2be996cf6682713c419bced73a5",
+      "outcome": "REJECTED_INVALID_EVIDENCE",
+      "humanReview": "Predefined synthetic rubric checked; no activation or production grants"
+    },
+    {
+      "case": "E01",
+      "arm": "candidate-v2",
+      "task": {
+        "id": "62bed7c5-d0b4-4384-bac6-c0de20ea5d93",
+        "kind": "analysis",
+        "status": "SUCCEEDED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:36:45.292Z",
+        "finishedAt": "2026-11-06T12:37:11.325Z",
+        "toolCalls": 4,
+        "retrievalBytes": 6928,
+        "promptBytes": 4907,
+        "usage": {
+          "total": {
+            "totalTokens": 25872,
+            "inputTokens": 25012,
+            "cachedInputTokens": 15488,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 860,
+            "reasoningOutputTokens": 100
+          },
+          "last": {
+            "totalTokens": 10119,
+            "inputTokens": 9396,
+            "cachedInputTokens": 8576,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 723,
+            "reasoningOutputTokens": 100
+          },
+          "modelContextWindow": 475000
+        },
+        "error": null
+      },
+      "effectivePromptBytes": 7283,
+      "skillSha256": "d19fd45aa2c4f98a4bacfa6d3cc11da16cb4a9a5fc67c8c2f83ca49cd34c2fe3",
+      "outcome": "PASS_EXPLORATORY",
+      "humanReview": "Predefined synthetic rubric checked; no activation or production grants",
+      "gherkin": "# Proposal for contracts/features/promotions.feature; not approved or implemented.\n# Reuse: existing feature and @scenario:free-shipping; no duplicate feature proposed.\n# Existing Given and When steps match ui/steps/promotions.ts.\n# Proposed Then replaces misleading 'discount' terminology with 'order threshold'.\n# Validation: unvalidated; no parser found through lookup or available through granted tools.\nFeature: Promotional free shipping\n\n  @promotion @smoke @scenario:free-shipping\n  Scenario Outline: Show the correct free shipping promotion\n    Given a guest customer from \"<countryIso>\" using language \"<languageIso>\" and brand \"<brand>\"\n    When the customer visits the promotions page\n    Then the free shipping promotion shows title \"<promoTitle>\", order threshold \"<orderThreshold>\" and subtitle \"<subtitle>\"\n\n    Examples:\n      | countryIso | languageIso | brand | promoTitle   | orderThreshold | subtitle                   |\n      | es         | es          | demo  | Envío gratis | 50€            | En pedidos superiores a 50€ |\n      | pt         | pt          | demo  | Envio grátis | 60€            | Em compras superiores a 60€ |\n",
+      "claims": [
+        {
+          "text": "At 7033.38 ms, the promotion region visibly contains title \"Envío gratis\", amount \"50€\" and subtitle \"En pedidos superiores a 50€\".",
+          "provenance": "OBSERVED",
+          "evidenceIds": ["event:9"]
+        },
+        {
+          "text": "At 7801.70 ms, the promotion region visibly contains title \"Envio grátis\", amount \"60€\" and subtitle \"Em compras superiores a 60€\".",
+          "provenance": "OBSERVED",
+          "evidenceIds": ["event:18"]
+        },
+        {
+          "text": "Narration at 0–8713.71 ms specifies guest contexts es/es/demo and pt/pt/demo and associates them respectively with the Spanish and Portuguese expected display values. The recorded URL parameters are redacted.",
+          "provenance": "NARRATED",
+          "evidenceIds": ["narration:0"]
+        },
+        {
+          "text": "Narration identifies the amounts as free-shipping order thresholds, not price reductions, and provides no evidence for other countries or checkout eligibility.",
+          "provenance": "NARRATED",
+          "evidenceIds": ["narration:0"]
+        }
+      ],
+      "questions": [
+        {
+          "id": "63ffdbee-4253-41a1-848b-31d01e6bbf2c",
+          "text": "Do you approve this exact proposed contract revision, including replacing “discount” with “order threshold”, for subsequent implementation?"
+        },
+        {
+          "id": "33360f5b-174b-4f02-8638-d44386158cda",
+          "text": "Should eligibility or threshold-boundary behavior be covered separately? If so, please supply explicit requirements or recordings; neither is established here."
+        }
+      ],
+      "evidenceHash": "253af0a8310675c6b4a137be57cf422da1bf1b2924c171ba3a6a2e7fee2b95a2",
+      "targetRevision": "197616f9025c250942e9b4f456a64b4f9f592e099e1cee8fa6b4e58053f68e80"
+    },
+    {
+      "case": "E04",
+      "arm": "baseline",
+      "task": {
+        "id": "79f3d14e-9cd6-438a-80e4-5103015b3ca2",
+        "kind": "implementation",
+        "status": "SUCCEEDED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:19:59.607Z",
+        "finishedAt": "2026-11-06T12:20:22.249Z",
+        "toolCalls": 7,
+        "retrievalBytes": 14147,
+        "promptBytes": 5854,
+        "usage": {
+          "total": {
+            "totalTokens": 27731,
+            "inputTokens": 26984,
+            "cachedInputTokens": 15232,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 747,
+            "reasoningOutputTokens": 43
+          },
+          "last": {
+            "totalTokens": 12196,
+            "inputTokens": 11628,
+            "cachedInputTokens": 8448,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 568,
+            "reasoningOutputTokens": 43
+          },
+          "modelContextWindow": 475000
+        },
+        "error": null
+      },
+      "effectivePromptBytes": 5854,
+      "skillSha256": null,
+      "outcome": "PASS_EXPLORATORY",
+      "humanReview": "Predefined synthetic rubric checked; no activation or production grants",
+      "reuse": [
+        {
+          "path": "ui/steps/promotions.ts",
+          "symbol": "a guest customer from {string} using language {string} and brand {string}"
+        },
+        {
+          "path": "ui/steps/promotions.ts",
+          "symbol": "the customer visits the promotions page"
+        },
+        {
+          "path": "ui/pages/PromotionsPage.ts",
+          "symbol": "PromotionsPage.visit"
+        },
+        {
+          "path": "ui/pages/PromotionsPage.ts",
+          "symbol": "PromotionsPage.expectPromotion"
+        },
+        {
+          "path": "ui/fixtures.ts",
+          "symbol": "test"
+        },
+        {
+          "path": "ui/builders/customer.ts",
+          "symbol": "guestCustomer"
+        }
+      ],
+      "changedPaths": ["ui/steps/promotions.ts", "contracts/features/promotions.feature"],
+      "contractHash": "3d04083a93dfaba1c7a00ab900ce4447adecd8126ed7965160803861903affaf",
+      "evidenceHash": "253af0a8310675c6b4a137be57cf422da1bf1b2924c171ba3a6a2e7fee2b95a2",
+      "targetRevision": "197616f9025c250942e9b4f456a64b4f9f592e099e1cee8fa6b4e58053f68e80",
+      "diffHash": "6086c22fae2622d5e7592b00081e3796656f65970ebb3d5a62b48d978f61b338",
+      "nativeValidation": [
+        {
+          "status": "FAILED",
+          "framework": "playwright",
+          "tests": 2,
+          "passed": 0,
+          "failed": 2,
+          "scenarioIds": ["free-shipping"],
+          "stepNames": [
+            "Given a guest customer from \"es\" using language \"es\" and brand \"demo\"",
+            "When the customer visits the promotions page",
+            "Then the free shipping promotion shows title \"Envío gratis\", order threshold \"50€\" and subtitle \"En pedidos superiores a 50€\"",
+            "Given a guest customer from \"pt\" using language \"pt\" and brand \"demo\"",
+            "When the customer visits the promotions page",
+            "Then the free shipping promotion shows title \"Envio grátis\", order threshold \"60€\" and subtitle \"Em compras superiores a 60€\""
+          ],
+          "artifacts": [
+            {
+              "name": "artifacts/.last-run.json",
+              "sha256": "41f8b1a22efb2e0fe12355edd302564730d84a05413c63c07f47f8eb56042f3f",
+              "bytes": 145
+            },
+            {
+              "name": "artifacts/promotions.feature-Promoti-6ae84-hipping-promotion-Example-2/error-context.md",
+              "sha256": "09f08abf6734f1a182672b97b71e0227ed56b59cda23dbcfe84998921bcc0cfa",
+              "bytes": 2396
+            },
+            {
+              "name": "artifacts/promotions.feature-Promoti-6ae84-hipping-promotion-Example-2/test-failed-1.png",
+              "sha256": "c18b991a14acf11994031f3f24cd0693aa873d086b9b98685507e49454575203",
+              "bytes": 37478
+            },
+            {
+              "name": "artifacts/promotions.feature-Promoti-6ae84-hipping-promotion-Example-2/trace.zip",
+              "sha256": "c602c25e8e3fc7e8253890b47a4a09e14e5d3d27b924a4306c1351e0f6e207ff",
+              "bytes": 103476
+            },
+            {
+              "name": "artifacts/promotions.feature-Promoti-7da5e-hipping-promotion-Example-1/error-context.md",
+              "sha256": "f54b2fc796bab958d54aeb7680035bc14b4e625ca321dcdb1653d8f852973e89",
+              "bytes": 2395
+            },
+            {
+              "name": "artifacts/promotions.feature-Promoti-7da5e-hipping-promotion-Example-1/test-failed-1.png",
+              "sha256": "f2928c94db9e2e4f2131ead5daadff8e580b5c665d8c965a4aadf1bac9b8ebec",
+              "bytes": 37149
+            },
+            {
+              "name": "artifacts/promotions.feature-Promoti-7da5e-hipping-promotion-Example-1/trace.zip",
+              "sha256": "5fe87ef5560094e4db0ff9f92971e0a7bcaa886f4364a33bd0c2cf483d3af08a",
+              "bytes": 102963
+            },
+            {
+              "name": "contract-snapshot.json",
+              "sha256": "5f0ef7ba30fc44bbd66a1d9af0f42319ac42a2ce960d20d7220d3a5c94105189",
+              "bytes": 1422
+            },
+            {
+              "name": "html/data/1991bdfd0b04d1b5133bb26a51c1478ef2db2329.png",
+              "sha256": "c18b991a14acf11994031f3f24cd0693aa873d086b9b98685507e49454575203",
+              "bytes": 37478
+            },
+            {
+              "name": "html/data/1b35c453305889bd369bc7f15d61f533a7dbd1aa.zip",
+              "sha256": "5fe87ef5560094e4db0ff9f92971e0a7bcaa886f4364a33bd0c2cf483d3af08a",
+              "bytes": 102963
+            },
+            {
+              "name": "html/data/5b6e6fe5483caf3bc9b3c4c71a703abf8e5e781a.zip",
+              "sha256": "c602c25e8e3fc7e8253890b47a4a09e14e5d3d27b924a4306c1351e0f6e207ff",
+              "bytes": 103476
+            },
+            {
+              "name": "html/data/b00c50aaa27cd5b9ab80e2814acb5a7e2d1c73f3.md",
+              "sha256": "09f08abf6734f1a182672b97b71e0227ed56b59cda23dbcfe84998921bcc0cfa",
+              "bytes": 2396
+            },
+            {
+              "name": "html/data/c413fad5b1458c3e8eb13f087b43de8f0733620a.md",
+              "sha256": "f54b2fc796bab958d54aeb7680035bc14b4e625ca321dcdb1653d8f852973e89",
+              "bytes": 2395
+            },
+            {
+              "name": "html/data/f9b795cb721f0fee484b8b0e22a060c97484eaba.png",
+              "sha256": "f2928c94db9e2e4f2131ead5daadff8e580b5c665d8c965a4aadf1bac9b8ebec",
+              "bytes": 37149
+            },
+            {
+              "name": "html/index.html",
+              "sha256": "e3a486833aebd3e7a7ea524c4cdaca00c43ba48d2a9a73d0bd1cf929f48bfd75",
+              "bytes": 522470
+            },
+            {
+              "name": "html/trace/assets/codeMirrorModule-DNqxPF-E.js",
+              "sha256": "53102e1a7795f44c51b4f4172f9493d94922892a1f5cefe31edf50278e0b89cd",
+              "bytes": 307383
+            },
+            {
+              "name": "html/trace/assets/defaultSettingsView-BQT9Z6FV.js",
+              "sha256": "807a114bcf1e58a0f46a931b42ae3b94b1ba049d3d6a308f869dea12e9d15034",
+              "bytes": 669380
+            },
+            {
+              "name": "html/trace/assets/rolldown-runtime-QTnfLwEv.js",
+              "sha256": "5db5ba82eef00d1dee7e86e663098c9427d01183a88d357437daff295aec3e75",
+              "bytes": 694
+            },
+            {
+              "name": "html/trace/assets/urlMatch-Cgl6axSs.js",
+              "sha256": "2d35d162cc21790c6adc218fbd1c3ef77865646b50f60157e04715f48974d182",
+              "bytes": 806
+            },
+            {
+              "name": "html/trace/codeMirrorModule.-QdMvsKi.css",
+              "sha256": "20be824a82832b62cc04642d31da3c609fd280b23f1cdcb1e622c4f40aac5ab8",
+              "bytes": 6251
+            },
+            {
+              "name": "html/trace/codicon.DCmgc-ay.ttf",
+              "sha256": "0f1d5219934e96e83b8db162d60b4d8c09b5de1e7d38031cbafe4a3c0f2889c9",
+              "bytes": 80340
+            },
+            {
+              "name": "html/trace/defaultSettingsView.C8BeHuxd.css",
+              "sha256": "278101b68ab48ee6323a6afbf4e0e629324e10e96902a62a0875643a1bba3d94",
+              "bytes": 107270
+            },
+            {
+              "name": "html/trace/index.B5WWZ7O0.js",
+              "sha256": "9789a9a4d7ed850d2bd20d420f404c1eda41a99d2547f556a182b7f8e18216d5",
+              "bytes": 6642
+            },
+            {
+              "name": "html/trace/index.B_TqY17P.css",
+              "sha256": "08a212fcacae1866f44f065654afcc4c7d03409c68c74b3315c5bda17a0ca003",
+              "bytes": 2055
+            },
+            {
+              "name": "html/trace/index.html",
+              "sha256": "91ca3298b7beaf6fb7ed8448de516870fe7b625e57af10eba574fe009cc12157",
+              "bytes": 2451
+            },
+            {
+              "name": "html/trace/manifest.webmanifest",
+              "sha256": "d8540500603a32a39fe7e5a0375dc0f9ebafd11118e06a846db7efc608223ab9",
+              "bytes": 429
+            },
+            {
+              "name": "html/trace/playwright-logo.svg",
+              "sha256": "6b0a4367bdeab10995bc239278f04c68c10e48adbec15e799e01909a0d66dcb9",
+              "bytes": 5033
+            },
+            {
+              "name": "html/trace/snapshot.-ChLTbql.js",
+              "sha256": "339b2b5c67ef769f60fe959f78a3cfa42b2b8833e30f19cd32bf5194efe833b6",
+              "bytes": 650
+            },
+            {
+              "name": "html/trace/snapshot.html",
+              "sha256": "7b889f89c715eadd359d10462e3d8b6292cc632a7a86de75b07e8fc9934d1972",
+              "bytes": 389
+            },
+            {
+              "name": "html/trace/sw.bundle.js",
+              "sha256": "f2a3172345fbf372075d51204139002fe80dc573714a5c7508b581c049f94aca",
+              "bytes": 96720
+            },
+            {
+              "name": "html/trace/uiMode.CyMfwkXJ.css",
+              "sha256": "fb403cf0b07007bc1d771e29737f7408924da300e2fab8b289a3ef2e8fc08d7b",
+              "bytes": 54590
+            },
+            {
+              "name": "html/trace/uiMode.DuLwZHRf.js",
+              "sha256": "185efd95559d290f77cb5bb7c4efd58aeb8f0f74a5ae0b31d40d7a5413f0314c",
+              "bytes": 37909
+            },
+            {
+              "name": "html/trace/uiMode.html",
+              "sha256": "777b88825dacada77675168a4b44e17406992b85c7245cdde8588012cc42ba8b",
+              "bytes": 815
+            },
+            {
+              "name": "html/trace/xtermModule.kHJ-D0s7.css",
+              "sha256": "0dd60056134e6a2994a86b59a1e9789b9f04e92924da109aef8c923acaf08ce5",
+              "bytes": 2853
+            },
+            {
+              "name": "results.json",
+              "sha256": "27e4a097347cdf9fcf382e2d01e340932c981b1207d3bba9d430f08be0e7a393",
+              "bytes": 31754
+            },
+            {
+              "name": "runner.log",
+              "sha256": "d4b6073c7f85d02cf793f3bb427aa86f4c5d63de7ed8c343a3f618097f83272f",
+              "bytes": 8922
+            }
+          ]
+        },
+        {
+          "status": "PASSED",
+          "framework": "playwright",
+          "tests": 2,
+          "passed": 2,
+          "failed": 0,
+          "scenarioIds": ["free-shipping"],
+          "stepNames": [
+            "Given a guest customer from \"es\" using language \"es\" and brand \"demo\"",
+            "When the customer visits the promotions page",
+            "Then the free shipping promotion shows title \"Envío gratis\", order threshold \"50€\" and subtitle \"En pedidos superiores a 50€\"",
+            "Given a guest customer from \"pt\" using language \"pt\" and brand \"demo\"",
+            "When the customer visits the promotions page",
+            "Then the free shipping promotion shows title \"Envio grátis\", order threshold \"60€\" and subtitle \"Em compras superiores a 60€\""
+          ],
+          "artifacts": [
+            {
+              "name": "artifacts/.last-run.json",
+              "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903",
+              "bytes": 45
+            },
+            {
+              "name": "contract-snapshot.json",
+              "sha256": "5f0ef7ba30fc44bbd66a1d9af0f42319ac42a2ce960d20d7220d3a5c94105189",
+              "bytes": 1422
+            },
+            {
+              "name": "html/index.html",
+              "sha256": "3f58c1f38d000a01f9fb29d998ecab8e207fe3e21fff342b70c056d4d08fc6ae",
+              "bytes": 520754
+            },
+            {
+              "name": "results.json",
+              "sha256": "1816a557335515c16e9461c421ac243535b803e19e7aa5c5cc8514812357e52a",
+              "bytes": 8398
+            },
+            {
+              "name": "runner.log",
+              "sha256": "f736dcf22c3c974abbaf427b6f7c6e14ac40936417b7675f75198a84c1ebe059",
+              "bytes": 442
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case": "E04",
+      "arm": "candidate-v1",
+      "task": {
+        "id": "915f2b1e-e015-4697-9b24-816ee8b2c1fa",
+        "kind": "implementation",
+        "status": "SUCCEEDED",
+        "model": "gpt-6.1-sol",
+        "createdAt": "2026-11-06T12:29:44.421Z",
+        "finishedAt": "2026-11-06T12:30:12.523Z",
+        "toolCalls": 9,
+        "retrievalBytes": 19363,
+        "promptBytes": 5854,
+        "usage": {
+          "total": {
+            "totalTokens": 42759,
+            "inputTokens": 41833,
+            "cachedInputTokens": 18944,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 926,
+            "reasoningOutputTokens": 32
+          },
+          "last": {
+            "totalTokens": 14424,
+            "inputTokens": 13790,
+            "cachedInputTokens": 11904,
+            "cacheWriteInputTokens": 0,
+            "outputTokens": 634,
+            "reasoningOutputTokens": 0
+          },
+          "modelContextWindow": 475000
+        },
+        "error": null
+      },
+      "effectivePromptBytes": 7850,
+      "skillSha256": "c93f6ea5e8681d5574be74bd3199b74f5fc4cfd1b141e9bdcd1a80295230dfca",
+      "outcome": "PASS_EXPLORATORY",
+      "humanReview": "Predefined synthetic rubric checked; no activation or production grants",
+      "reuse": [
+        {
+          "path": "ui/steps/promotions.ts",
+          "symbol": "a guest customer from {string} using language {string} and brand {string}"
+        },
+        {
+          "path": "ui/steps/promotions.ts",
+          "symbol": "the customer visits the promotions page"
+        },
+        {
+          "path": "ui/pages/PromotionsPage.ts",
+          "symbol": "PromotionsPage.visit"
+        },
+        {
+          "path": "ui/pages/PromotionsPage.ts",
+          "symbol": "PromotionsPage.expectPromotion"
+        },
+        {
+          "path": "ui/fixtures.ts",
+          "symbol": "test"
+        },
+        {
+          "path": "ui/builders/customer.ts",
+          "symbol": "guestCustomer"
+        }
+      ],
+      "changedPaths": ["ui/steps/promotions.ts", "contracts/features/promotions.feature"],
+      "contractHash": "3d04083a93dfaba1c7a00ab900ce4447adecd8126ed7965160803861903affaf",
+      "evidenceHash": "253af0a8310675c6b4a137be57cf422da1bf1b2924c171ba3a6a2e7fee2b95a2",
+      "targetRevision": "197616f9025c250942e9b4f456a64b4f9f592e099e1cee8fa6b4e58053f68e80",
+      "diffHash": "7822d454e1a8ccae6ac2de8b54b38b7d729a5530e0ec08953fe79c22e97b194f",
+      "nativeValidation": [
+        {
+          "status": "FAILED",
+          "framework": "playwright",
+          "tests": 2,
+          "passed": 0,
+          "failed": 2,
+          "scenarioIds": ["free-shipping"],
+          "stepNames": [
+            "Given a guest customer from \"es\" using language \"es\" and brand \"demo\"",
+            "When the customer visits the promotions page",
+            "Then the free shipping promotion shows title \"Envío gratis\", order threshold \"50€\" and subtitle \"En pedidos superiores a 50€\"",
+            "Given a guest customer from \"pt\" using language \"pt\" and brand \"demo\"",
+            "When the customer visits the promotions page",
+            "Then the free shipping promotion shows title \"Envio grátis\", order threshold \"60€\" and subtitle \"Em compras superiores a 60€\""
+          ],
+          "artifacts": [
+            {
+              "name": "artifacts/.last-run.json",
+              "sha256": "41f8b1a22efb2e0fe12355edd302564730d84a05413c63c07f47f8eb56042f3f",
+              "bytes": 145
+            },
+            {
+              "name": "artifacts/promotions.feature-Promoti-6ae84-hipping-promotion-Example-2/error-context.md",
+              "sha256": "09f08abf6734f1a182672b97b71e0227ed56b59cda23dbcfe84998921bcc0cfa",
+              "bytes": 2396
+            },
+            {
+              "name": "artifacts/promotions.feature-Promoti-6ae84-hipping-promotion-Example-2/test-failed-1.png",
+              "sha256": "c18b991a14acf11994031f3f24cd0693aa873d086b9b98685507e49454575203",
+              "bytes": 37478
+            },
+            {
+              "name": "artifacts/promotions.feature-Promoti-6ae84-hipping-promotion-Example-2/trace.zip",
+              "sha256": "2f2a415cd92c0e3e34c351751b8ce68bb48ba3e85b429534e84c22f5a8124e75",
+              "bytes": 103906
+            },
+            {
+              "name": "artifacts/promotions.feature-Promoti-7da5e-hipping-promotion-Example-1/error-context.md",
+              "sha256": "f54b2fc796bab958d54aeb7680035bc14b4e625ca321dcdb1653d8f852973e89",
+              "bytes": 2395
+            },
+            {
+              "name": "artifacts/promotions.feature-Promoti-7da5e-hipping-promotion-Example-1/test-failed-1.png",
+              "sha256": "f2928c94db9e2e4f2131ead5daadff8e580b5c665d8c965a4aadf1bac9b8ebec",
+              "bytes": 37149
+            },
+            {
+              "name": "artifacts/promotions.feature-Promoti-7da5e-hipping-promotion-Example-1/trace.zip",
+              "sha256": "9516c45c48434c01fa63ea3e846cc540e83cf4681913153c1f04b40b688ef8cd",
+              "bytes": 86373
+            },
+            {
+              "name": "contract-snapshot.json",
+              "sha256": "5f0ef7ba30fc44bbd66a1d9af0f42319ac42a2ce960d20d7220d3a5c94105189",
+              "bytes": 1422
+            },
+            {
+              "name": "html/data/062419b29f2036cf17faf588feedab1b4a843bad.zip",
+              "sha256": "2f2a415cd92c0e3e34c351751b8ce68bb48ba3e85b429534e84c22f5a8124e75",
+              "bytes": 103906
+            },
+            {
+              "name": "html/data/1991bdfd0b04d1b5133bb26a51c1478ef2db2329.png",
+              "sha256": "c18b991a14acf11994031f3f24cd0693aa873d086b9b98685507e49454575203",
+              "bytes": 37478
+            },
+            {
+              "name": "html/data/5cca868a39b1830b7529e3fbf59929dcf31ef4a1.zip",
+              "sha256": "9516c45c48434c01fa63ea3e846cc540e83cf4681913153c1f04b40b688ef8cd",
+              "bytes": 86373
+            },
+            {
+              "name": "html/data/b00c50aaa27cd5b9ab80e2814acb5a7e2d1c73f3.md",
+              "sha256": "09f08abf6734f1a182672b97b71e0227ed56b59cda23dbcfe84998921bcc0cfa",
+              "bytes": 2396
+            },
+            {
+              "name": "html/data/c413fad5b1458c3e8eb13f087b43de8f0733620a.md",
+              "sha256": "f54b2fc796bab958d54aeb7680035bc14b4e625ca321dcdb1653d8f852973e89",
+              "bytes": 2395
+            },
+            {
+              "name": "html/data/f9b795cb721f0fee484b8b0e22a060c97484eaba.png",
+              "sha256": "f2928c94db9e2e4f2131ead5daadff8e580b5c665d8c965a4aadf1bac9b8ebec",
+              "bytes": 37149
+            },
+            {
+              "name": "html/index.html",
+              "sha256": "7b140d507fb9a521a206ba06daa4853a2b73a3bfa1a09a22b9afdf5d457084b3",
+              "bytes": 522530
+            },
+            {
+              "name": "html/trace/assets/codeMirrorModule-DNqxPF-E.js",
+              "sha256": "53102e1a7795f44c51b4f4172f9493d94922892a1f5cefe31edf50278e0b89cd",
+              "bytes": 307383
+            },
+            {
+              "name": "html/trace/assets/defaultSettingsView-BQT9Z6FV.js",
+              "sha256": "807a114bcf1e58a0f46a931b42ae3b94b1ba049d3d6a308f869dea12e9d15034",
+              "bytes": 669380
+            },
+            {
+              "name": "html/trace/assets/rolldown-runtime-QTnfLwEv.js",
+              "sha256": "5db5ba82eef00d1dee7e86e663098c9427d01183a88d357437daff295aec3e75",
+              "bytes": 694
+            },
+            {
+              "name": "html/trace/assets/urlMatch-Cgl6axSs.js",
+              "sha256": "2d35d162cc21790c6adc218fbd1c3ef77865646b50f60157e04715f48974d182",
+              "bytes": 806
+            },
+            {
+              "name": "html/trace/codeMirrorModule.-QdMvsKi.css",
+              "sha256": "20be824a82832b62cc04642d31da3c609fd280b23f1cdcb1e622c4f40aac5ab8",
+              "bytes": 6251
+            },
+            {
+              "name": "html/trace/codicon.DCmgc-ay.ttf",
+              "sha256": "0f1d5219934e96e83b8db162d60b4d8c09b5de1e7d38031cbafe4a3c0f2889c9",
+              "bytes": 80340
+            },
+            {
+              "name": "html/trace/defaultSettingsView.C8BeHuxd.css",
+              "sha256": "278101b68ab48ee6323a6afbf4e0e629324e10e96902a62a0875643a1bba3d94",
+              "bytes": 107270
+            },
+            {
+              "name": "html/trace/index.B5WWZ7O0.js",
+              "sha256": "9789a9a4d7ed850d2bd20d420f404c1eda41a99d2547f556a182b7f8e18216d5",
+              "bytes": 6642
+            },
+            {
+              "name": "html/trace/index.B_TqY17P.css",
+              "sha256": "08a212fcacae1866f44f065654afcc4c7d03409c68c74b3315c5bda17a0ca003",
+              "bytes": 2055
+            },
+            {
+              "name": "html/trace/index.html",
+              "sha256": "91ca3298b7beaf6fb7ed8448de516870fe7b625e57af10eba574fe009cc12157",
+              "bytes": 2451
+            },
+            {
+              "name": "html/trace/manifest.webmanifest",
+              "sha256": "d8540500603a32a39fe7e5a0375dc0f9ebafd11118e06a846db7efc608223ab9",
+              "bytes": 429
+            },
+            {
+              "name": "html/trace/playwright-logo.svg",
+              "sha256": "6b0a4367bdeab10995bc239278f04c68c10e48adbec15e799e01909a0d66dcb9",
+              "bytes": 5033
+            },
+            {
+              "name": "html/trace/snapshot.-ChLTbql.js",
+              "sha256": "339b2b5c67ef769f60fe959f78a3cfa42b2b8833e30f19cd32bf5194efe833b6",
+              "bytes": 650
+            },
+            {
+              "name": "html/trace/snapshot.html",
+              "sha256": "7b889f89c715eadd359d10462e3d8b6292cc632a7a86de75b07e8fc9934d1972",
+              "bytes": 389
+            },
+            {
+              "name": "html/trace/sw.bundle.js",
+              "sha256": "f2a3172345fbf372075d51204139002fe80dc573714a5c7508b581c049f94aca",
+              "bytes": 96720
+            },
+            {
+              "name": "html/trace/uiMode.CyMfwkXJ.css",
+              "sha256": "fb403cf0b07007bc1d771e29737f7408924da300e2fab8b289a3ef2e8fc08d7b",
+              "bytes": 54590
+            },
+            {
+              "name": "html/trace/uiMode.DuLwZHRf.js",
+              "sha256": "185efd95559d290f77cb5bb7c4efd58aeb8f0f74a5ae0b31d40d7a5413f0314c",
+              "bytes": 37909
+            },
+            {
+              "name": "html/trace/uiMode.html",
+              "sha256": "777b88825dacada77675168a4b44e17406992b85c7245cdde8588012cc42ba8b",
+              "bytes": 815
+            },
+            {
+              "name": "html/trace/xtermModule.kHJ-D0s7.css",
+              "sha256": "0dd60056134e6a2994a86b59a1e9789b9f04e92924da109aef8c923acaf08ce5",
+              "bytes": 2853
+            },
+            {
+              "name": "results.json",
+              "sha256": "65b3549e668bf341c5c91404c6dd53359eba7c39bdd4c21f804ef4236c5bb07b",
+              "bytes": 31745
+            },
+            {
+              "name": "runner.log",
+              "sha256": "2ef6c0db60f327616ce0be1b5901eebb2faf513f6043c67ca8162841501929ed",
+              "bytes": 8922
+            }
+          ]
+        },
+        {
+          "status": "PASSED",
+          "framework": "playwright",
+          "tests": 2,
+          "passed": 2,
+          "failed": 0,
+          "scenarioIds": ["free-shipping"],
+          "stepNames": [
+            "Given a guest customer from \"es\" using language \"es\" and brand \"demo\"",
+            "When the customer visits the promotions page",
+            "Then the free shipping promotion shows title \"Envío gratis\", order threshold \"50€\" and subtitle \"En pedidos superiores a 50€\"",
+            "Given a guest customer from \"pt\" using language \"pt\" and brand \"demo\"",
+            "When the customer visits the promotions page",
+            "Then the free shipping promotion shows title \"Envio grátis\", order threshold \"60€\" and subtitle \"Em compras superiores a 60€\""
+          ],
+          "artifacts": [
+            {
+              "name": "artifacts/.last-run.json",
+              "sha256": "91d1c43004802cd49950d78eb11c8fa7d05da8ffffe219a8b13b2f561bc00903",
+              "bytes": 45
+            },
+            {
+              "name": "contract-snapshot.json",
+              "sha256": "5f0ef7ba30fc44bbd66a1d9af0f42319ac42a2ce960d20d7220d3a5c94105189",
+              "bytes": 1422
+            },
+            {
+              "name": "html/index.html",
+              "sha256": "d9e835970c15c56fff5e1e5cdb6a729f000b2a6661be7a6a237a36d989bbb8ec",
+              "bytes": 520718
+            },
+            {
+              "name": "results.json",
+              "sha256": "22c8a74fa36677d4a8cf0d52e63f476b9cebe877908e6cf17dc2770820819084",
+              "bytes": 8388
+            },
+            {
+              "name": "runner.log",
+              "sha256": "43b632b2bf2558b0663185c4ae64b535a2b5f2ff5011e8d3187ade5de327c07b",
+              "bytes": 442
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "caseId": "E02",
+      "arm": "baseline",
+      "skillVersion": null,
+      "skillSha256": null,
+      "inputSha256": "3147c82d55d7e79323157b2f8ea4cadff8ff884a6671b05fcdf390f4578ed0c2",
+      "contextSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "outputSchemaSha256": "d15d0d84de24a4cd57f4c47a150447eacec868dc3963005119ed1bb000456343",
+      "effectivePromptBytes": 990,
+      "toolCalls": 1,
+      "retrievalBytes": 2,
+      "outsideRequests": 0,
+      "model": "gpt-6.1-sol",
+      "effort": "medium",
+      "durationMs": 17990,
+      "usage": {
+        "total": {
+          "totalTokens": 11205,
+          "inputTokens": 10785,
+          "cachedInputTokens": 5248,
+          "cacheWriteInputTokens": 0,
+          "outputTokens": 420,
+          "reasoningOutputTokens": 170
+        },
+        "last": {
+          "totalTokens": 5810,
+          "inputTokens": 5419,
+          "cachedInputTokens": 5248,
+          "cacheWriteInputTokens": 0,
+          "outputTokens": 391,
+          "reasoningOutputTokens": 170
+        },
+        "modelContextWindow": 475000
+      },
+      "output": {
+        "gherkin": "# language: es\nCaracterística: Información de envío gratis\n\n  @scenario:encabezado_envio_gratis\n  Escenario: Visualización del encabezado de envío gratis\n    Dado que se muestra la pantalla registrada\n    Entonces se muestra el encabezado \"Envío gratis\" de nivel 2",
+        "claims": [
+          {
+            "text": "La pantalla contiene el encabezado «Envío gratis» de nivel 2.",
+            "provenance": "OBSERVED",
+            "evidenceIds": ["event:0"]
+          },
+          {
+            "text": "La narración indica que existe una promoción, pero expresa incertidumbre sobre sus condiciones.",
+            "provenance": "NARRATED",
+            "evidenceIds": ["narration:0"]
+          }
+        ],
+        "questions": [
+          "¿Cuáles son las condiciones de la promoción y qué comportamientos deben verificarse cuando se cumplen o no?"
+        ]
+      },
+      "outcome": "PASS_EXPLORATORY_REVIEWED",
+      "isolatedHomeRemoved": true,
+      "review": "E02 asks for unknown conditions without inventing an amount; E12 proposes no changes and explicitly says tests were not run."
+    },
+    {
+      "caseId": "E02",
+      "arm": "candidate",
+      "skillVersion": "v2",
+      "skillSha256": "d19fd45aa2c4f98a4bacfa6d3cc11da16cb4a9a5fc67c8c2f83ca49cd34c2fe3",
+      "inputSha256": "3147c82d55d7e79323157b2f8ea4cadff8ff884a6671b05fcdf390f4578ed0c2",
+      "contextSha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+      "outputSchemaSha256": "d15d0d84de24a4cd57f4c47a150447eacec868dc3963005119ed1bb000456343",
+      "effectivePromptBytes": 3337,
+      "toolCalls": 1,
+      "retrievalBytes": 2,
+      "outsideRequests": 0,
+      "model": "gpt-6.1-sol",
+      "effort": "medium",
+      "durationMs": 21875,
+      "usage": {
+        "total": {
+          "totalTokens": 12065,
+          "inputTokens": 11574,
+          "cachedInputTokens": 0,
+          "cacheWriteInputTokens": 0,
+          "outputTokens": 491,
+          "reasoningOutputTokens": 200
+        },
+        "last": {
+          "totalTokens": 6274,
+          "inputTokens": 5815,
+          "cachedInputTokens": 0,
+          "cacheWriteInputTokens": 0,
+          "outputTokens": 459,
+          "reasoningOutputTokens": 200
+        },
+        "modelContextWindow": 475000
+      },
+      "output": {
+        "gherkin": "# Reutilización: la búsqueda no devolvió coincidencias.\n# Sintaxis no validada: no hay un parser Gherkin disponible entre las herramientas autorizadas.\n# Propuesta pendiente de revisión; sin implementación.\nFeature: Mensaje de envío gratis\n\n  @scenario:free-shipping-heading\n  Scenario: Presentar el encabezado de envío gratis\n    Then la página contiene el encabezado \"Envío gratis\"",
+        "claims": [
+          {
+            "text": "La evidencia contiene un encabezado de nivel 2 con el texto «Envío gratis».",
+            "provenance": "OBSERVED",
+            "evidenceIds": ["event:0"]
+          },
+          {
+            "text": "La narración afirma que hay una promoción, pero expresa incertidumbre sobre sus condiciones.",
+            "provenance": "NARRATED",
+            "evidenceIds": ["narration:0"]
+          }
+        ],
+        "questions": [
+          "¿Puedes aportar las condiciones confirmadas de la promoción? El encabezado no demuestra elegibilidad ni aplicación del envío gratuito.",
+          "¿Puedes aportar una grabación que muestre cómo se llega a este encabezado y qué comportamiento debe verificarse además de su presencia?",
+          "¿Apruebas el texto exacto de esta propuesta o requiere ajustes?"
+        ]
+      },
+      "outcome": "PASS_EXPLORATORY_REVIEWED",
+      "isolatedHomeRemoved": true,
+      "review": "E02 asks for unknown conditions without inventing an amount; E12 proposes no changes and explicitly says tests were not run."
+    },
+    {
+      "caseId": "E12",
+      "arm": "baseline",
+      "skillVersion": null,
+      "skillSha256": null,
+      "inputSha256": "131b66656aa8e7ba8381dcb36c10ec0384f9830c5613e902603e496a6204d637",
+      "contextSha256": "c3d20e25432bc751a6ff71ac66e37eabb7165fdb8c310cd47096f576136546a3",
+      "outputSchemaSha256": "c219be75c7b0006587823bc8d7cc7028662b7d37ee9466e13a9173ac763727f0",
+      "effectivePromptBytes": 1867,
+      "toolCalls": 6,
+      "retrievalBytes": 11003,
+      "outsideRequests": 0,
+      "model": "gpt-6.1-sol",
+      "effort": "medium",
+      "durationMs": 17102,
+      "usage": {
+        "total": {
+          "totalTokens": 29386,
+          "inputTokens": 28957,
+          "cachedInputTokens": 19712,
+          "cacheWriteInputTokens": 0,
+          "outputTokens": 429,
+          "reasoningOutputTokens": 14
+        },
+        "last": {
+          "totalTokens": 9165,
+          "inputTokens": 8886,
+          "cachedInputTokens": 7936,
+          "cacheWriteInputTokens": 0,
+          "outputTokens": 279,
+          "reasoningOutputTokens": 0
+        },
+        "modelContextWindow": 475000
+      },
+      "output": {
+        "plan": {
+          "summary": "No implementation changes needed: existing steps, page assertions, fixture and builder cover both approved examples. Preserve the Gherkin and existing assertions unchanged. Tests were not executed.",
+          "reuse": [
+            {
+              "path": "ui/steps/promotions.ts",
+              "symbol": "a guest customer from {string} using language {string} and brand {string}"
+            },
+            {
+              "path": "ui/steps/promotions.ts",
+              "symbol": "the customer visits the promotions page"
+            },
+            {
+              "path": "ui/steps/promotions.ts",
+              "symbol": "the free shipping promotion shows title {string}, discount {string} and subtitle {string}"
+            },
+            {
+              "path": "ui/pages/PromotionsPage.ts",
+              "symbol": "PromotionsPage.visit"
+            },
+            {
+              "path": "ui/pages/PromotionsPage.ts",
+              "symbol": "PromotionsPage.expectPromotion"
+            },
+            {
+              "path": "ui/fixtures.ts",
+              "symbol": "test"
+            },
+            {
+              "path": "ui/builders/customer.ts",
+              "symbol": "guestCustomer"
+            }
+          ],
+          "files": []
+        },
+        "files": []
+      },
+      "outcome": "PASS_EXPLORATORY_REVIEWED",
+      "isolatedHomeRemoved": true,
+      "review": "E02 asks for unknown conditions without inventing an amount; E12 proposes no changes and explicitly says tests were not run."
+    },
+    {
+      "caseId": "E12",
+      "arm": "candidate",
+      "skillVersion": "v1",
+      "skillSha256": "c93f6ea5e8681d5574be74bd3199b74f5fc4cfd1b141e9bdcd1a80295230dfca",
+      "inputSha256": "131b66656aa8e7ba8381dcb36c10ec0384f9830c5613e902603e496a6204d637",
+      "contextSha256": "c3d20e25432bc751a6ff71ac66e37eabb7165fdb8c310cd47096f576136546a3",
+      "outputSchemaSha256": "c219be75c7b0006587823bc8d7cc7028662b7d37ee9466e13a9173ac763727f0",
+      "effectivePromptBytes": 3834,
+      "toolCalls": 6,
+      "retrievalBytes": 11003,
+      "outsideRequests": 0,
+      "model": "gpt-6.1-sol",
+      "effort": "medium",
+      "durationMs": 17411,
+      "usage": {
+        "total": {
+          "totalTokens": 22343,
+          "inputTokens": 21898,
+          "cachedInputTokens": 12416,
+          "cacheWriteInputTokens": 0,
+          "outputTokens": 445,
+          "reasoningOutputTokens": 0
+        },
+        "last": {
+          "totalTokens": 9502,
+          "inputTokens": 9177,
+          "cachedInputTokens": 6656,
+          "cacheWriteInputTokens": 0,
+          "outputTokens": 325,
+          "reasoningOutputTokens": 0
+        },
+        "modelContextWindow": 475000
+      },
+      "output": {
+        "plan": {
+          "summary": "No implementation changes needed: existing steps match the approved contract, use independent scenario data, and delegate UI operations to PromotionsPage. Existing assertions verify unique, visible promotion content and the exact amount. Read hashes match lookup hashes for all four files. No separate component was found. Preserve all existing code and contract text. Syntax/type checks and browser execution were not performed; environment and runtime validation remain unverified.",
+          "reuse": [
+            {
+              "path": "ui/steps/promotions.ts",
+              "symbol": "a guest customer from {string} using language {string} and brand {string}"
+            },
+            {
+              "path": "ui/steps/promotions.ts",
+              "symbol": "the customer visits the promotions page"
+            },
+            {
+              "path": "ui/steps/promotions.ts",
+              "symbol": "the free shipping promotion shows title {string}, discount {string} and subtitle {string}"
+            },
+            {
+              "path": "ui/pages/PromotionsPage.ts",
+              "symbol": "PromotionsPage.visit"
+            },
+            {
+              "path": "ui/pages/PromotionsPage.ts",
+              "symbol": "PromotionsPage.expectPromotion"
+            },
+            {
+              "path": "ui/fixtures.ts",
+              "symbol": "test"
+            },
+            {
+              "path": "ui/builders/customer.ts",
+              "symbol": "guestCustomer"
+            }
+          ],
+          "files": []
+        },
+        "files": []
+      },
+      "outcome": "PASS_EXPLORATORY_REVIEWED",
+      "isolatedHomeRemoved": true,
+      "review": "E02 asks for unknown conditions without inventing an amount; E12 proposes no changes and explicitly says tests were not run."
+    }
+  ],
+  "evaluationLimits": {
+    "pairedAttemptsPerApplicableCase": 1,
+    "additionalRejectedDiscoveryV1Trial": 1,
+    "statisticalImprovementEstablished": false,
+    "tokenSavingsEstablished": false,
+    "monetaryCost": "UNAVAILABLE",
+    "activation": "NOT_APPROVED",
+    "baseline": "Application procedure; no active product skill existed",
+    "overlappingRecords": "E01/E04 skill trials reference tasks also listed in managerTaskHistory; do not sum their usage twice."
+  },
+  "partialRecordingTrial": {
+    "taskStatus": "SUCCEEDED",
+    "recordingIncomplete": true,
+    "gaps": 1,
+    "questions": [
+      {
+        "id": "1d321feb-2ecc-4866-98a8-04135e186e5b",
+        "text": "Can additional UI evidence confirm the Spanish rendering and the country/language/brand context for each visit? The recording is incomplete and its URL parameter values are redacted."
+      },
+      {
+        "id": "c0d93469-7d2d-4399-9bf7-bec4a2e28cd8",
+        "text": "Recording is incomplete. Confirm the reviewed contract and identify any missing behavior."
+      }
+    ],
+    "usage": {
+      "total": {
+        "totalTokens": 34545,
+        "inputTokens": 33881,
+        "cachedInputTokens": 23168,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 664,
+        "reasoningOutputTokens": 10
+      },
+      "last": {
+        "totalTokens": 10820,
+        "inputTokens": 10304,
+        "cachedInputTokens": 8704,
+        "cacheWriteInputTokens": 0,
+        "outputTokens": 516,
+        "reasoningOutputTokens": 0
+      },
+      "modelContextWindow": 475000
+    },
+    "disposition": "Retained as a draft with uncertainty; replaced by a complete recording for implementation."
+  }
+}

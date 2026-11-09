@@ -1,0 +1,6 @@
+{
+  "name": "@qa/domain",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0"
+}

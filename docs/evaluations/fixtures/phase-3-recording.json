@@ -1,0 +1,215 @@
+{
+  "source": "Actual Chromium capture of synthetic demo; narration is explicit manual test data, not automatic transcription",
+  "recordingId": "e99b3332-c288-430a-88c2-5611de546722",
+  "status": "COMPLETED",
+  "incomplete": false,
+  "gaps": 0,
+  "durationMs": 8713.71136200428,
+  "events": [
+    {
+      "id": "event:1",
+      "sequence": 1,
+      "kind": "page",
+      "provenance": "OBSERVED",
+      "timeMs": 1514.2965430021286,
+      "detail": "Browser page opened"
+    },
+    {
+      "id": "event:2",
+      "sequence": 2,
+      "kind": "network",
+      "provenance": "OBSERVED",
+      "timeMs": 1661.4098689556122,
+      "detail": "GET 302 document",
+      "url": "http://127.0.0.1:49556/"
+    },
+    {
+      "id": "event:3",
+      "sequence": 3,
+      "kind": "network",
+      "provenance": "OBSERVED",
+      "timeMs": 1700.79925096035,
+      "detail": "GET 200 document",
+      "url": "http://127.0.0.1:49556/promotions?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D"
+    },
+    {
+      "id": "event:4",
+      "sequence": 4,
+      "kind": "navigation",
+      "provenance": "OBSERVED",
+      "timeMs": 1705.967041015625,
+      "detail": "Document navigation",
+      "url": "http://127.0.0.1:49556/promotions?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D"
+    },
+    {
+      "id": "event:5",
+      "sequence": 5,
+      "kind": "clock",
+      "provenance": "OBSERVED",
+      "timeMs": 1740.7463659793139,
+      "detail": "Browser clock calibration",
+      "url": "http://127.0.0.1:49556/promotions?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D"
+    },
+    {
+      "id": "event:6",
+      "sequence": 6,
+      "kind": "network",
+      "provenance": "OBSERVED",
+      "timeMs": 1756.7173429727554,
+      "detail": "GET 200 fetch",
+      "url": "http://127.0.0.1:49556/api/promotions/free-shipping?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D"
+    },
+    {
+      "id": "event:7",
+      "sequence": 7,
+      "kind": "page",
+      "provenance": "OBSERVED",
+      "timeMs": 1687.1463659703732,
+      "sourceEventId": "feylj81temw-1",
+      "detail": "Document observer ready",
+      "url": "http://127.0.0.1:49556/promotions?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D"
+    },
+    {
+      "id": "event:8",
+      "sequence": 8,
+      "kind": "action",
+      "provenance": "OBSERVED",
+      "timeMs": 6848.346365973353,
+      "sourceEventId": "feylj81temw-2",
+      "detail": "click",
+      "url": "http://127.0.0.1:49556/promotions?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D"
+    },
+    {
+      "id": "event:9",
+      "sequence": 9,
+      "kind": "context",
+      "provenance": "OBSERVED",
+      "timeMs": 7033.379796028137,
+      "sourceEventId": "feylj81temw-2",
+      "detail": "Context for click",
+      "aria": "- region \"Free shipping promotion\":\n  - paragraph: Your local offer\n  - heading \"Envío gratis\" [level=2]\n  - strong: 50€\n  - paragraph: En pedidos superiores a 50€",
+      "url": "http://127.0.0.1:49556/promotions?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D",
+      "locators": [
+        {
+          "kind": "label",
+          "value": "Free shipping promotion",
+          "count": 1,
+          "matchesTarget": true
+        }
+      ]
+    },
+    {
+      "id": "event:10",
+      "sequence": 10,
+      "kind": "action",
+      "provenance": "OBSERVED",
+      "timeMs": 7111.146365970373,
+      "sourceEventId": "feylj81temw-3",
+      "detail": "click",
+      "url": "http://127.0.0.1:49556/promotions?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D"
+    },
+    {
+      "id": "event:11",
+      "sequence": 11,
+      "kind": "network",
+      "provenance": "OBSERVED",
+      "timeMs": 7198.932491064072,
+      "detail": "GET 200 document",
+      "url": "http://127.0.0.1:49556/promotions?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D"
+    },
+    {
+      "id": "event:12",
+      "sequence": 12,
+      "kind": "context",
+      "provenance": "OBSERVED",
+      "timeMs": 7205.645949006081,
+      "sourceEventId": "feylj81temw-3",
+      "detail": "Context for click",
+      "url": "http://127.0.0.1:49556/promotions?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D"
+    },
+    {
+      "id": "event:13",
+      "sequence": 13,
+      "kind": "navigation",
+      "provenance": "OBSERVED",
+      "timeMs": 7208.494377017021,
+      "detail": "Document navigation",
+      "url": "http://127.0.0.1:49556/promotions?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D"
+    },
+    {
+      "id": "event:14",
+      "sequence": 14,
+      "kind": "network",
+      "provenance": "OBSERVED",
+      "timeMs": 7232.744493961334,
+      "detail": "GET 200 fetch",
+      "url": "http://127.0.0.1:49556/api/promotions/free-shipping?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D"
+    },
+    {
+      "id": "event:15",
+      "sequence": 15,
+      "kind": "clock",
+      "provenance": "OBSERVED",
+      "timeMs": 7250.59012901783,
+      "detail": "Browser clock calibration",
+      "url": "http://127.0.0.1:49556/promotions?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D"
+    },
+    {
+      "id": "event:16",
+      "sequence": 16,
+      "kind": "page",
+      "provenance": "OBSERVED",
+      "timeMs": 7177.89012901485,
+      "sourceEventId": "sn3ss3azakc-1",
+      "detail": "Document observer ready",
+      "url": "http://127.0.0.1:49556/promotions?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D"
+    },
+    {
+      "id": "event:17",
+      "sequence": 17,
+      "kind": "action",
+      "provenance": "OBSERVED",
+      "timeMs": 7619.190129011869,
+      "sourceEventId": "sn3ss3azakc-2",
+      "detail": "click",
+      "url": "http://127.0.0.1:49556/promotions?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D"
+    },
+    {
+      "id": "event:18",
+      "sequence": 18,
+      "kind": "context",
+      "provenance": "OBSERVED",
+      "timeMs": 7801.70019698143,
+      "sourceEventId": "sn3ss3azakc-2",
+      "detail": "Context for click",
+      "aria": "- region \"Free shipping promotion\":\n  - paragraph: Your local offer\n  - heading \"Envio grátis\" [level=2]\n  - strong: 60€\n  - paragraph: Em compras superiores a 60€",
+      "url": "http://127.0.0.1:49556/promotions?countryIso=%5BREDACTED%5D&languageIso=%5BREDACTED%5D&brand=%5BREDACTED%5D",
+      "locators": [
+        {
+          "kind": "label",
+          "value": "Free shipping promotion",
+          "count": 1,
+          "matchesTarget": true
+        }
+      ]
+    },
+    {
+      "id": "event:19",
+      "sequence": 19,
+      "kind": "page",
+      "provenance": "OBSERVED",
+      "timeMs": 8290.764466047287,
+      "detail": "Browser page closed"
+    }
+  ],
+  "narration": [
+    {
+      "startMs": 0,
+      "endMs": 8713.71136200428,
+      "source": "manual",
+      "provenance": "NARRATED",
+      "text": "Synthetic acceptance narration: a guest visits promotions for es/es/demo and pt/pt/demo. Expected visible fields respectively: Envío gratis; 50€; En pedidos superiores a 50€. Envio grátis; 60€; Em compras superiores a 60€. These amounts describe free-shipping order thresholds, not price reductions. No other country or checkout eligibility is evidenced."
+    }
+  ],
+  "projection": "Selected non-sensitive event fields for review. The original storage digest in live proposals is not the byte hash of this exported JSON."
+}

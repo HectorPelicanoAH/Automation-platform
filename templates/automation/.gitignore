@@ -1,0 +1,8 @@
+ui/node_modules/
+ui/.features-gen/
+ui/test-results/
+api/.gradle/
+api/build/
+.env
+.env.*
+*.sqlite*

@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "features": [
+    {
+      "id": "feature-promotions",
+      "path": "contracts/features/promotions.feature",
+      "scenarios": [
+        {
+          "id": "free-shipping",
+          "tag": "@scenario:free-shipping",
+          "title": "Show the correct free shipping promotion",
+          "exampleRows": ["shipping-es", "shipping-pt"],
+          "bindings": {
+            "playwright": {
+              "path": "contracts/features/promotions.feature",
+              "coverage": "visible title, displayed amount, subtitle"
+            },
+            "karate": {
+              "path": "api/src/test/resources/features/promotions.feature",
+              "coverage": "HTTP status, response schema and business state; does not verify rendering"
+            }
+          }
+        }
+      ],
+      "canonicalHash": "8868faaa2891ef39e449c50bd76ddf42c76651f19e760f2489993f4390455ff4"
+    }
+  ]
+}

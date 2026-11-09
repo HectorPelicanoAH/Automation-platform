@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "date": "2026-11-08",
+  "scope": [
+    "Constructor-owned readonly Page/component locator fields and factories",
+    "Per-field awaited uniqueness and exact named selectors",
+    "Target document-language evidence and observed unique candidate references",
+    "Business-assertion scope and constructor-aware literal repairs"
+  ],
+  "validation": [
+    {
+      "command": "node --import tsx --test tests/generation.test.ts tests/ui-locators.test.ts tests/maintenance.test.ts",
+      "status": "PASSED",
+      "passed": 27,
+      "includes": [
+        "Rejected inline/imprecise generated Page before staging or writes",
+        "Exact own-field checks; unrelated, unawaited or nested checks rejected",
+        "Preserved constructor state, fields, methods and significant whitespace in expected values",
+        "Only uniquely matching recorded candidates referenced; locale metadata retained without duplicate payloads"
+      ]
+    },
+    {
+      "command": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts tests/localized-locators.spec.ts tests/generation-ui.spec.ts tests/maintenance-ui.spec.ts --grep \"One Page instance|Ambiguous localized|locale mismatch|Generation web flow|Maintenance web flow\" --output /tmp/qa-locator-quality-results --reporter list",
+      "status": "PASSED",
+      "passed": 5,
+      "includes": [
+        "Same Page instance reused across Spanish/Portuguese DOM and label changes",
+        "Unknown/missing language fails clearly",
+        "Ambiguous localized links fail actual count validation",
+        "Wrong-language labels never fall back to another language",
+        "Actual bilingual recording, demo native generation/application and independent execution",
+        "Actual native locator repair, unchanged-assertion negative control and reversal"
+      ]
+    },
+    {
+      "command": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts tests/generation-ui.spec.ts tests/maintenance-ui.spec.ts --grep \"Generation web flow|Maintenance web flow\" --output /tmp/qa-locator-final-results --reporter list",
+      "status": "PASSED",
+      "passed": 2,
+      "note": "Final-source revalidation after the assertion-preservation normalization change; overlaps the five earlier browser cases."
+    },
+    {
+      "command": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts tests/recorder.spec.ts --output /tmp/qa-locator-recorder-results --reporter list",
+      "status": "PASSED",
+      "passed": 4,
+      "includes": [
+        "Real frames/popups/privacy/origin boundaries",
+        "Startup cancellation",
+        "Oversized screenshot gap",
+        "Slow optional context does not delay actions"
+      ]
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "status": "PASSED"
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js .",
+      "status": "PASSED"
+    },
+    {
+      "command": "node node_modules/prettier/bin/prettier.cjs --check .",
+      "status": "PASSED"
+    },
+    {
+      "command": "node node_modules/vite/bin/vite.js build --config apps/web/vite.config.ts",
+      "status": "PASSED"
+    },
+    {
+      "command": "git diff --check",
+      "status": "PASSED"
+    }
+  ],
+  "boundaries": [
+    "Static structure checks do not establish live DOM truth, complete control-flow coverage or translation correctness",
+    "Unknown translations/locales remain questions or explicit failures; no labels are invented",
+    "No live model inference, owner Mango execution, managed-repository migration or external source writes",
+    "The demo retains an invariant accessible region name; translated selector factories are exercised in a separate explicitly synthetic bilingual fixture",
+    "Fields required by canonical Gherkin remain assertions; no assertion weakening to hide failures",
+    "No active skill activation or mandatory context expansion; no token savings claimed"
+  ],
+  "notRun": [
+    "Current cross-platform CI",
+    "Full browser suite for this change; the preceding correction full-suite navigation timeout remains recorded, not waived by these passing scoped checks"
+  ]
+}

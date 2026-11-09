@@ -1,0 +1,257 @@
+{
+  "phase": 4,
+  "status": "VALIDATION",
+  "source": "Deterministic provider fixture; actual reviewed browser flow, Karate, Playwright and independent target CLI. No real model inference.",
+  "reviewActor": "Predefined synthetic QA acceptance rubric; does not represent owner approval of production changes.",
+  "liveModel": {
+    "invocations": 0,
+    "status": "PENDING_SEPARATE_CREDENTIAL_AUTHORIZATION",
+    "tokenSavings": "NOT_ESTABLISHED"
+  },
+  "proposal": {
+    "id": "e86baeda-92ec-4714-9db2-67e3e1f27325",
+    "framework": "karate",
+    "status": "APPLIED",
+    "diffHash": "317faad06c38c3eb4d8376f00e971c1a0cd33d4a3a955e2957f52e6d1d573e3c",
+    "plan": {
+      "summary": "Fixture-only API generation; reuse response schema and preserve two datasets.",
+      "reuse": [
+        {
+          "path": "api/src/test/resources/helpers/promotion-schema.feature",
+          "symbol": "Reusable promotion response schema"
+        }
+      ],
+      "files": [
+        "api/src/test/resources/features/promotions.feature",
+        "contracts/manifest.json",
+        "contracts/features/promotions.feature"
+      ]
+    },
+    "files": [
+      {
+        "path": "api/src/test/resources/features/promotions.feature",
+        "baseHash": "878ab10189e98c9f8609137272deacd6534110752d9508134c9dcf21fc67d3ac",
+        "afterHash": "bd75c71e68aba9e830ece52e7ca5666a3d0a3eee4762aad74d411ae4ab9de91d"
+      },
+      {
+        "path": "contracts/manifest.json",
+        "baseHash": "a9fdd600c8bf2403bb81b2727c22d6afc53220e6b083c6ea49be58676e324058",
+        "afterHash": "67d2a9c4a54a4650ed6b8386ffb18ce3d26296849eb50c664c9ec3b9882acf24"
+      }
+    ]
+  },
+  "task": {
+    "id": "296bee0c-00fa-4c0c-a6c8-4abd25733dca",
+    "status": "SUCCEEDED",
+    "model": "fixture-only",
+    "usage": null,
+    "retrievalBytes": 10792,
+    "toolCalls": 3
+  },
+  "validation": {
+    "id": "7ffe599b-9d02-4065-ae7a-7580b12bb189",
+    "framework": "karate",
+    "status": "PASSED",
+    "selection": {
+      "kind": "feature",
+      "value": "contracts/features/promotions.feature"
+    },
+    "tests": [
+      {
+        "scenarioId": "free-shipping",
+        "status": "PASSED",
+        "name": "Return the correct promotion business state"
+      },
+      {
+        "scenarioId": "free-shipping",
+        "status": "PASSED",
+        "name": "Return the correct promotion business state"
+      }
+    ],
+    "artifactCount": 14
+  },
+  "wrongRenderControl": {
+    "api": {
+      "id": "b47f4443-6e7c-4121-a08d-b3c4db7db3f9",
+      "framework": "karate",
+      "status": "PASSED",
+      "selection": {
+        "kind": "feature",
+        "value": "contracts/features/promotions.feature"
+      },
+      "tests": [
+        {
+          "scenarioId": "free-shipping",
+          "status": "PASSED",
+          "name": "Return the correct promotion business state"
+        },
+        {
+          "scenarioId": "free-shipping",
+          "status": "PASSED",
+          "name": "Return the correct promotion business state"
+        }
+      ],
+      "artifactCount": 14
+    },
+    "ui": {
+      "id": "f8b6ceae-3d3e-4c5d-9f1d-c1a979cbdc30",
+      "framework": "playwright",
+      "status": "FAILED",
+      "selection": {
+        "kind": "feature",
+        "value": "contracts/features/promotions.feature"
+      },
+      "tests": [
+        {
+          "scenarioId": "free-shipping",
+          "status": "FAILED",
+          "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #1"
+        },
+        {
+          "scenarioId": "free-shipping",
+          "status": "FAILED",
+          "name": "promotions.feature.spec.js › Promotional free shipping › Show the correct free shipping promotion › Example #2"
+        }
+      ],
+      "artifactCount": 36
+    },
+    "sameEnvironment": true
+  },
+  "independentCli": {
+    "selectedFeature": "PASSED",
+    "suite": "PASSED",
+    "suiteScenarioCount": 2,
+    "duplicateGeneratedFeature": false
+  },
+  "parallelPreparation": {
+    "contexts": [
+      {
+        "id": "999b71b9-b1fe-4728-aaa9-429f2dbc2988",
+        "countryIso": "es",
+        "languageIso": "es",
+        "brand": "demo"
+      },
+      {
+        "id": "a1d0375f-af02-4165-86bd-c1bee250653d",
+        "countryIso": "pt",
+        "languageIso": "pt",
+        "brand": "demo"
+      }
+    ],
+    "intervals": [
+      {
+        "startMs": 1793975770068,
+        "minimumDurationMs": 569.548775
+      },
+      {
+        "startMs": 1793975770068,
+        "minimumDurationMs": 569.487698
+      }
+    ],
+    "overlapping": true
+  },
+  "setupComparison": {
+    "sampleCountPerArm": 3,
+    "order": "alternating",
+    "includesFinalUiAssertions": true,
+    "samples": [
+      {
+        "kind": "ui",
+        "iteration": 0,
+        "durationMs": 281.06519099998695,
+        "contextId": "b27c9221-5ba9-4cb9-b8c2-c53175ea271b"
+      },
+      {
+        "kind": "api",
+        "iteration": 0,
+        "durationMs": 91.30207000000519,
+        "contextId": "9dde6113-cd37-4fde-bfc2-83ac2b4b8acb"
+      },
+      {
+        "kind": "api",
+        "iteration": 1,
+        "durationMs": 88.39345600000524,
+        "contextId": "fcca4294-351a-4fa4-b2ec-02fe9bc7a501"
+      },
+      {
+        "kind": "ui",
+        "iteration": 1,
+        "durationMs": 223.36491800000658,
+        "contextId": "1ed5547c-c6c4-49b4-a0e3-21fc8c1621a4"
+      },
+      {
+        "kind": "ui",
+        "iteration": 2,
+        "durationMs": 242.46900499999174,
+        "contextId": "a8cdac22-4071-426a-aa92-e479e1c0733a"
+      },
+      {
+        "kind": "api",
+        "iteration": 2,
+        "durationMs": 89.84578600000532,
+        "contextId": "f6bcceaa-4a61-4f27-b1d2-b76a74af9755"
+      }
+    ],
+    "mediansMs": {
+      "ui": 242.46900499999174,
+      "api": 89.84578600000532
+    },
+    "conditions": "macOS Intel, existing warmed local demo and browser, same synthetic ES guest and original final Page assertions; includes setup and final UI assertions; excludes browser/JVM startup. Three alternating samples per arm, not a statistical/general speedup claim."
+  },
+  "browserErrors": [],
+  "fullBrowserRegression": {
+    "stats": {
+      "startTime": "2026-11-06T14:23:09.315Z",
+      "duration": 617584.327,
+      "expected": 9,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "note": "Nine unique tests passed during implementation; subsequent API/binding/guard changes validated by affected-flow rerun and deterministic checks."
+  },
+  "affectedBrowserRerun": {
+    "stats": {
+      "startTime": "2026-11-06T14:34:18.445Z",
+      "duration": 147967.839,
+      "expected": 2,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "note": "Two affected generation workflows; later presentation/empty-state guards type/lint/build checked, no business assertions changed."
+  },
+  "finalReportNormalizationReplay": {
+    "source": "Final report normalizer replay against preserved genuine Karate output; no runner re-execution",
+    "statuses": ["PASSED", "PASSED"],
+    "durationMs": [634.256263, 635.009372],
+    "note": "Nested native call timings are not summed twice. Prior stored run history is not rewritten."
+  },
+  "deterministic": {
+    "command": "node --import tsx --test tests/*.test.ts",
+    "tests": 45,
+    "passed": 45,
+    "failed": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "ci": {
+    "status": "NOT_RUN",
+    "reason": "Last Phase 3 final run was blocked before any steps by GitHub account billing/spending state. No new Phase 4 Actions run was launched. Full current-branch three-system matrix remains required.",
+    "systems": ["ubuntu-24.04", "macos-15", "macos-15-intel"]
+  },
+  "skill": {
+    "name": "implement-karate",
+    "version": "v1",
+    "sha256": "e9d362d10dcf911229dda0e94b9ae8306e8b2a80301d6a58728e8b24be4a056f",
+    "format": "PASS",
+    "behavior": "NOT_RUN",
+    "activation": "NOT_APPROVED"
+  },
+  "screenshot": {
+    "path": "test-results/phase4-coverage.png",
+    "sha256": "7bee4ee40064891e40285e0827d3b044eab561aaf79251837edd3dcffa74dfca",
+    "review": "Visually inspected actual UI/API native outcomes before minor header padding adjustment."
+  },
+  "snapshot": "Initial fixture acceptance at code checkpoint 81f5ae4 before live-model authorization. Current real-output acceptance and updated checks are in phase-4-live-evidence.json."
+}
