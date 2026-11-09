@@ -30,6 +30,16 @@ export function generationRoutes(app: FastifyInstance, manager: GenerationManage
     }),
     (id, body) => manager.discussFailure(id, body),
   );
+  post<{ expectedHash: string; adviceTaskId: string; option: number; message: string }>(
+    '/api/generation/runs/:id/revise',
+    obj({
+      expectedHash: digest,
+      adviceTaskId: str,
+      option: { type: 'integer', minimum: 0, maximum: 4 },
+      message: { type: 'string', maxLength: 4000 },
+    }),
+    (id, body) => manager.reviseFailure(id, body),
+  );
   app.get('/api/generation/state', async () => ({
     settings: manager.repository.settings(),
     codexHome: manager.home,

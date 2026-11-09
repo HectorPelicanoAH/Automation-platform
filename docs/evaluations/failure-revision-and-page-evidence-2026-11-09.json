@@ -1,0 +1,83 @@
+{
+  "date": "2026-11-09",
+  "scope": "Failure advice to reviewed literal-locator proposal; bounded native trace evidence; retained sanitized page/frame states",
+  "provider": "Deterministic synthetic provider; no live inference or owner credentials used",
+  "environment": "macOS Intel, Node 24.22.2, pinned Playwright 1.65.0; local demonstration targets only",
+  "checks": [
+    {
+      "command": "node --import tsx --test tests/failure-revision.test.ts tests/failure-advice.test.ts tests/generation.test.ts tests/maintenance.test.ts tests/recording.test.ts tests/server.test.ts tests/ui-locators.test.ts tests/provider.test.ts",
+      "passed": 54,
+      "failed": 0,
+      "note": "Before final correction-task selection and recorder lifecycle refinements; affected cases revalidated below."
+    },
+    {
+      "command": "node --import tsx --test tests/failure-revision.test.ts tests/failure-advice.test.ts",
+      "passed": 8,
+      "failed": 0,
+      "note": "Final affected deterministic cases, including choosing earlier advice, immutable parent, no target writes, stale fingerprint refusal, trace filtering and snapshot expiry. Counts overlap."
+    },
+    {
+      "command": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts tests/failure-revision-ui.spec.ts tests/failure-conversation-ui.spec.ts tests/recorder.spec.ts tests/generation-ui.spec.ts --output /tmp/qa-failure-evidence-final --reporter list",
+      "passed": 7,
+      "failed": 1,
+      "failure": "Startup cancellation exceeded the recorder six-second grace period and honestly returned INTERRUPTED rather than expected CANCELLED. Original failure retained. This combined run is not reported green. Final recorder lifecycle/queue changes were verified in the focused run below."
+    },
+    {
+      "command": "node node_modules/@playwright/test/cli.js test --config tests/playwright.config.ts tests/recorder.spec.ts tests/failure-revision-ui.spec.ts --grep 'Recorder saves|Public headed|Recorder can cancel|Oversized|Slow optional' --output /tmp/qa-page-evidence-final --reporter list",
+      "passed": 5,
+      "failed": 0,
+      "note": "Final headless-helper lifecycle, bounded pending snapshot queue, explicit drain gap and cleared drain timer; unchanged existing test assertions and timeouts. Counts overlap."
+    },
+    {
+      "command": "node node_modules/typescript/bin/tsc --noEmit",
+      "status": "PASSED"
+    },
+    {
+      "command": "node node_modules/eslint/bin/eslint.js .",
+      "status": "PASSED"
+    },
+    {
+      "command": "node node_modules/vite/bin/vite.js build --config apps/web/vite.config.ts",
+      "status": "PASSED"
+    },
+    {
+      "command": "node node_modules/prettier/bin/prettier.cjs --check .",
+      "status": "PASSED"
+    },
+    {
+      "command": "git diff --check",
+      "status": "PASSED"
+    }
+  ],
+  "native_evidence": {
+    "new_revision_journey": "Two actual demo examples failed with incorrect button role. Trace excerpts including to.have.count and selector reached the synthetic advice provider. Web action created a separate role=region diff. Both actual examples then passed native validation. Original run remained FAILED, target files remained unchanged and apply required separate approval.",
+    "existing_generation_journey": "Actual recorded es/pt demo, reviewed generated proposal, negative business-state validation, passing native validation, exact approved application and independent target execution passed.",
+    "recorder": "Actual es/pt navigation, same-frame DOM update, separately approved iframe, private controls/regions/custom masks/hidden text/query redaction and task-scoped snapshot retrieval passed. Saved accessibility is a reconstruction, not the original full accessibility tree."
+  },
+  "initial_attempts": [
+    "Synthetic native fixture initially attempted to modify an existing protected When step; fixture now starts without that step and preserves the existing capabilities gate.",
+    "Synthetic HTML lacked a charset and genuinely rendered mojibake; fixed fixture charset without changing observed text.",
+    "Use accessible combobox name instead of getByLabel for the select whose enclosing label includes its options.",
+    "Native traces revealed polling logs displaced the failed before event; extraction now prioritizes before/after and includes the real params.expression field.",
+    "Snapshot provenance hash was incorrectly processed as arbitrary secret-like text; trusted computed metadata now remains outside text scrubbing.",
+    "Earlier browser attempts used a stale web bundle. Frontend rebuilt before the recorded combined/focused validation."
+  ],
+  "not_run": [
+    "Live AI inference",
+    "Owner website or managed target tests",
+    "Cross-platform CI",
+    "Entire repository browser suite after these changes"
+  ],
+  "unchanged_obligations": [
+    "Phases 3–6 remain VALIDATION with three-system CI pending",
+    "Previously documented broader-suite navigation timeout remains historical evidence"
+  ],
+  "limits": "Locator literal corrections only; applied tests use existing maintenance flow. No arbitrary method/API repair. Trace archives/images/network bodies not uploaded. Old recordings have no retroactive snapshots. Visible-text redaction needs configured masks and remains best effort.",
+  "local_runtime": {
+    "restarted": true,
+    "active_owner_runs_recordings_and_ai_tasks_before_restart": 0,
+    "platform_http_status": 200,
+    "demo_http_status": 200,
+    "private_launch_opened_without_logging_token": true
+  }
+}

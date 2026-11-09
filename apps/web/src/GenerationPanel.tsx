@@ -54,6 +54,7 @@ export function GenerationPanel({
   targets,
   baseUrl,
   recordingsRevision = 0,
+  requestedChange,
   onRun,
 }: {
   visible: boolean;
@@ -62,6 +63,7 @@ export function GenerationPanel({
   targets: Target[];
   baseUrl: string;
   recordingsRevision?: number;
+  requestedChange?: { id: string; targetId: string };
   onRun: (id: string) => void;
 }) {
   const { t } = useLocale();
@@ -208,6 +210,12 @@ export function GenerationPanel({
     setDirty(false);
     setEvidence(undefined);
   }, [targetId]);
+  useEffect(() => {
+    if (requestedChange?.targetId === targetId) {
+      setChangeId(requestedChange.id);
+      setChange(undefined);
+    }
+  }, [requestedChange, targetId]);
   useEffect(() => {
     if (!visible || !taskId) return;
     let stopped = false,
@@ -1182,6 +1190,11 @@ export function GenerationPanel({
                     targetId={targetId}
                     visible={visible}
                     onInspect={onRun}
+                    onProposal={(id) => {
+                      setChangeId(id);
+                      setChange(undefined);
+                      void refresh(false);
+                    }}
                   />
                 )}
                 {change.status === 'VALIDATED' && (

@@ -4,7 +4,13 @@ import { AppError } from '../domain/model.ts';
 import { validateGeneratedFile } from '../generation/staging.ts';
 
 // Positions come from the parsed source, never arbitrary text replacement or executable output.
-export function replaceLocator(path: string, before: string, oldValue: string, newValue: string) {
+export function replaceLocator(
+  path: string,
+  before: string,
+  oldValue: string,
+  newValue: string,
+  argument: 'name' | 'role' = 'name',
+) {
   if (!/^ui\/(pages|components)\/[A-Za-z0-9_/-]+\.tsx?$/.test(path))
     throw new AppError(403, 'Locator repairs must reuse an existing Page/component');
   if (
@@ -21,7 +27,14 @@ export function replaceLocator(path: string, before: string, oldValue: string, n
   const walk = (node: ts.Node) => {
     if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression)) {
       const method = node.expression.name.text;
-      if (['getByLabel', 'getByTestId'].includes(method)) {
+      if (argument === 'role' && method === 'getByRole') {
+        const arg = node.arguments[0];
+        if (arg && ts.isStringLiteralLike(arg) && arg.text === oldValue) {
+          matches.push(arg);
+          sites.push(node);
+        }
+      }
+      if (argument === 'name' && ['getByLabel', 'getByTestId'].includes(method)) {
         const arg = node.arguments[0];
         if (arg && ts.isStringLiteralLike(arg) && arg.text === oldValue) {
           matches.push(arg);
@@ -29,6 +42,7 @@ export function replaceLocator(path: string, before: string, oldValue: string, n
         }
       }
       if (
+        argument === 'name' &&
         method === 'getByRole' &&
         node.arguments[1] &&
         ts.isObjectLiteralExpression(node.arguments[1])

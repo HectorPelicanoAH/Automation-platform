@@ -31,6 +31,7 @@ export interface GenerationTask {
   finishedAt?: string;
   events: (AgentEvent & { at: string })[];
   contextFiles: ContextFile[];
+  evidenceReads?: { recordingId: string; sequence: number; hash: string; bytes: number }[];
   retrievalBytes: number;
   promptBytes: number;
   toolCalls: number;
@@ -68,6 +69,13 @@ export interface FileChange {
   after: string;
 }
 export interface ChangeProposal {
+  revisionOf?: {
+    changeId: string;
+    hash: string;
+    runId: string;
+    adviceTaskId: string;
+    option: number;
+  };
   framework?: Framework;
   apiEndpoint?: { ref: RootRef; path: string; symbol: string; hash: string };
   id: string;
@@ -99,5 +107,13 @@ export interface FailureReply {
 export interface FailureDiscussion {
   id: string;
   targetId: string;
-  turns: { taskId: string; question: string; createdAt: string; reply?: FailureReply }[];
+  correctionSource?: { id: string; hash: string };
+  correctionTaskId?: string;
+  turns: {
+    taskId: string;
+    question: string;
+    createdAt: string;
+    revisionTaskId?: string;
+    reply?: FailureReply;
+  }[];
 }

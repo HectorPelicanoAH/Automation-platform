@@ -35,6 +35,10 @@ export interface EvidenceEvent {
   detail: string;
   url?: string;
   documentLanguage?: string;
+  snapshotVersion?: 1;
+  snapshotTruncated?: boolean;
+  snapshotExpired?: boolean;
+  accessibilitySource?: 'SANITIZED_DOM_RECONSTRUCTION';
   dom?: string;
   aria?: string;
   locators?: LocatorEvidence[];

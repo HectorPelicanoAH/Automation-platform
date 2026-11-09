@@ -59,8 +59,19 @@ export class RecordingRepository {
       throw new AppError(403, 'Recording symlink denied');
     return path;
   }
+  private expireSnapshots(record: Recording) {
+    if (Date.now() - Date.parse(record.createdAt) <= record.policy.retentionDays * 86400000) return;
+    this.store.db
+      .prepare(
+        `UPDATE recording_events
+      SET data=json_set(json_remove(data,'$.dom','$.aria'),'$.snapshotExpired',json('true'))
+      WHERE recording_id=? AND json_extract(data,'$.snapshotVersion')=1
+      AND COALESCE(json_extract(data,'$.snapshotExpired'),0)=0`,
+      )
+      .run(record.id);
+  }
   events(id: string, after = 0) {
-    this.get(id);
+    this.expireSnapshots(this.get(id));
     return (
       this.store.db
         .prepare(
@@ -70,7 +81,7 @@ export class RecordingRepository {
     ).map((r) => JSON.parse(r.data) as EvidenceEvent);
   }
   *iterateEvents(id: string) {
-    this.get(id);
+    this.expireSnapshots(this.get(id));
     for (const row of this.store.db
       .prepare('SELECT data FROM recording_events WHERE recording_id=? ORDER BY sequence')
       .iterate(id))
@@ -139,6 +150,7 @@ export class RecordingRepository {
   }
   expire() {
     for (const r of this.list()) {
+      this.expireSnapshots(r);
       for (const a of r.artifacts) {
         const days = a.kind === 'audio' ? r.policy.audioRetentionDays : r.policy.retentionDays;
         if (!a.expired && Date.now() - Date.parse(r.createdAt) > days * 86400000) {

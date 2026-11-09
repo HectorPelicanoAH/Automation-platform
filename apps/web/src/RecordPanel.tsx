@@ -382,6 +382,11 @@ export function RecordPanel({
                 'Audio can contain secrets and is retained locally without automatic redaction. No provider upload. Screenshots mask forms, private regions and frames; arbitrary visible secrets require your masking policy.',
               )}
             </p>
+            <p>
+              {t(
+                'Recording saves sampled, sanitized page DOM and reconstructed accessibility for later generation. Fields and private regions are omitted; mask other sensitive content before starting. Snapshots use the screenshot retention period.',
+              )}
+            </p>
             <label>
               {t('Screenshot retention (days)')}
               <input
@@ -760,6 +765,14 @@ export function RecordPanel({
                       {event.offsetMs?.toFixed(2) ?? t('n/a')} {t('ms · uncertainty ±')}
                       {event.uncertaintyMs?.toFixed(2) ?? t('unknown')} {t('ms')}
                     </p>
+                    {evidence?.snapshotVersion && (
+                      <p>
+                        {t(
+                          'Saved sanitized page snapshot. Accessibility is reconstructed without editable or private regions; validate locators on the real page.',
+                        )}{' '}
+                        {evidence.snapshotTruncated && t('Snapshot truncated.')}
+                      </p>
+                    )}
                     <pre>{evidence?.dom}</pre>
                     <pre>{evidence?.aria}</pre>
                     {evidence?.locators?.map((l, i) => (

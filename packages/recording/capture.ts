@@ -6,7 +6,8 @@ import {
   type Frame,
   type Locator,
 } from '@playwright/test';
-import { randomUUID } from 'node:crypto';
+import { sanitizedDocument } from './page-snapshot.ts';
+import { createHash, randomUUID } from 'node:crypto';
 import { OBSERVER_SCRIPT } from './observer.ts';
 import {
   monotonicMs,
@@ -20,6 +21,7 @@ import { safeText, safeUrl, recordingUrl, controlOrigin } from './privacy.ts';
 type CapturedEvent = Omit<EvidenceEvent, 'sequence' | 'receivedMs'>;
 export class BrowserCapture {
   browser?: Browser;
+  private snapshotBrowser?: Browser;
   context?: BrowserContext;
   private stopped = false;
   private pages = new WeakMap<Page, string>();
@@ -32,7 +34,99 @@ export class BrowserCapture {
   private observedIds = new Set<string>();
   private contextTasks = new Map<string, Promise<void>>();
   private beaconPath = '/__qa_observation_' + randomUUID().replaceAll('-', '');
+  private snapshotTimers = new Map<Frame, ReturnType<typeof setTimeout>>();
+  private snapshotHashes = new WeakMap<Frame, string>();
+  private snapshotCount = 0;
+  private snapshotQueued = new Set<Frame>();
+  private snapshotsClosing = false;
   private recent: number[] = [];
+  private scheduleSnapshot(page: Page, frame: Frame) {
+    if (
+      this.stopped ||
+      this.snapshotsClosing ||
+      !this.allowed(frame.url()) ||
+      this.snapshotTimers.has(frame) ||
+      this.snapshotQueued.has(frame)
+    )
+      return;
+    this.ids(page, frame);
+    if (
+      this.snapshotCount >= 100 ||
+      this.frameCount > RECORDING_LIMITS.frames ||
+      this.snapshotTimers.size + this.snapshotQueued.size >= 30
+    ) {
+      this.limited('Page snapshot/frame/backlog limit reached');
+      return;
+    }
+    this.snapshotTimers.set(
+      frame,
+      setTimeout(() => {
+        this.snapshotTimers.delete(frame);
+        this.enqueueSnapshot(page, frame);
+      }, 500),
+    );
+  }
+  private enqueueSnapshot(page: Page, frame: Frame) {
+    this.snapshotQueued.add(frame);
+    this.pending = this.pending
+      .then(() => this.captureSnapshot(page, frame))
+      .finally(() => {
+        this.snapshotQueued.delete(frame);
+      });
+  }
+  private async captureSnapshot(page: Page, frame: Frame) {
+    if (this.stopped || !this.allowed(frame.url()) || this.snapshotCount >= 100) return;
+    const url = frame.url();
+    let sterile: BrowserContext | undefined;
+    try {
+      const snapshot = await frame.evaluate(sanitizedDocument, this.policy.maskSelectors);
+      if (frame.url() !== url || !this.allowed(frame.url())) return;
+      const bounded = (value: string) =>
+        Buffer.from(safeText(value)).subarray(0, 7000).toString('utf8');
+      const dom = bounded(snapshot.dom);
+      const digest = createHash('sha256')
+        .update(url + snapshot.language + dom)
+        .digest('hex');
+      if (this.snapshotHashes.get(frame) === digest) return;
+      this.snapshotCount++;
+      // Build accessibility from the sanitized document in a separate, network-denied context.
+      // Never mutate the demonstrated page to hide sensitive fields.
+      this.snapshotBrowser ??= await chromium.launch({ headless: true, timeout: 3000 });
+      sterile = await this.snapshotBrowser.newContext({
+        javaScriptEnabled: false,
+        serviceWorkers: 'block',
+      });
+      await sterile.route('**/*', (route) => route.abort());
+      const preview = await sterile.newPage();
+      await preview.setContent(dom, { timeout: 1500, waitUntil: 'domcontentloaded' });
+      const aria = bounded(await preview.locator('body').ariaSnapshot({ timeout: 1000 }));
+      if (this.stopped || frame.url() !== url) return;
+      this.snapshotHashes.set(frame, digest);
+      this.emit({
+        kind: 'context',
+        detail: 'Sanitized page snapshot',
+        snapshotVersion: 1,
+        snapshotTruncated:
+          snapshot.truncated || Buffer.byteLength(dom) >= 7000 || Buffer.byteLength(aria) >= 7000,
+        accessibilitySource: 'SANITIZED_DOM_RECONSTRUCTION',
+        dom,
+        aria,
+        url: safeUrl(url),
+        documentLanguage: /^[a-zA-Z]{2,8}(?:-[a-zA-Z0-9]{1,8})*$/.test(snapshot.language)
+          ? snapshot.language.slice(0, 64)
+          : undefined,
+        ...this.ids(page, frame),
+        timeMs: this.time(),
+        evidenceAtMs: this.time(),
+        provenance: 'OBSERVED',
+      });
+    } catch {
+      if (!this.stopped)
+        this.event('gap', 'Page snapshot unavailable during navigation or capture', page, frame);
+    } finally {
+      await sterile?.close().catch(() => {});
+    }
+  }
   private lastLimitGap = -Infinity;
   private limited(detail: string) {
     if (this.time() - this.lastLimitGap > 1000) {
@@ -223,6 +317,7 @@ export class BrowserCapture {
       this.limited('Unload backup unavailable; fast navigation can lose observation evidence');
     // Persist observed intent before any DOM/ARIA/screenshot work. Enrichment must never block the action stream.
     this.emit(base);
+    if (base.kind === 'action' || base.kind === 'navigation') this.scheduleSnapshot(page, frame);
     if (!input.target) return Promise.resolve();
     if (this.frameCount > RECORDING_LIMITS.frames || this.queued >= 30) {
       this.limited('Frame/context backlog exceeded; detailed evidence omitted');
@@ -286,7 +381,10 @@ export class BrowserCapture {
       return;
     }
     this.event('page', 'Browser page opened', page, page.mainFrame());
+    page.on('domcontentloaded', () => this.scheduleSnapshot(page, page.mainFrame()));
+    page.on('load', () => this.scheduleSnapshot(page, page.mainFrame()));
     page.on('framenavigated', (frame) => {
+      this.scheduleSnapshot(page, frame);
       if (this.allowed(frame.url()))
         this.emit({
           kind: 'navigation',
@@ -489,8 +587,24 @@ export class BrowserCapture {
   }
   async stop() {
     if (this.stopped) return;
-    await Promise.race([this.pending, new Promise((r) => setTimeout(r, 4000))]);
+    this.snapshotsClosing = true;
+    for (const [frame, timer] of this.snapshotTimers) {
+      clearTimeout(timer);
+      this.enqueueSnapshot(frame.page(), frame);
+    }
+    this.snapshotTimers.clear();
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const drained = await Promise.race([
+      this.pending.then(() => true),
+      new Promise<boolean>((resolve) => {
+        timer = setTimeout(() => resolve(false), 4000);
+      }),
+    ]);
+    clearTimeout(timer);
+    if (!drained)
+      this.event('gap', 'Optional evidence did not finish before stop; some page states omitted');
     this.stopped = true;
+    await this.snapshotBrowser?.close();
     await this.browser?.close();
   }
 }

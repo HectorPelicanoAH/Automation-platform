@@ -16,12 +16,14 @@ export function ValidationRunPanel({
   targetId,
   visible,
   onInspect,
+  onProposal,
 }: {
   runId: string;
   proposalId: string;
   targetId: string;
   visible: boolean;
   onInspect: (id: string) => void;
+  onProposal?: (id: string) => void;
 }) {
   const { t } = useLocale();
   const [run, setRun] = useState<Run>();
@@ -130,7 +132,12 @@ export function ValidationRunPanel({
         </p>
       )}
       {run && ['FAILED', 'INTERRUPTED'].includes(run.status) && (
-        <FailureConversation key={run.id} runId={run.id} visible={visible} />
+        <FailureConversation
+          key={run.id}
+          runId={run.id}
+          visible={visible}
+          onProposal={onProposal}
+        />
       )}
       <div className="button-row">
         <button className="button secondary" onClick={() => onInspect(runId)}>

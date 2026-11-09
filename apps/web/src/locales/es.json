@@ -600,5 +600,15 @@
   "Ask about the failed step and compare solution options before reviewing a correction.": "Pregunta sobre el paso fallido y compara opciones de solución antes de revisar una corrección.",
   "Evidence shared with AI": "Evidencia compartida con la IA",
   "Conversation history": "Historial de conversación",
-  "Loading conversation…": "Cargando conversación…"
+  "Loading conversation…": "Cargando conversación…",
+  "Propose locator correction": "Proponer corrección del locator",
+  "Preparing a reviewed correction…": "Preparando una corrección para revisar…",
+  "Proposed correction": "Corrección propuesta",
+  "Files have not been changed. Review this new proposal in Generate, then prepare and run validation before applying it.": "Los archivos no se han modificado. Revisa esta nueva propuesta en Generar y después prepara y ejecuta su validación antes de aplicarla.",
+  "Review and validate correction": "Revisar y validar corrección",
+  "Code proposals here require the current failed private UI validation. For an applied test, use the reviewed maintenance workflow in Runs.": "Para proponer código aquí se necesita la validación privada UI fallida actual. Para un test ya aplicado, utiliza el flujo de mantenimiento con revisión en Ejecuciones.",
+  "Ask about the error and compare solution options. The configured analysis model receives redacted run evidence, bounded proposal excerpts and recent conversation. Indexed target files are available through read-only tools. Bounded trace call/error excerpts are included when available. Saved sanitized recording snapshots can be retrieved on demand. Screenshots and full trace DOM/network contents are not sent.": "Consulta el error y compara soluciones. El modelo de análisis recibe evidencia filtrada, fragmentos de la propuesta y conversación reciente. Puede consultar archivos indexados en lectura. Se incluyen fragmentos limitados de llamadas y errores de las trazas disponibles y puede consultar instantáneas filtradas de la grabación. No se envían imágenes ni el DOM o tráfico completos de la traza.",
+  "Saved sanitized page snapshot. Accessibility is reconstructed without editable or private regions; validate locators on the real page.": "Instantánea filtrada de la página. El árbol accesible se reconstruye sin zonas editables o privadas; valida los locators en la página real.",
+  "Snapshot truncated.": "Instantánea truncada.",
+  "Recording saves sampled, sanitized page DOM and reconstructed accessibility for later generation. Fields and private regions are omitted; mask other sensitive content before starting. Snapshots use the screenshot retention period.": "La grabación guarda muestras del DOM filtrado y accesibilidad reconstruida para generar código después. Se omiten campos y zonas privadas; configura máscaras para el resto del contenido sensible antes de empezar. Las instantáneas usan el plazo de retención de las capturas."
 }

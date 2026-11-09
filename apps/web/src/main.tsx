@@ -33,6 +33,7 @@ function App() {
   const [recordingsRevision, setRecordingsRevision] = useState(0);
   const [state, setState] = useState<State>();
   const [targetId, setTargetId] = useState('');
+  const [requestedChange, setRequestedChange] = useState<{ id: string; targetId: string }>();
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [busy, setBusy] = useState(false);
@@ -407,6 +408,7 @@ function App() {
               <GenerationPanel
                 visible={view === 'Generate'}
                 recordingsRevision={recordingsRevision}
+                requestedChange={requestedChange}
                 targetId={targetId}
                 sources={state.sources}
                 targets={state.targets}
@@ -893,6 +895,11 @@ function App() {
                       key={'chat-' + run.id}
                       runId={run.id}
                       visible={view === 'Runs'}
+                      onProposal={(id) => {
+                        setTargetId(run.targetId);
+                        setRequestedChange({ id, targetId: run.targetId });
+                        setView('Generate');
+                      }}
                     />
                   )}
                   {run && !run.proposalId && ['FAILED', 'INTERRUPTED'].includes(run.status) && (

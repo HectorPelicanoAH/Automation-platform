@@ -1,6 +1,6 @@
 # Phase status
 
-Updated: 2026-11-08. This file records authorization and acceptance evidence. The roadmap describes scope, not permission to implement it.
+Updated: 2026-11-09. This file records authorization and acceptance evidence. The roadmap describes scope, not permission to implement it.
 
 | Phase | Name                                        | Status     | Authorization                                                                                    | Acceptance evidence                                                                                                                                                                   |
 | ----- | ------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -117,3 +117,7 @@ On 2026-11-08 the owner requested visible validation logs and guidance after a s
 On 2026-11-08 the owner requested conversational AI assistance for failures (including private validation locator failures), optional reuse of Autohealth findings, and a persisted Spanish interface choice in Workspace. This authorizes the concrete existing-product extension: read-only, user-triggered diagnostic conversations and local interface preferences. It does not authorize automatic repairs, owner-test execution, active skill changes or credential copying. Phase and CI statuses are unchanged; evidence and limits are recorded in the usability correction report.
 
 The owner subsequently requested precise selectors, fewer unrelated assertions, constructor-owned reusable Page elements and target-language-aware selectors. The approved correction updates generation instructions, static locator checks, the starter and read-only recording language metadata, plus constructor-locator repair support. It does not authorize rewriting existing managed tests, live Mango navigation/inference, assertion weakening, active skill changes or automatic translation guesses. Existing phase and CI statuses remain unchanged.
+
+## Failure revision and saved page evidence — 2026-11-09
+
+The owner requested code proposals from failure advice, access to error traces and saved DOM/accessibility for future generation. This authorizes the bounded follow-up documented in the [correction report](usability-corrections-2026-11-09.md), without any phase transition or CI waiver. Active skills, owner target files and credentials remain unchanged. Validation evidence: [execution record](evaluations/failure-revision-and-page-evidence-2026-11-09.json).

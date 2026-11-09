@@ -2,13 +2,26 @@ import React, { useEffect, useState, useRef } from 'react';
 import { api } from './api.ts';
 import { Status } from './ui.tsx';
 import { useLocale } from './locale.tsx';
-import type { FailureDiscussion, GenerationTask } from '../../../packages/generation/model.ts';
+import type {
+  FailureDiscussion,
+  GenerationTask,
+  ChangeProposal,
+} from '../../../packages/generation/model.ts';
 
-export function FailureConversation({ runId, visible }: { runId: string; visible: boolean }) {
+export function FailureConversation({
+  runId,
+  visible,
+  onProposal,
+}: {
+  runId: string;
+  visible: boolean;
+  onProposal?: (id: string) => void;
+}) {
   const { language, t } = useLocale();
   const [discussion, setDiscussion] = useState<FailureDiscussion>();
   const [task, setTask] = useState<GenerationTask>();
   const [message, setMessage] = useState('');
+  const [correction, setCorrection] = useState<ChangeProposal>();
   const [includeHealth, setIncludeHealth] = useState(true);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -38,13 +51,22 @@ export function FailureConversation({ runId, visible }: { runId: string; visible
           return;
         }
         const current = await api<GenerationTask>(
-          '/generation/tasks/' + last.taskId,
+          '/generation/tasks/' + (d.correctionTaskId || last.revisionTaskId || last.taskId),
           undefined,
           'GET',
           AbortSignal.any([controller.signal, AbortSignal.timeout(15000)]),
         );
         if (stopped) return;
         setTask(current);
+        if (current.changeId) {
+          const change = await api<ChangeProposal>(
+            '/generation/changes/' + current.changeId,
+            undefined,
+            'GET',
+            controller.signal,
+          );
+          if (!stopped) setCorrection(change);
+        }
         if (['RUNNING', 'CANCEL_REQUESTED'].includes(current.status))
           timer = setTimeout(() => void read(), 1200);
       } catch (e) {
@@ -69,7 +91,7 @@ export function FailureConversation({ runId, visible }: { runId: string; visible
         <summary>{t('Evidence shared with AI')}</summary>
         <p>
           {t(
-            'Ask about the error and compare solution options. The configured analysis model receives redacted run evidence, bounded proposal excerpts and recent conversation. Indexed target files are available through read-only tools. Screenshots and traces are referenced by name; their contents are not sent.',
+            'Ask about the error and compare solution options. The configured analysis model receives redacted run evidence, bounded proposal excerpts and recent conversation. Indexed target files are available through read-only tools. Bounded trace call/error excerpts are included when available. Saved sanitized recording snapshots can be retrieved on demand. Screenshots and full trace DOM/network contents are not sent.',
           )}
         </p>
         <p>
@@ -96,6 +118,32 @@ export function FailureConversation({ runId, visible }: { runId: string; visible
                 {turn.reply.options.map((option, index) => (
                   <div key={index}>
                     <h4>{option.title}</h4>
+                    {discussion.correctionSource && (
+                      <button
+                        type="button"
+                        className="button secondary"
+                        disabled={busy || !!active}
+                        onClick={() => {
+                          setBusy(true);
+                          setError('');
+                          setCorrection(undefined);
+                          void api<GenerationTask>('/generation/runs/' + runId + '/revise', {
+                            expectedHash: discussion.correctionSource!.hash,
+                            adviceTaskId: turn.taskId,
+                            option: index,
+                            message,
+                          })
+                            .then((next) => {
+                              setTask(next);
+                              setRevision((n) => n + 1);
+                            })
+                            .catch((e) => setError(String(e)))
+                            .finally(() => setBusy(false));
+                        }}
+                      >
+                        {t('Propose locator correction')}
+                      </button>
+                    )}
                     <p>{option.evidence}</p>
                     <ol>
                       {option.steps.map((step, i) => (
@@ -120,24 +168,57 @@ export function FailureConversation({ runId, visible }: { runId: string; visible
                 )}
               </>
             )}
-            {!turn.reply && turn.taskId === task?.id && (
-              <>
-                <Status value={task.status} />
-                {task.error && <p role="alert">{task.error}</p>}
-              </>
-            )}
+            {(!turn.reply || turn.revisionTaskId) &&
+              (turn.revisionTaskId || turn.taskId) === task?.id && (
+                <>
+                  <Status value={task.status} />
+                  {task.error && <p role="alert">{task.error}</p>}
+                </>
+              )}
           </article>
         ))}
       </div>
       {active && (
         <div role="status">
-          <Status value={task.status} /> {t('Analyzing this failure…')}
+          <Status value={task.status} />{' '}
+          {t(
+            task.kind === 'implementation'
+              ? 'Preparing a reviewed correction…'
+              : 'Analyzing this failure…',
+          )}
           <ul>
             {task.events.slice(-4).map((event, index) => (
               <li key={index}>{event.text}</li>
             ))}
           </ul>
         </div>
+      )}
+      {correction && (
+        <section aria-label={t('Proposed correction')}>
+          <h4>{t('Proposed correction')}</h4>
+          <p>{correction.plan.summary}</p>
+          <pre className="code">{correction.diff}</pre>
+          <p>
+            {t(
+              'Files have not been changed. Review this new proposal in Generate, then prepare and run validation before applying it.',
+            )}
+          </p>
+          <p>
+            {t('Change proposal')} · {correction.id}
+          </p>
+          {onProposal && (
+            <button type="button" className="button" onClick={() => onProposal(correction.id)}>
+              {t('Review and validate correction')}
+            </button>
+          )}
+        </section>
+      )}
+      {discussion && !discussion.correctionSource && (
+        <p>
+          {t(
+            'Code proposals here require the current failed private UI validation. For an applied test, use the reviewed maintenance workflow in Runs.',
+          )}
+        </p>
       )}
       {error && <p role="alert">{error}</p>}
       <form
